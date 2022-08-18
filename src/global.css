@@ -2,7 +2,7 @@
     box-sizing: border-box;
 }
 
-body {
+.container {
     color: #fff;
     background: #17181c;
     font-family: sans-serif;
@@ -18,44 +18,42 @@ body {
     overflow: hidden;
 }
 
-header {
+.header-container {
     padding: 10px 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
 }
 
-header h1 {
+.app-header {
     font-size: 40px;
     font-weight: 800;
 }
 
-.burger-container{
+.burger-button{
     display: none;
 }
 
 @media (max-width: 767px) {
-    html, body{
+    html,
+    .container {
         height: 100%;
     }
 
-    body {
+    .container {
         justify-content: flex-start;
         align-items: stretch;
     }
 
-    main {
+    .content {
         position: relative;
         overflow-x: hidden;
         flex: auto;
     }
 
-    header {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .burger-container {
+    .burger-button {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -64,11 +62,11 @@ header h1 {
         transition: transform 0.5s;
     }
 
-    .burger-container.active {
+    .burger-button.active {
         transform: rotate(90deg);
     }
 
-    .burger-container .burger {
+    .burger-button__icon {
         position: relative;
         width: 40px;
         height: 5px;
@@ -76,7 +74,7 @@ header h1 {
         transition: background-color 0.3s;
     }
 
-    .burger-container .burger:before {
+    .burger-button__icon:before {
         position: absolute;
         content: "";
         bottom: 15px;
@@ -85,7 +83,7 @@ header h1 {
         background-color: inherit;
     }
 
-    .burger-container .burger:after {
+    .burger-button__icon:after {
         position: absolute;
         content: "";
         top: 15px;
@@ -93,17 +91,17 @@ header h1 {
         height: 5px;
         background-color: inherit;
     }
-    
-    .burger-container:hover {
+
+    .burger-button:hover {
         cursor: pointer;
     }
 
-    .burger-container:hover .burger {
+    .burger-button:hover .burger-button__icon {
         background-color: #30c5ff;
     }
 }
 
-footer {
+.footer {
     margin-top: auto;
     /*height: 100px;*/
     display: flex;
@@ -112,7 +110,7 @@ footer {
     justify-content: space-around;
 }
 
-footer .rs-logo-container {
+.rs-logo {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -122,35 +120,59 @@ footer .rs-logo-container {
     transition: background-color 0.3s;
 }
 
-.rs-logo-container a {
+.rs-logo__link {
     display: block;
     height: 100%;
     padding: 5px;
     width: inherit;
 }
 
-footer .rs-logo-container:hover {
+.rs-logo:hover {
     cursor: pointer;
     background-color: #30c5ff;
 }
 
-.rs-logo-container .rs-logo {
+.rs-logo__icon {
     display: block;
     height: calc(100% - 10px);
     width: auto;
 }
 
-footer .copyright {
+.footer__copyright {
     font-size: 14px;
     color: #333;
     text-align: center;
 }
-footer .copyright a {
+.footer__copyright-link {
     color: #444;
 }
-footer .copyright a:hover {
+.footer__copyright-link:hover {
     color: #555;
 }
-footer .copyright:before {
+.footer__copyright:before {
     content: '©';
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.5rem;
+    margin-right: auto;
+    padding-top: 10px;
+}
+
+.nav-list__link {
+    transition: transform 0.3s, color 0.3s;
+}
+
+.nav-list__link:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.nav-list__link--active {
+    color: #30c5ff;
 }
