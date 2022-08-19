@@ -1,4 +1,4 @@
+import EbookView from "./assets/views/eBookView";
 
-import './global.css';
-
-// Empty js template
+const eBook = new EbookView(document.querySelector<HTMLElement>('.content')!);
+eBook.drawEbook();;
