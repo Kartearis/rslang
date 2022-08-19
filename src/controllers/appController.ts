@@ -1,6 +1,5 @@
-import RouterController from "./routerController";
-import {assertDefined} from "../helpers/helpers";
-
+import RouterController from './routerController';
+import { assertDefined } from '../helpers/helpers';
 
 export default class AppController {
     constructor() {
@@ -11,6 +10,5 @@ export default class AppController {
         // tmp
         assertDefined(document.querySelector('#garage')).addEventListener('click', () => router.navigate('/'));
         assertDefined(document.querySelector('#records')).addEventListener('click', () => router.navigate('/test'));
-
     }
 }

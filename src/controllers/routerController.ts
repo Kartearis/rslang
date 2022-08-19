@@ -1,15 +1,15 @@
-import MainView from "../views/mainView";
-import TestView from "../views/test";
-import {ViewConstructor} from "../views/viewInterface";
+import MainView from '../views/mainView';
+import TestView from '../views/test';
+import { ViewConstructor } from '../views/viewInterface';
 
-export type RouteConfig = Record<string, ViewConstructor>
+export type RouteConfig = Record<string, ViewConstructor>;
 
 export default class RouterController {
-    private static instance: RouterController
+    private static instance: RouterController;
 
-    private routeConfig: RouteConfig
-    private history: History
-    private rootElement: HTMLElement = document.body
+    private routeConfig: RouteConfig;
+    private history: History;
+    private rootElement: HTMLElement = document.body;
 
     public static getInstance(): RouterController {
         if (!RouterController.instance) {
@@ -22,7 +22,7 @@ export default class RouterController {
         // Route config must have '/'
         this.routeConfig = {
             '/': MainView,
-            '/test': TestView
+            '/test': TestView,
         };
         this.history = window.history;
         window.addEventListener('popstate', (event: PopStateEvent) => this.processStatePop(event));
@@ -48,13 +48,12 @@ export default class RouterController {
 
     reOpenCurrent(): void {
         const path = window.location.pathname;
-        if (path in this.routeConfig)
-            this.renderView(path);
+        if (path in this.routeConfig) this.renderView(path);
         else this.renderView('/');
     }
 
     navigate(to: string): void {
-        this.history.pushState({path: to}, to, to);
+        this.history.pushState({ path: to }, to, to);
         this.renderView(to);
     }
 
@@ -65,5 +64,4 @@ export default class RouterController {
     forward(): void {
         this.history.forward();
     }
-
 }

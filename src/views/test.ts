@@ -1,8 +1,6 @@
-import ViewInterface from "./viewInterface";
+import ViewInterface from './viewInterface';
 
-
-export default class TestView extends ViewInterface{
-
+export default class TestView extends ViewInterface {
     constructor(rootElement: HTMLElement) {
         super(rootElement);
     }
