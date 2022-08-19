@@ -1,4 +1,5 @@
 
 import './global.css';
+import AppController from "./controllers/appController";
 
-// Empty js template
+const app = new AppController();
