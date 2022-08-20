@@ -78,7 +78,15 @@ class EbookView {
         const ul = document.createElement('ul');
         for (let i = 0; i < MAX_GROUP; i++) {
             const li = document.createElement('li');
-            li.textContent = `GROUP ${i + 1}`;
+            const btn = document.createElement('button');
+            btn.dataset.group = `${i}`;
+            btn.addEventListener('click', (ev: Event) => {
+                const target = ev.target as HTMLButtonElement;
+                this.group = Number(target.dataset.group);
+                this.reDraw();
+            });
+            btn.innerText = `GROUP ${i + 1}`;
+            li.append(btn);
             ul.append(li);
         }
         return ul;

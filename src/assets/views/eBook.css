@@ -2,6 +2,11 @@ audio {
     display: none;
 }
 
+ul {
+    display: inline-flex;
+    list-style: none;
+}
+
 .start::after {
     content: '▶';
 }
