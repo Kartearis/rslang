@@ -1,0 +1,11 @@
+audio {
+    display: none;
+}
+
+.start::after {
+    content: '▶';
+}
+
+.stop::after {
+    content: '■';
+}
