@@ -1,7 +1,5 @@
 
-import Authorization from './assets/views/authorization/authorizationView';
 import './global.css';
+import AppController from './controllers/appController';
 
-const container = document.querySelector<HTMLElement>('.content')!;
-const login  = new Authorization(container);
-login.drawAuthContainer();
+new AppController();
