@@ -23,10 +23,9 @@ class EbookView extends ViewInterface {
         this.rootElement.append(pagination);
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-        bookContainer.classList.add(`group${this.group}`);
+
         const words = await this.eBookController.getGroupWords(this.group, this.pagination.page);
         const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
-
         if (words !== null) {
             words.forEach((w) => {
                 const clone = template.content.cloneNode(true) as HTMLDivElement;
@@ -42,7 +41,6 @@ class EbookView extends ViewInterface {
         assertDefined(document.querySelector('.ebook-container')).remove();
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-        bookContainer.classList.add(`group${this.group}`);
         const words = await this.eBookController.getGroupWords(this.group, this.pagination.page);
         const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
 
@@ -64,13 +62,15 @@ class EbookView extends ViewInterface {
             const li = document.createElement('li');
             li.textContent = `ГРУППА ${i + 1}`;
             li.classList.add('group-list__group');
+            if (this.group === i) li.classList.add('active-group');
             li.dataset.group = `${i}`;
             li.addEventListener('click', (ev: Event) => {
                 const target = ev.target as HTMLButtonElement;
                 this.group = Number(target.dataset.group);
                 this.pagination.toFirstPage();
                 localStorage.setItem('group', this.group.toString());
-
+                assertDefined(document.querySelector('.active-group')).classList.remove('active-group');
+                target.classList.add('active-group');
                 this.reDraw();
             });
             ul.append(li);
@@ -85,64 +85,69 @@ class EbookView extends ViewInterface {
     getWordCard(word: wordType, template: HTMLDivElement): HTMLElement {
         const wordCard = template;
         wordCard.id = word.id;
+        assertDefined(wordCard.querySelector('.word-card')).classList.add(`group${this.group}`);
         const markHard = assertDefined(wordCard.querySelector('#hardMark')) as HTMLButtonElement;
         markHard.addEventListener('click', (ev) => this.markHard(ev));
+        const audioBtn = assertDefined(wordCard.querySelector('#audioBtn')) as HTMLButtonElement;
+        this.addAudioAction(word.audio, word.audioMeaning, word.audioExample, audioBtn);
         const learnedMark = assertDefined(wordCard.querySelector('#learnedMark')) as HTMLButtonElement;
         learnedMark.addEventListener('click', (ev) => this.markLearned(ev));
         const img = assertDefined(wordCard.querySelector('#wordImg')) as HTMLImageElement;
         img.src = `${HOST}\\${word.image}`;
-        const wordAudio = assertDefined(wordCard.querySelector('#wordAudio')) as HTMLAudioElement;
-        wordAudio.src = `${HOST}\\${word.audio}`;
-        wordAudio.style.display = 'none';
-        const audioBtn = assertDefined(wordCard.querySelector('#audioBtn')) as HTMLButtonElement;
-        this.addAudioAction(wordAudio, audioBtn);
         const wordInfo = assertDefined(wordCard.querySelector('#word')) as HTMLParagraphElement;
         wordInfo.innerText = `${word.word} ${word.transcription} - ${word.wordTranslate}`;
-        const audioMeaning = assertDefined(wordCard.querySelector('#audioMeaning')) as HTMLAudioElement;
-        audioMeaning.src = `${HOST}\\${word.audioMeaning}`;
-        audioMeaning.style.display = 'none';
-        const audioMeaningBtn = assertDefined(wordCard.querySelector('#audioMeaningBtn')) as HTMLButtonElement;
-        this.addAudioAction(audioMeaning, audioMeaningBtn);
         const meaning = assertDefined(wordCard.querySelector('#meaning')) as HTMLParagraphElement;
         meaning.insertAdjacentHTML('afterbegin', word.textMeaning);
         const meaningTransalte = assertDefined(wordCard.querySelector('#meaningTransalte')) as HTMLParagraphElement;
         meaningTransalte.innerText = word.textMeaningTranslate;
-        const audioExample = assertDefined(wordCard.querySelector('#audioExample')) as HTMLAudioElement;
-        audioExample.src = `${HOST}\\${word.audioExample}`;
-        audioExample.style.display = 'none';
-        const audioExampleBtn = assertDefined(wordCard.querySelector('#audioExampleBtn')) as HTMLButtonElement;
-        this.addAudioAction(audioExample, audioExampleBtn);
         const example = assertDefined(wordCard.querySelector('#example')) as HTMLParagraphElement;
         example.insertAdjacentHTML('afterbegin', word.textExample);
         const exampleTransalte = assertDefined(wordCard.querySelector('#exampleTransalte')) as HTMLParagraphElement;
         exampleTransalte.innerText = word.textExampleTranslate;
         return wordCard;
     }
-    private addAudioAction(audio: HTMLAudioElement, playBtn: HTMLButtonElement) {
+    private addAudioAction(audio: string, audioMeaning: string, audioExample: string, playBtn: HTMLButtonElement) {
+        const wordAudio = new Audio();
+
+        wordAudio.onended = function (e) {
+            var target = e.target as HTMLAudioElement;
+            var cur_src = target.getAttribute('src');
+            switch (cur_src) {
+                case `${HOST}\\${audio}`: target.setAttribute('src', `${HOST}\\${audioMeaning}`); break;
+                case `${HOST}\\${audioMeaning}`: target.setAttribute('src', `${HOST}\\${audioExample}`); break;
+                case `${HOST}\\${audioExample}`: target.setAttribute('src', `${HOST}\\${audio}`); break;
+            }
+            target.play();
+        };
+        wordAudio.setAttribute('src', `${HOST}\\${audio}`);
+
         playBtn.addEventListener('click', (ev: Event) => {
             const target = ev.target as HTMLButtonElement;
+            let currentAudio = wordAudio;
             if (target.classList.contains('audio_start')) {
-                audio.play();
+                currentAudio.play();
+                this.togleAudioBtn(playBtn)
             } else {
-                audio.pause();
+                currentAudio.pause();
+                this.togleAudioBtn(playBtn)
             }
         });
-        audio.addEventListener('play', () => this.togleAudioBtn(playBtn));
-        audio.addEventListener('pause', () => this.togleAudioBtn(playBtn));
+        // wordAudio.addEventListener('play', () => this.togleAudioBtn(playBtn));
+        // wordAudio.addEventListener('pause', () => this.togleAudioBtn(playBtn));
     }
     private togleAudioBtn(target: HTMLButtonElement) {
         target.classList.toggle('audio_start');
         target.classList.toggle('audio_stop');
     }
 
-    markHard(ev: Event): void {
+    private markHard(ev: Event): void {
         if (localStorage.getItem('jwt') === null) {
             alert('Нужно авторизоватся');
             console.log(ev);
         }
     }
 
-    markLearned(ev: Event): void {
+    private markLearned(ev: Event): void {
         if (localStorage.getItem('jwt') === null) {
             alert('Нужно авторизоватся');
             console.log(ev);

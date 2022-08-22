@@ -1,71 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>Async race</title>
-    </head>
-    <body class="container">
-        <header class="header-container">
-            <h1 class="app-header">Async race</h1>
-            <ul class="nav-list">
-                <li class="nav-list__link" id="garage">Garage</li>
-                <li class="nav-list__link" id="records">Records</li>
-                <li class="nav-list__link" id="ebook">Учебник</li>
-            </ul>
-            <!--      <div class="burger-button">-->
-            <!--          <div class="burger-button__icon"></div>-->
-            <!--      </div>-->
-        </header>
-        <main class="content"></main>
-        <footer class="footer">
-            <p class="footer__copyright">
-                <a class="footer__copyright-link" href="https://github.com/Kartearis">Kartearis</a>, 2022
-            </p>
-            <div class="rs-logo">
-                <a class="rs-logo__link" href="https://rs.school/js/">
-                    <img alt="Rs school logo" class="rs-logo__icon" src="assets/logo/rs_school_js.svg" />
-                </a>
-            </div>
-        </footer>
-        <template id="wordCardTemplate">
-            <div class="word-card" data-word-id="">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Async race</title>
+</head>
+
+<body class="container">
+    <header class="header-container">
+        <h1 class="app-header">Async race</h1>
+        <ul class="nav-list">
+            <li class="nav-list__link" id="garage">Garage</li>
+            <li class="nav-list__link" id="records">Records</li>
+            <li class="nav-list__link" id="ebook">Учебник</li>
+        </ul>
+        <!--      <div class="burger-button">-->
+        <!--          <div class="burger-button__icon"></div>-->
+        <!--      </div>-->
+    </header>
+    <main class="content"></main>
+    <footer class="footer">
+        <p class="footer__copyright">
+            <a class="footer__copyright-link" href="https://github.com/Kartearis">Kartearis</a>, 2022
+        </p>
+        <div class="rs-logo">
+            <a class="rs-logo__link" href="https://rs.school/js/">
+                <img alt="Rs school logo" class="rs-logo__icon" src="assets/logo/rs_school_js.svg" />
+            </a>
+        </div>
+    </footer>
+    <template id="wordCardTemplate">
+        <div class="word-card" data-word-id="">
+            <img id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
+            <div class='word-info'>
+                <p id="word"></p>
+                <p id="meaning"></p>
+                <p id="meaningTransalte"></p>
+                <p id="example"></p>
+                <p id="exampleTransalte"></p>
                 <div class="word-card__action">
-                    <button id="hardMark" class="hardMark">Cложна</button>
-                    <button id="learnedMark" class="learnedMark">Запомнил</button>
-                </div>
-                <img id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
-                <div class="word-row">
-                    <div class="audio-btn-block">
-                        <audio id="wordAudio" src="https://rs-lang-proj.herokuapp.com/files/01_0006.mp3"></audio>
-                        <button id="audioBtn" class="audio_start"></button>
-                    </div>
-                    <div>
-                        <p id="word"></p>
-                    </div>
-                </div>
-                <div class="sentence-row">
-                    <div class="audio-btn-block">
-                        <audio id="audioMeaning" src="https://rs-lang-proj.herokuapp.com/files/01_0006.mp3"></audio>
-                        <button id="audioMeaningBtn" class="audio_start"></button>
-                    </div>
-                    <div>
-                        <p id="meaning"></p>
-                        <p id="meaningTransalte"></p>
-                    </div>
-                </div>
-                <div class="sentence-row">
-                    <div class="audio-btn-block">
-                        <audio id="audioExample" src="https://rs-lang-proj.herokuapp.com/files/01_0006.mp3"></audio>
-                        <button id="audioExampleBtn" class="audio_start"></button>
-                    </div>
-                    <div>
-                        <p id="example"></p>
-                        <p id="exampleTransalte"></p>
-                    </div>
+                    <button id="hardMark" class="word-card__action_hardMark">!</button>
+                    <button id="audioBtn" class="audio audio_start"></button>
+                    <button id="learnedMark" class="word-card__action_learnedMark">✓</button>
                 </div>
             </div>
-        </template>
-    </body>
+        </div>
+    </template>
+</body>
+
 </html>

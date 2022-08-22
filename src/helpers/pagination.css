@@ -1,0 +1,38 @@
+.pagination {
+    display: flex;
+    padding: 15px;
+    gap: 20px;
+    background-color: #F5F5F5;
+    color: #2F4550;
+    justify-content: center;
+}
+
+.prev-page-btn {
+    transform: rotate(180deg);
+}
+
+.next-page-btn,
+.prev-page-btn,
+.page-page-num {
+    border: solid 2px #2F4550;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    font-weight: bold;
+    background-color: inherit;
+    font-size: 18px;
+}
+
+.next-page-btn:hover,
+.prev-page-btn:hover,
+.page-page-num:hover {
+    cursor: pointer;
+    color: gray;
+    border: solid 2px gray;
+}
+
+.page-page-num {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

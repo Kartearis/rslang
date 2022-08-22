@@ -1,3 +1,6 @@
+import { assertDefined } from './helpers';
+import './pagination.css'
+
 class Pagination {
     page: number;
     limitPage: number;
@@ -33,39 +36,44 @@ class Pagination {
         }
     }
     getPagination = (reDraw: () => void) => {
-        const paination = document.createElement('div');
-        paination.id = 'paination';
-        paination.addEventListener('click', () => {
+        const pagination = document.createElement('div');
+        pagination.id = 'paination';
+        pagination.classList.add('pagination');
+        pagination.addEventListener('click', () => {
             sessionStorage.setItem('lastPage', this.page.toString());
             this.lockBtn();
-            const el = document.querySelector<HTMLSpanElement>('#pageNum');
+            const el = assertDefined(document.querySelector<HTMLSpanElement>('#pageNum'));
             if (el !== null) {
                 el.textContent = (this.page + 1).toString();
             }
             reDraw();
         });
         const prev = document.createElement('button');
-        prev.innerText = 'Prev';
-
+        prev.innerText = '➙';
         prev.id = 'prevBtn';
+        prev.classList.add('prev-page-btn');
         prev.addEventListener('click', () => {
             this.page -= 1;
         });
         const next = document.createElement('button');
-        next.innerText = 'Next';
+        next.innerText = '➙';
         next.id = 'nextBtn';
+        next.classList.add('next-page-btn');
         next.addEventListener('click', () => {
             this.page += 1;
         });
         this.lockBtn(prev, next);
-        paination.append(prev);
+        pagination.append(prev);
         const pageNum = document.createElement('span');
         pageNum.id = 'pageNum';
         pageNum.innerText = (this.page + 1).toString();
-        paination.append(pageNum);
-        paination.append(next);
+        const numPageBlock = assertDefined(document.createElement('div'));
+        numPageBlock.classList.add('page-page-num');
+        numPageBlock.append(pageNum);
+        pagination.append(numPageBlock);
+        pagination.append(next);
 
-        return paination;
+        return pagination;
     };
 }
 export default Pagination;
