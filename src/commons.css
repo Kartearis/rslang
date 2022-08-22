@@ -21,6 +21,11 @@
     --color-shaded: #2F4550;
     --color-backgroud: #F5F5F5;
     --color-block: #EDEDED;
-    --color-accent: #00BD9D;
-    --color-accent-2: #FE5F55;
+    --color-accent-0: var(--color-header);
+    --color-accent-1: #29A6C3;
+    --color-accent-2: #00BD9D;
+    --color-accent-3: #80AC70;
+    --color-accent-4: #FFBC42;
+    --color-accent-5: #FF8E4C;
+    --color-accent-6: #FE5F55;
 }

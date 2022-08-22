@@ -126,8 +126,8 @@ export default class StatView extends ViewInterface {
                 label: 'Correct Answers',
                 data: data,
                 backgroundColor: [
-                    getComputedStyle(this.rootElement).getPropertyValue('--color-accent'),
                     getComputedStyle(this.rootElement).getPropertyValue('--color-accent-2'),
+                    getComputedStyle(this.rootElement).getPropertyValue('--color-accent-6'),
                 ],
                 hoverOffset: 4
             }]
@@ -162,7 +162,7 @@ export default class StatView extends ViewInterface {
                 label: data.label,
                 data: data.data.map((x: {date: Date, words: number}) => x.words),
                 hoverOffset: 4,
-                borderColor: getComputedStyle(this.rootElement).getPropertyValue('--color-accent'),
+                borderColor: getComputedStyle(this.rootElement).getPropertyValue('--color-accent-2'),
                 fill: true
             }]
         };
