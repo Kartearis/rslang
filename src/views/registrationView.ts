@@ -1,4 +1,5 @@
 import UserController from '../controllers/userController';
+import { assertDefined } from '../helpers/helpers';
 import FormService from '../service/formService';
 import ViewInterface from './viewInterface';
 
@@ -15,7 +16,9 @@ class RegistrationView extends ViewInterface {
         const form = document.createElement('div');
         form.classList.add('signin-form');
         this.fillRegistrationForm(form);
-        form.addEventListener('input', () => form?.querySelector<HTMLParagraphElement>('#errMesage')!.classList.add('hidden'));
+        form.addEventListener('input', () =>
+            assertDefined(form.querySelector<HTMLParagraphElement>('#errMesage')).classList.add('hidden')
+        );
         formContainer.append(form);
         this.rootElement.innerText = '';
         this.rootElement.append(formContainer);
@@ -39,4 +42,4 @@ class RegistrationView extends ViewInterface {
     }
 }
 
-export default RegistrationView
+export default RegistrationView;

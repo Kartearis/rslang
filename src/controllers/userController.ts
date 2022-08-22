@@ -1,11 +1,12 @@
-import CookieHelper from '../helpers/cookiehelper';
 import { assertDefined, HOST } from '../helpers/helpers';
 import RouterController from './routerController';
 
 class UserController {
     async signIn(_email: string | null = null, _password: string | null = null): Promise<void> {
-        const email = _email === null ? assertDefined(document.querySelector<HTMLInputElement>('#email')).value : _email;
-        const password = _password === null ? assertDefined(document.querySelector<HTMLInputElement>('#password')).value : _password;
+        const email =
+            _email === null ? assertDefined(document.querySelector<HTMLInputElement>('#email')).value : _email;
+        const password =
+            _password === null ? assertDefined(document.querySelector<HTMLInputElement>('#password')).value : _password;
 
         const res = await fetch(`${HOST}/signin`, {
             method: 'POST',
@@ -14,17 +15,17 @@ class UserController {
             },
             body: JSON.stringify({
                 email: email,
-                password: password
-            })
+                password: password,
+            }),
         });
         if (res.ok) {
             const jwt = await res.json();
-            CookieHelper.setCookie('jwt', JSON.stringify(jwt));
+            localStorage.setItem('jwt', JSON.stringify(jwt));
             const a = new UserController();
             a.togleHeaderLink();
             RouterController.getInstance().reOpenCurrent();
         } else {
-            const errMesage = document.querySelector<HTMLParagraphElement>('#errMesage')!;
+            const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
             errMesage.classList.toggle('hidden');
         }
     }
@@ -32,7 +33,7 @@ class UserController {
         const email = assertDefined(document.querySelector<HTMLInputElement>('#email')).value;
         const password = assertDefined(document.querySelector<HTMLInputElement>('#password')).value;
         const name = assertDefined(document.querySelector<HTMLInputElement>('#name')).value;
-        let res = await fetch(`${HOST}/users`, {
+        const res = await fetch(`${HOST}/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,14 +42,14 @@ class UserController {
                 name: name,
                 email: email,
                 password: password,
-            })
+            }),
         });
         if (res.ok) {
             const a = new UserController();
             await a.signIn(email, password);
             RouterController.getInstance().navigate('/');
         } else {
-            const errMesage = document.querySelector<HTMLParagraphElement>('#errMesage')!;
+            const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
             errMesage.classList.toggle('hidden');
         }
     }
@@ -58,7 +59,7 @@ class UserController {
         assertDefined(document.querySelector('#logout')).classList.toggle('hidden');
     }
     logout(): void {
-        CookieHelper.deleteCookie('jwt');
+        localStorage.removeItem('jwt');
         this.togleHeaderLink();
     }
 }

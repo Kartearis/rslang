@@ -29,7 +29,6 @@ export default class RouterController {
             '/signin': SigninView,
             '/registration': RegistrationView,
             '/logout': LogoutView,
-
         };
         this.history = window.history;
         window.addEventListener('popstate', (event: PopStateEvent) => this.processStatePop(event));

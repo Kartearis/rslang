@@ -16,4 +16,4 @@ class LogoutView extends ViewInterface {
     }
 }
 
-export default LogoutView
+export default LogoutView;
