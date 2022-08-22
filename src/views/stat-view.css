@@ -47,7 +47,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: calc(var(--font-4) + 4px) calc(var(--font-accent) + var(--font-5) + 12px) 1fr;
-    gap: 10px 10px;
+    gap: 10px;
     align-items: center;
     justify-items: center;
 }
@@ -80,6 +80,20 @@
 
 .stat-card__pie {
     grid-column: 1/span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-card__pie-title {
+    font-size: var(--font-5);
+    margin: 0;
+    color: var(--color-header);
+}
+
+.stat-card__pie-canvas {
     width: 250px;
     height: 250px;
     background-color: var(--color-accent);
@@ -107,7 +121,6 @@
 }
 
 .stat-graph__canvas {
-    height: 50px;
+    max-height: 300px;
     width: 100%;
-    background-color: var(--color-accent);
 }
