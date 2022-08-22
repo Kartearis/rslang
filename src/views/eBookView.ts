@@ -87,6 +87,8 @@ class EbookView extends ViewInterface {
         wordCard.id = word.id;
         const markHard = assertDefined(wordCard.querySelector('#hardMark')) as HTMLButtonElement;
         markHard.addEventListener('click', (ev) => this.markHard(ev));
+        const learnedMark = assertDefined(wordCard.querySelector('#learnedMark')) as HTMLButtonElement;
+        learnedMark.addEventListener('click', (ev) => this.markLearned(ev));
         const img = assertDefined(wordCard.querySelector('#wordImg')) as HTMLImageElement;
         img.src = `${HOST}\\${word.image}`;
         const wordAudio = assertDefined(wordCard.querySelector('#wordAudio')) as HTMLAudioElement;
@@ -134,6 +136,13 @@ class EbookView extends ViewInterface {
     }
 
     markHard(ev: Event): void {
+        if (localStorage.getItem('jwt') === null) {
+            alert('Нужно авторизоватся');
+            console.log(ev);
+        }
+    }
+
+    markLearned(ev: Event): void {
         if (localStorage.getItem('jwt') === null) {
             alert('Нужно авторизоватся');
             console.log(ev);

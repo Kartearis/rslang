@@ -253,12 +253,25 @@
     align-items: center;
     justify-content: center;
 }
-.hardMark {
+.word-card__action{
     position: absolute;
+    display: flex;
+    justify-content: space-between;
+    width: 330px;
+}
+.hardMark {
     border: none;
     background: red;
+    width: 90px;
+    height: 25px;
 }
-.hardMark:hover {
+.learnedMark {
+    border: none;
+    background: greenyellow;
+    width: 90px;
+    height: 25px;
+}
+.hardMark:hover, .learnedMark:hover {
     cursor: pointer;
     font-size: 110%;
 }
