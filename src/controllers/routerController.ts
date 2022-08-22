@@ -1,3 +1,4 @@
+import EbookView from '../views/eBookView';
 import MainView from '../views/mainView';
 import TestView from '../views/test';
 import { ViewConstructor } from '../views/viewInterface';
@@ -23,6 +24,7 @@ export default class RouterController {
         this.routeConfig = {
             '/': MainView,
             '/test': TestView,
+            '/ebook': EbookView,
         };
         this.history = window.history;
         window.addEventListener('popstate', (event: PopStateEvent) => this.processStatePop(event));

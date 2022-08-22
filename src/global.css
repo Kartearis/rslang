@@ -176,3 +176,110 @@
 .nav-list__link--active {
     color: #30c5ff;
 }
+
+
+/*------------palasja-----------------*/
+.group-list{
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+}
+.group-list__group{
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+.group-list__group:hover{
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.group-list__group:nth-child(1){
+    background-color: rgb(26, 179, 179);
+}
+.group-list__group:nth-child(2){
+    background-color: rgb(63, 55, 182);
+}
+.group-list__group:nth-child(3){
+    background-color: rgb(54, 160, 40);
+}
+.group-list__group:nth-child(4){
+    background-color: rgb(37, 98, 17);
+}
+.group-list__group:nth-child(5){
+    background-color: rgb(216, 226, 17);
+}
+.group-list__group:nth-child(6){
+    background-color: rgb(176, 109, 7);
+}
+.group-list__group:nth-child(7){
+    background-color: rgb(190, 35, 35);
+}
+.ebook-container{
+    display: grid;
+    row-gap: 20px;
+    justify-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    
+}
+.word-card{
+    width: 350px;
+    background-color: dimgray;
+    padding: 10px;
+}
+.word-card img{
+    width: 100%;
+}
+.audio_start::after{
+    content: '►';
+}
+.audio_stop::after{
+    content: '■';
+}
+.word-row{
+    display: grid;
+    grid-template-columns: 50px 1fr;
+}
+.sentence-row{
+    display: grid;
+    grid-template-columns: 50px 1fr;
+}
+.audio-btn-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hardMark {
+    position: absolute;
+    border: none;
+    background: red;
+}
+.hardMark:hover {
+    cursor: pointer;
+    font-size: 110%;
+}
+.group0{
+    background-color: rgb(26, 179, 179);
+}
+.group1{
+    background-color: rgb(63, 55, 182);
+}
+.group2{
+    background-color: rgb(54, 160, 40);
+}
+.group3{
+    background-color: rgb(37, 98, 17);
+}
+.group4{
+    background-color: rgb(216, 226, 17);
+}
+.group5{
+    background-color: rgb(176, 109, 7);
+}
+.group6{
+    background-color: rgb(190, 35, 35);
+}
