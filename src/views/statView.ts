@@ -3,8 +3,7 @@ import './stat-view.css';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
-import * as assert from "assert";
-import {assertDefined} from "../helpers/helpers";
+import { assertDefined } from '../helpers/helpers';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -92,97 +91,104 @@ export default class StatView extends ViewInterface {
         this.wsPie = assertDefined(this.rootElement.querySelector('#ws .stat-card__pie-canvas'));
         this.drawPieChart(this.wsPie, [10, 90]);
         this.wpdCanvas = assertDefined(this.rootElement.querySelector('#wpd .stat-graph__canvas'));
-        this.drawLongChart(this.wpdCanvas, {label: 'Words per day', data: [
-            {date: new Date('2022-07-01'), words: 2},
-            {date: new Date('2022-07-02'), words: 5},
-            {date: new Date('2022-07-03'), words: 0},
-            {date: new Date('2022-07-04'), words: 0},
-            {date: new Date('2022-07-05'), words: 10},
-            {date: new Date('2022-07-06'), words: 13},
-            {date: new Date('2022-07-07'), words: 0},
-            {date: new Date('2022-07-08'), words: 15},
-        ]});
+        this.drawLongChart(this.wpdCanvas, {
+            label: 'Words per day',
+            data: [
+                { date: new Date('2022-07-01'), words: 2 },
+                { date: new Date('2022-07-02'), words: 5 },
+                { date: new Date('2022-07-03'), words: 0 },
+                { date: new Date('2022-07-04'), words: 0 },
+                { date: new Date('2022-07-05'), words: 10 },
+                { date: new Date('2022-07-06'), words: 13 },
+                { date: new Date('2022-07-07'), words: 0 },
+                { date: new Date('2022-07-08'), words: 15 },
+            ],
+        });
         this.lwCanvas = assertDefined(this.rootElement.querySelector('#lw .stat-graph__canvas'));
-        this.drawLongChart(this.lwCanvas, {label: 'Learned words', data: [
-                {date: new Date('2022-07-01'), words: 2},
-                {date: new Date('2022-07-02'), words: 5},
-                {date: new Date('2022-07-03'), words: 6},
-                {date: new Date('2022-07-04'), words: 6},
-                {date: new Date('2022-07-05'), words: 9},
-                {date: new Date('2022-07-06'), words: 13},
-                {date: new Date('2022-07-07'), words: 13},
-                {date: new Date('2022-07-08'), words: 15},
-            ]});
+        this.drawLongChart(this.lwCanvas, {
+            label: 'Learned words',
+            data: [
+                { date: new Date('2022-07-01'), words: 2 },
+                { date: new Date('2022-07-02'), words: 5 },
+                { date: new Date('2022-07-03'), words: 6 },
+                { date: new Date('2022-07-04'), words: 6 },
+                { date: new Date('2022-07-05'), words: 9 },
+                { date: new Date('2022-07-06'), words: 13 },
+                { date: new Date('2022-07-07'), words: 13 },
+                { date: new Date('2022-07-08'), words: 15 },
+            ],
+        });
     }
 
     drawPieChart(element: HTMLCanvasElement, data: number[]): void {
         const ctx = assertDefined(element.getContext('2d'));
         const chartData = {
-            labels: [
-                'Correct',
-                'Incorrect'
+            labels: ['Correct', 'Incorrect'],
+            datasets: [
+                {
+                    label: 'Correct Answers',
+                    data: data,
+                    backgroundColor: [
+                        getComputedStyle(this.rootElement).getPropertyValue('--color-accent-2'),
+                        getComputedStyle(this.rootElement).getPropertyValue('--color-accent-6'),
+                    ],
+                    hoverOffset: 4,
+                },
             ],
-            datasets: [{
-                label: 'Correct Answers',
-                data: data,
-                backgroundColor: [
-                    getComputedStyle(this.rootElement).getPropertyValue('--color-accent-2'),
-                    getComputedStyle(this.rootElement).getPropertyValue('--color-accent-6'),
-                ],
-                hoverOffset: 4
-            }]
         };
-        const chart = new Chart(ctx, {
+        new Chart(ctx, {
             type: 'pie',
             data: chartData,
             plugins: [ChartDataLabels],
             options: {
                 plugins: {
                     title: {
-                        display: false
+                        display: false,
                     },
                     legend: {
-                        display: false
+                        display: false,
                     },
                     datalabels: {
-                        formatter: function(value, context) {
+                        formatter: function (value, context) {
                             return assertDefined(context?.chart?.data?.labels)[context.dataIndex];
-                        }
-                    }
-                }
-            }
+                        },
+                    },
+                },
+            },
         });
     }
 
-    drawLongChart(element: HTMLCanvasElement, data: {label: string, data: {date: Date, words: number}[]}): void {
+    drawLongChart(element: HTMLCanvasElement, data: { label: string; data: { date: Date; words: number }[] }): void {
         const ctx = assertDefined(element.getContext('2d'));
         const chartData = {
-            labels: data.data.map((x: {date: Date, words: number}) => x.date.toLocaleDateString()),
-            datasets: [{
-                label: data.label,
-                data: data.data.map((x: {date: Date, words: number}) => x.words),
-                hoverOffset: 4,
-                borderColor: getComputedStyle(this.rootElement).getPropertyValue('--color-accent-2'),
-                fill: true
-            }]
+            labels: data.data.map((x: { date: Date; words: number }) => x.date.toLocaleDateString()),
+            datasets: [
+                {
+                    label: data.label,
+                    data: data.data.map((x: { date: Date; words: number }) => x.words),
+                    hoverOffset: 4,
+                    borderColor: getComputedStyle(this.rootElement).getPropertyValue('--color-accent-2'),
+                    fill: true,
+                },
+            ],
         };
-        const chart = new Chart(ctx, {
+        new Chart(ctx, {
             type: 'line',
             data: chartData,
             // plugins: [ChartDataLabels],
             options: {
                 plugins: {
                     title: {
-                        display: false
+                        display: false,
                     },
                     legend: {
-                        display: false
+                        display: false,
                     },
                     // datalabels: {
                     //
                     // }
-                }
-            }
+                },
+            },
         });
     }
 }
