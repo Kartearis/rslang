@@ -1,4 +1,4 @@
-import EbookView from "./assets/views/eBookView";
+import './global.css';
+import AppController from './controllers/appController';
 
-const eBook = new EbookView(document.querySelector<HTMLElement>('.content')!);
-eBook.drawEbook();;
+new AppController();
