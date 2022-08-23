@@ -249,11 +249,16 @@
     flex-direction: column;
     justify-content: space-between;
     padding-bottom: 10px;
-    border: solid 2px #2F4550;
+    border: solid 4px #2F4550;
     box-shadow: 2px 13px 5px -2px rgb(34 60 80 / 25%);
     border-radius: 10px;
 }
-
+.word-card_hard{
+    border-color: red;
+}
+.word-card_easy{
+    border-color: green;
+}
 .word-card img {
     width: 100%;
 }

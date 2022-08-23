@@ -11,6 +11,23 @@ class EBookController {
         }
         return null;
     }
+    async getGroupWordsUser(group: number, page: number): Promise<wordType[] | null> {
+        const { userId, jwt } = localStorage;
+        const response = await fetch(`${HOST}/users/${userId}/aggregatedWords?group=${group}&page=${page}&wordsPerPage=20`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${jwt}`,
+                
+              },
+        });
+        if (response.status === 200) {
+            let arr = await response.json();
+            let arrWords: wordType[] = arr[0].paginatedResults;
+            return arrWords;
+        }
+        return null;
+    }
 }
 
 export default EBookController;

@@ -1,21 +1,24 @@
 import EBookController from '../controllers/eBookController';
 import { assertDefined, HOST } from '../helpers/helpers';
-import { wordType } from '../helpers/types';
+import { wordProperty, wordStatus, wordType } from '../helpers/types';
 import Pagination from '../helpers/pagination';
 import ViewInterface from './viewInterface';
 import UserController from '../controllers/userController';
+import WordController from '../controllers/wordController';
 
 class EbookView extends ViewInterface {
     group = 0;
     pagination: Pagination;
     eBookController: EBookController;
     userController: UserController;
+    wordController: WordController;
     constructor(rootElement: HTMLElement) {
         super(rootElement);
         this.eBookController = new EBookController();
         this.pagination = new Pagination();
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
+        this.wordController = WordController.getInstance();
     }
 
     async show(): Promise<void> {
@@ -26,8 +29,10 @@ class EbookView extends ViewInterface {
         this.rootElement.append(pagination);
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-
-        const words = await this.eBookController.getGroupWords(this.group, this.pagination.page);
+        const words = this.userController.isSignin() ?
+            await this.eBookController.getGroupWordsUser(this.group, this.pagination.page):
+            await this.eBookController.getGroupWords(this.group, this.pagination.page);
+            console.log(words);
         const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
         if (words !== null) {
             words.forEach((w) => {
@@ -44,7 +49,9 @@ class EbookView extends ViewInterface {
         assertDefined(document.querySelector('.ebook-container')).remove();
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-        const words = await this.eBookController.getGroupWords(this.group, this.pagination.page);
+        const words = this.userController.isSignin() ?
+            await this.eBookController.getGroupWordsUser(this.group, this.pagination.page):
+            await this.eBookController.getGroupWords(this.group, this.pagination.page);
         const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
 
         if (words !== null) {
@@ -90,8 +97,13 @@ class EbookView extends ViewInterface {
 
     getWordCard(word: wordType, template: HTMLDivElement): HTMLElement {
         const wordCard = template;
-        wordCard.id = word.id;
-        assertDefined(wordCard.querySelector('.word-card')).classList.add(`group${this.group}`);
+        const card = assertDefined(wordCard.querySelector('.word-card')) as HTMLDivElement;
+        card.classList.add(`group${this.group}`);
+        card.dataset.cardId = word._id === undefined ? word.id : word._id;
+        if(word.userWord !== undefined){
+            card.classList.add(`word-card_${word.userWord.difficulty}`);
+        }
+        
         const audioBtn = assertDefined(wordCard.querySelector('#audioBtn')) as HTMLButtonElement;
         this.addAudioAction(word.audio, word.audioMeaning, word.audioExample, audioBtn);
         const img = assertDefined(wordCard.querySelector('#wordImg')) as HTMLImageElement;
@@ -109,8 +121,8 @@ class EbookView extends ViewInterface {
         const markHard = assertDefined(wordCard.querySelector('#hardMark')) as HTMLButtonElement;
         const learnedMark = assertDefined(wordCard.querySelector('#learnedMark')) as HTMLButtonElement;
         if(this.userController.isSignin()){
-            markHard.addEventListener('click', (ev) => this.markHard(ev));
-            learnedMark.addEventListener('click', (ev) => this.markLearned(ev));
+            markHard.addEventListener('click', (ev) => this.markCard(ev, wordStatus.hard));
+            learnedMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
         } else {
             markHard.remove();
             learnedMark.remove();
@@ -150,18 +162,33 @@ class EbookView extends ViewInterface {
         target.classList.toggle('word-action__audio_stop');
     }
 
-    private markHard(ev: Event): void {
-        if (localStorage.getItem('jwt') === null) {
-            alert('Нужно авторизоватся');
-            console.log(ev);
+    private async markCard(ev: Event, status: wordStatus) {
+        const target = ev.target as HTMLButtonElement;
+        const card = assertDefined(target.closest<HTMLElement>('.word-card'));
+        const id = assertDefined(card.dataset.cardId);
+        const otherStatus = status === wordStatus.easy ? wordStatus.hard : wordStatus.easy;
+        const wortUpdate: wordProperty = {
+            difficulty: status,
+            optional:{}
         }
-    }
-
-    private markLearned(ev: Event): void {
-        if (localStorage.getItem('jwt') === null) {
-            alert('Нужно авторизоватся');
-            console.log(ev);
+        if(card.classList.contains(`word-card_${status}`)){
+            const succesAction = () =>{
+                card.classList.remove(`word-card_${status}`)
+            }
+            await this.wordController.deleteStatus(id,  succesAction);
+        } else if(card.classList.contains(`word-card_${otherStatus}`)){
+            const succesAction = () =>{
+                card.classList.remove(`word-card_${otherStatus}`);
+                card.classList.add(`word-card_${status}`)
+            }
+            await this.wordController.updateStatus(id, wortUpdate, succesAction)
+        } else {
+            const succesAction = () =>{
+                card.classList.add(`word-card_${status}`)
+            }
+                await this.wordController.addStatus(id, wortUpdate, succesAction)
         }
+        
     }
 }
 

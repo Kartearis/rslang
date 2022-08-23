@@ -25,8 +25,13 @@ class SigninView extends ViewInterface {
         form.append(email);
         const pass = FormService.getInput(['login-form__pass'], 'password', 'Пароль...', 'password');
         form.append(pass);
-        const submit = FormService.getSubmitBtn(['login-form__submit'], 'Войти', this.controller.signIn);
+        const submit = FormService.getSubmitBtn(['login-form__submit'], 'Войти', this.signinAction);
         form.append(submit);
+    }
+    private signinAction(){
+        const email = assertDefined(document.querySelector<HTMLInputElement>('#email')).value;
+        const password = assertDefined(document.querySelector<HTMLInputElement>('#password')).value;
+        UserController.getInstance().signIn(email, password);
     }
 }
 

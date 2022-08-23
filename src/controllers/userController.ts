@@ -1,4 +1,5 @@
-import { assertDefined, HOST } from '../helpers/helpers';
+import { assertDefined, HOST, TOKEN_NAME, USER_NAME } from '../helpers/helpers';
+import { signInResponceType } from '../helpers/types';
 import RouterController from './routerController';
 
 class UserController {
@@ -10,12 +11,7 @@ class UserController {
         return UserController.instance;
     }
 
-    async signIn(_email: string | null = null, _password: string | null = null): Promise<void> {
-        const email =
-            _email === null ? assertDefined(document.querySelector<HTMLInputElement>('#email')).value : _email;
-        const password =
-            _password === null ? assertDefined(document.querySelector<HTMLInputElement>('#password')).value : _password;
-
+    async signIn(email: string, password: string): Promise<void> {
         const res = await fetch(`${HOST}/signin`, {
             method: 'POST',
             headers: {
@@ -27,8 +23,9 @@ class UserController {
             }),
         });
         if (res.ok) {
-            const jwt = await res.json();
-            localStorage.setItem('jwt', JSON.stringify(jwt));
+            const {token, userId} = await res.json() as signInResponceType;
+            localStorage.setItem(TOKEN_NAME, token);
+            localStorage.setItem(USER_NAME, userId);
             UserController.getInstance().togleHeaderLink();
             RouterController.getInstance().navigate('/');
         } else {
@@ -65,11 +62,11 @@ class UserController {
         assertDefined(document.querySelector('#logout')).classList.toggle('hidden');
     }
     logout(): void {
-        localStorage.removeItem('jwt');
+        localStorage.removeItem(TOKEN_NAME);
         this.togleHeaderLink();
     }
     isSignin() {
-        return localStorage.getItem('jwt') !== null;
+        return localStorage.getItem(TOKEN_NAME) !== null;
     }
 }
 
