@@ -2,35 +2,25 @@ import UserController from '../controllers/userController';
 import { assertDefined } from '../helpers/helpers';
 import FormService from '../service/formService';
 import ViewInterface from './viewInterface';
-
+import './authView.css';
 class RegistrationView extends ViewInterface {
     controller: UserController;
     constructor(rootElement: HTMLElement) {
         super(rootElement);
-        this.controller = new UserController();
+        this.controller = UserController.getInstance();
     }
 
     show(): void {
-        const formContainer = document.createElement('div');
-        formContainer.classList.add('form-container');
-        const form = document.createElement('div');
-        form.classList.add('signin-form');
+        const form = FormService.getAuthForm();
         this.fillRegistrationForm(form);
         form.addEventListener('input', () =>
             assertDefined(form.querySelector<HTMLParagraphElement>('#errMesage')).classList.add('hidden')
         );
-        formContainer.append(form);
         this.rootElement.innerText = '';
-        this.rootElement.append(formContainer);
+        this.rootElement.append(form);
     }
 
     private fillRegistrationForm(form: HTMLElement) {
-        const errMesage = document.createElement('p');
-        errMesage.innerText = 'Некоректный логин или пароль';
-        errMesage.classList.add('errMesage');
-        errMesage.classList.add('hidden');
-        errMesage.id = 'errMesage';
-        form.append(errMesage);
         const name = FormService.getInput(['reg-form__name'], 'text', 'Имя...', 'name');
         form.append(name);
         const email = FormService.getInput(['reg-form__login'], 'email', 'email...', 'email');

@@ -180,13 +180,3 @@
 .nav-list__link--active {
     color: #30c5ff;
 }
-
-
-/* ------------ PALASJA ------------------ */
-.errMesage {
-    color: red;
-}
-
-.hidden {
-    display: none;
-}

@@ -17,6 +17,18 @@ class FormService {
         submitBtn.addEventListener('click', () => action());
         return submitBtn;
     }
+    static getAuthForm(): HTMLDivElement {
+        const form = document.createElement('div');
+        form.classList.add('signin-form');
+
+        const errMesage = document.createElement('p');
+        errMesage.innerText = 'Некоректный логин или пароль';
+        errMesage.classList.add('errMesage');
+        errMesage.classList.add('hidden');
+        errMesage.id = 'errMesage';
+        form.append(errMesage);
+        return form;
+    }
 }
 
 export default FormService;

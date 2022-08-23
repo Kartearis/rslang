@@ -6,7 +6,7 @@ class LogoutView extends ViewInterface {
     controller: UserController;
     constructor(rootElement: HTMLElement) {
         super(rootElement);
-        this.controller = new UserController();
+        this.controller = UserController.getInstance();
     }
 
     show(): void {

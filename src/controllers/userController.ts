@@ -2,6 +2,14 @@ import { assertDefined, HOST } from '../helpers/helpers';
 import RouterController from './routerController';
 
 class UserController {
+    private static instance: UserController;
+    static getInstance(): UserController {
+        if (UserController.instance === undefined) {
+            UserController.instance = new UserController();
+        }
+        return UserController.instance;
+    }
+
     async signIn(_email: string | null = null, _password: string | null = null): Promise<void> {
         const email =
             _email === null ? assertDefined(document.querySelector<HTMLInputElement>('#email')).value : _email;
@@ -21,9 +29,8 @@ class UserController {
         if (res.ok) {
             const jwt = await res.json();
             localStorage.setItem('jwt', JSON.stringify(jwt));
-            const a = new UserController();
-            a.togleHeaderLink();
-            RouterController.getInstance().reOpenCurrent();
+            UserController.getInstance().togleHeaderLink();
+            RouterController.getInstance().navigate('/');
         } else {
             const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
             errMesage.classList.toggle('hidden');
@@ -45,8 +52,7 @@ class UserController {
             }),
         });
         if (res.ok) {
-            const a = new UserController();
-            await a.signIn(email, password);
+            await UserController.getInstance().signIn(email, password);
             RouterController.getInstance().navigate('/');
         } else {
             const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
@@ -61,6 +67,9 @@ class UserController {
     logout(): void {
         localStorage.removeItem('jwt');
         this.togleHeaderLink();
+    }
+    isSignin() {
+        return localStorage.getItem('jwt') !== null;
     }
 }
 
