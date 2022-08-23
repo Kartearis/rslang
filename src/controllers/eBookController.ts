@@ -13,16 +13,19 @@ class EBookController {
     }
     async getGroupWordsUser(group: number, page: number): Promise<wordType[] | null> {
         const { userId, jwt } = localStorage;
-        const response = await fetch(`${HOST}/users/${userId}/aggregatedWords?group=${group}&page=${page}&wordsPerPage=20`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${jwt}`,
-            },
-        });
+        const response = await fetch(
+            `${HOST}/users/${userId}/aggregatedWords?group=${group}&page=${page}&wordsPerPage=20`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${jwt}`,
+                },
+            }
+        );
         if (response.status === 200) {
-            let arr = await response.json();
-            let arrWords: wordType[] = arr[0].paginatedResults;
+            const arr = await response.json();
+            const arrWords: wordType[] = arr[0].paginatedResults;
             return arrWords;
         }
         return null;
@@ -30,16 +33,19 @@ class EBookController {
     async getHardWordsUser(): Promise<wordType[] | null> {
         const { userId, jwt } = localStorage;
         const max_words = 999;
-        const response = await fetch(`${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${max_words}&filter={"userWord.difficulty":"hard"}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${jwt}`,
-            },
-        });
+        const response = await fetch(
+            `${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${max_words}&filter={"userWord.difficulty":"hard"}`,
+            {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${jwt}`,
+                },
+            }
+        );
         if (response.status === 200) {
-            let arr = await response.json();
-            let arrWords: wordType[] = arr[0].paginatedResults;
+            const arr = await response.json();
+            const arrWords: wordType[] = arr[0].paginatedResults;
             return arrWords;
         }
         return null;

@@ -1,3 +1,4 @@
+//word have id, but words has _id field and userWord obhect
 type wordType = {
     id: string;
     _id?: string;
@@ -14,20 +15,24 @@ type wordType = {
     wordTranslate: string;
     textMeaningTranslate: string;
     textExampleTranslate: string;
-    userWord?: {
-        difficulty: wordStatus
-      }
+    userWord?: wordProperty;
 };
 type signInResponceType = {
-    message: string,
-    token: string,
-    refreshToken: string,
-    userId: string,
-    name: string
-  }
-enum wordStatus { hard = 'hard', easy = 'easy'};
+    message: string;
+    token: string;
+    refreshToken: string;
+    userId: string;
+    name: string;
+};
+enum wordStatus {
+    hard = 'hard',
+    easy = 'easy',
+}
 type wordProperty = {
-    difficulty: string,
-    optional: {}
-  }
+    difficulty: wordStatus;
+    optional: {
+        //linter error on empty object{}, after add any field remove id
+        id?: number;
+    };
+};
 export { signInResponceType, wordType, wordStatus, wordProperty };

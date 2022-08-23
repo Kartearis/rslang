@@ -18,6 +18,7 @@ export default class AppController {
             router.navigate('/registration')
         );
         assertDefined(document.querySelector('#logout')).addEventListener('click', () => router.navigate('/logout'));
+        //hidde signin and registration button after reload page
         if (userController.isSignin()) {
             assertDefined(document.querySelector('#signin')).classList.add('hidden');
             assertDefined(document.querySelector('#registration')).classList.add('hidden');

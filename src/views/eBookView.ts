@@ -1,11 +1,11 @@
 import EBookController from '../controllers/eBookController';
-import { assertDefined, HOST } from '../helpers/helpers';
+import { assertDefined, HARD_WORD_PAGE_NUM, HOST } from '../helpers/helpers';
 import { wordProperty, wordStatus, wordType } from '../helpers/types';
 import Pagination from '../helpers/pagination';
 import ViewInterface from './viewInterface';
 import UserController from '../controllers/userController';
 import UserWordController from '../controllers/wordController';
-
+import './eBook.css';
 class EbookView extends ViewInterface {
     group = 0;
     pagination: Pagination;
@@ -30,12 +30,12 @@ class EbookView extends ViewInterface {
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
         let words: wordType[] | null = [];
-        if (this.group === 6) {
+        if (this.group === HARD_WORD_PAGE_NUM) {
             words = await this.eBookController.getHardWordsUser();
         } else {
-            words = this.userController.isSignin() ?
-                await this.eBookController.getGroupWordsUser(this.group, this.pagination.page) :
-                await this.eBookController.getGroupWords(this.group, this.pagination.page);
+            words = this.userController.isSignin()
+                ? await this.eBookController.getGroupWordsUser(this.group, this.pagination.page)
+                : await this.eBookController.getGroupWords(this.group, this.pagination.page);
         }
         const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
         if (words !== null) {
@@ -53,12 +53,12 @@ class EbookView extends ViewInterface {
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
         let words: wordType[] | null = [];
-        if (this.group === 6) {
+        if (this.group === HARD_WORD_PAGE_NUM) {
             words = await this.eBookController.getHardWordsUser();
         } else {
-            words = this.userController.isSignin() ?
-                await this.eBookController.getGroupWordsUser(this.group, this.pagination.page) :
-                await this.eBookController.getGroupWords(this.group, this.pagination.page);
+            words = this.userController.isSignin()
+                ? await this.eBookController.getGroupWordsUser(this.group, this.pagination.page)
+                : await this.eBookController.getGroupWords(this.group, this.pagination.page);
         }
         const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
         if (words !== null) {
@@ -80,7 +80,7 @@ class EbookView extends ViewInterface {
             ul.append(li);
         }
         if (this.userController.isSignin()) {
-            const li = this.getGroupLi(`Сложные слова`, 6);
+            const li = this.getGroupLi(`Сложные слова`, HARD_WORD_PAGE_NUM);
             ul.append(li);
         }
         return ul;
@@ -89,20 +89,22 @@ class EbookView extends ViewInterface {
         const li = document.createElement('li');
         li.textContent = groupName;
         li.classList.add('group-list__group');
-        if (this.group === groupNum) li.classList.add('active-group');
+        if (this.group === groupNum) li.classList.add('group-list__group_active');
         li.dataset.group = groupNum.toString();
         li.addEventListener('click', (ev: Event) => {
             const target = ev.target as HTMLButtonElement;
             this.group = Number(target.dataset.group);
             this.pagination.toFirstPage();
             localStorage.setItem('group', this.group.toString());
-            assertDefined(document.querySelector('.active-group')).classList.remove('active-group');
-            target.classList.add('active-group');
+            assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
+                'group-list__group_active'
+            );
+            target.classList.add('group-list__group_active');
             this.reDraw();
         });
         return li;
     }
-    getWordCard(word: wordType, template: HTMLDivElement): HTMLElement {
+    private getWordCard(word: wordType, template: HTMLDivElement): HTMLElement {
         const wordCard = template;
         const card = assertDefined(wordCard.querySelector('.word-card')) as HTMLDivElement;
         card.classList.add(`group${this.group}`);
@@ -142,24 +144,28 @@ class EbookView extends ViewInterface {
         const wordAudio = new Audio();
         wordAudio.setAttribute('src', `${HOST}\\${audio}`);
         wordAudio.addEventListener('ended', (ev) => {
-            var target = ev.target as HTMLAudioElement;
-            var cur_src = target.getAttribute('src');
+            const target = ev.target as HTMLAudioElement;
+            const cur_src = target.getAttribute('src');
             switch (cur_src) {
-                case `${HOST}\\${audio}`: target.setAttribute('src', `${HOST}\\${audioMeaning}`); break;
-                case `${HOST}\\${audioMeaning}`: target.setAttribute('src', `${HOST}\\${audioExample}`); break;
+                case `${HOST}\\${audio}`:
+                    target.setAttribute('src', `${HOST}\\${audioMeaning}`);
+                    break;
+                case `${HOST}\\${audioMeaning}`:
+                    target.setAttribute('src', `${HOST}\\${audioExample}`);
+                    break;
                 case `${HOST}\\${audioExample}`:
                     target.setAttribute('src', `${HOST}\\${audio}`);
                     this.togleAudioBtn(playBtn);
                     return;
             }
             target.play();
-        })
+        });
         playBtn.addEventListener('click', (ev: Event) => {
             const target = ev.target as HTMLButtonElement;
-            let currentAudio = wordAudio;
+            const currentAudio = wordAudio;
             if (target.classList.contains('word-action__audio_start')) {
                 currentAudio.play();
-                this.togleAudioBtn(playBtn)
+                this.togleAudioBtn(playBtn);
             } else {
                 currentAudio.pause();
                 this.togleAudioBtn(playBtn);
@@ -177,33 +183,33 @@ class EbookView extends ViewInterface {
         const id = assertDefined(card.dataset.cardId);
         const wortUpdate: wordProperty = {
             difficulty: status,
-            optional: {}
-        }
-        let group = this.group;
+            optional: {},
+        };
+        const group = this.group;
         if (status === wordStatus.hard) {
             const succesAction = () => {
                 card.classList.add(`word-card_${status}`);
                 target.disabled = true;
-                console.log(group);
-            }
+            };
             await this.wordController.addUserWord(id, wortUpdate, succesAction);
         } else {
             const markHard = assertDefined(card.querySelector('#hardMark')) as HTMLButtonElement;
             const succesAction = () => {
-                if (group === 6) {
+                //if group is hard remove from page, else change style
+                if (group === HARD_WORD_PAGE_NUM) {
                     card.remove();
                 } else {
                     card.classList.remove(`word-card_${wordStatus.hard}`);
                     card.classList.add(`word-card_${status}`);
                     target.disabled = true;
                     markHard.disabled = true;
-                };
-            }
+                }
+            };
+            //if word in hard group - change, else that new user word and create
             if (card.classList.contains(`word-card_${wordStatus.hard}`)) {
                 await this.wordController.updateUserWord(id, wortUpdate, succesAction);
             } else {
                 await this.wordController.addUserWord(id, wortUpdate, succesAction);
-
             }
         }
     }

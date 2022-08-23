@@ -1,6 +1,5 @@
-import { HOST, TOKEN_NAME } from "../helpers/helpers";
-import { wordProperty, wordStatus } from "../helpers/types";
-
+import { HOST } from '../helpers/helpers';
+import { wordProperty } from '../helpers/types';
 
 class UserWordController {
     private static instance: UserWordController;
@@ -17,11 +16,11 @@ class UserWordController {
         const resp = await fetch(`${HOST}/users/${userId}/words/${wordId}`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${jwt}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                Authorization: `Bearer ${jwt}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(word)
+            body: JSON.stringify(word),
         });
         if (resp.ok) {
             succesAction();
@@ -32,11 +31,11 @@ class UserWordController {
         const resp = await fetch(`${HOST}/users/${userId}/words/${wordId}`, {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${jwt}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                Authorization: `Bearer ${jwt}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(word)
+            body: JSON.stringify(word),
         });
         if (resp.ok) {
             succesAction();
@@ -47,8 +46,8 @@ class UserWordController {
         const resp = await fetch(`${HOST}/users/${userId}/words/${wordId}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${jwt}`,
-                'Accept': 'application/json',
+                Authorization: `Bearer ${jwt}`,
+                Accept: 'application/json',
             },
         });
         if (resp.ok) {
@@ -57,4 +56,4 @@ class UserWordController {
     }
 }
 
-export default UserWordController
+export default UserWordController;

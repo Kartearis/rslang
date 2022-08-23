@@ -1,5 +1,5 @@
 import { assertDefined } from './helpers';
-import './pagination.css'
+import './pagination.css';
 
 class Pagination {
     page: number;

@@ -23,7 +23,7 @@ class UserController {
             }),
         });
         if (res.ok) {
-            const {token, userId} = await res.json() as signInResponceType;
+            const { token, userId } = (await res.json()) as signInResponceType;
             localStorage.setItem(TOKEN_NAME, token);
             localStorage.setItem(USER_NAME, userId);
             UserController.getInstance().togleHeaderLink();
