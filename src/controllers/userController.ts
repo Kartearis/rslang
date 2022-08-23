@@ -10,7 +10,7 @@ class UserController {
         }
         return UserController.instance;
     }
-
+    //after signin token save to localstorage as jwt, user as userId
     async signIn(email: string, password: string): Promise<void> {
         const res = await fetch(`${HOST}/signin`, {
             method: 'POST',
@@ -63,6 +63,7 @@ class UserController {
     }
     logout(): void {
         localStorage.removeItem(TOKEN_NAME);
+        localStorage.removeItem(USER_NAME);
         this.togleHeaderLink();
     }
     isSignin() {
