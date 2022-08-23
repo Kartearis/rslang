@@ -253,12 +253,15 @@
     box-shadow: 2px 13px 5px -2px rgb(34 60 80 / 25%);
     border-radius: 10px;
 }
-.word-card_hard{
+
+.word-card_hard {
     border-color: red;
 }
-.word-card_easy{
+
+.word-card_easy {
     border-color: green;
 }
+
 .word-card img {
     width: 100%;
 }
@@ -267,14 +270,17 @@
     padding: 10px;
     color: #2F4550;
 }
+
 .word-info__meaning,
-.word-info__example{
+.word-info__example {
     margin-bottom: 0;
 }
+
 .word-info__meaning_translate,
-.word-info__example_translate{
+.word-info__example_translate {
     margin-top: 0;
 }
+
 .word-action__audio {
     border: solid 3px #2F4550;
     border-radius: 30px;
@@ -320,10 +326,15 @@
 }
 
 .word-action__audio:hover,
-.word-action__hardMark:hover,
-.word-action__learnedMark:hover {
+.word-action__hardMark:hover:enabled,
+.word-action__learnedMark:hover:enabled {
     cursor: pointer;
     font-size: 110%;
+}
+
+.word-action__hardMark:disabled,
+.word-action__learnedMark:disabled {
+    border-color: gray;
 }
 
 .group0 {

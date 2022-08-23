@@ -18,8 +18,24 @@ class EBookController {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${jwt}`,
-                
-              },
+
+            },
+        });
+        if (response.status === 200) {
+            let arr = await response.json();
+            let arrWords: wordType[] = arr[0].paginatedResults;
+            return arrWords;
+        }
+        return null;
+    }
+    async getHardWordsUser(): Promise<wordType[] | null> {
+        const { userId, jwt } = localStorage;
+        const response = await fetch(`${HOST}/users/${userId}/aggregatedWords?filter={"userWord.difficulty":"hard"}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${jwt}`,
+            },
         });
         if (response.status === 200) {
             let arr = await response.json();
