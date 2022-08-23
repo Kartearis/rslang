@@ -247,8 +247,10 @@
     width: 350px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 10px;
     border: solid 2px #2F4550;
-    box-shadow: 2px 13px 5px -2px rgba(34, 60, 80, 0.25);
+    box-shadow: 2px 13px 5px -2px rgb(34 60 80 / 25%);
     border-radius: 10px;
 }
 
@@ -256,40 +258,37 @@
     width: 100%;
 }
 
-.word-info {
+.word-card__info {
     padding: 10px;
     color: #2F4550;
 }
-
-.audio {
+.word-info__meaning,
+.word-info__example{
+    margin-bottom: 0;
+}
+.word-info__meaning_translate,
+.word-info__example_translate{
+    margin-top: 0;
+}
+.word-action__audio {
     border: solid 3px #2F4550;
     border-radius: 30px;
     width: 60px;
     height: 60px;
 }
 
-.audio_start::after {
+.word-action__audio_start::after {
     content: '▷';
     font-weight: bold;
     font-size: 40px;
     margin-right: -5px;
 }
 
-.audio_stop::after {
+.word-action__audio_stop::after {
     content: '■';
     font-weight: bold;
     line-height: 0.5;
     font-size: 40px;
-}
-
-.word-card__word-row {
-    display: grid;
-    grid-template-columns: 50px 1fr;
-}
-
-.sentence-row {
-    display: grid;
-    grid-template-columns: 50px 1fr;
 }
 
 .audio-btn-block {
@@ -305,8 +304,8 @@
     align-items: center;
 }
 
-.word-card__action_hardMark,
-.word-card__action_learnedMark {
+.word-action__hardMark,
+.word-action__learnedMark {
     border: solid 4px #2F4550;
     border-radius: 20px;
     width: 40px;
@@ -315,9 +314,9 @@
     background-color: inherit;
 }
 
-.audio:hover,
-.word-card__action_hardMark:hover,
-.word-card__action_learnedMark:hover {
+.word-action__audio:hover,
+.word-action__hardMark:hover,
+.word-action__learnedMark:hover {
     cursor: pointer;
     font-size: 110%;
 }

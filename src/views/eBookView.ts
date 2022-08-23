@@ -3,16 +3,19 @@ import { assertDefined, HOST } from '../helpers/helpers';
 import { wordType } from '../helpers/types';
 import Pagination from '../helpers/pagination';
 import ViewInterface from './viewInterface';
+import UserController from '../controllers/userController';
 
 class EbookView extends ViewInterface {
     group = 0;
     pagination: Pagination;
     eBookController: EBookController;
+    userController: UserController;
     constructor(rootElement: HTMLElement) {
         super(rootElement);
         this.eBookController = new EBookController();
         this.pagination = new Pagination();
-        this.group = sessionStorage.getItem('group') !== undefined ? Number(sessionStorage.getItem('group')) : 0;
+        this.userController = UserController.getInstance();
+        this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
     }
 
     async show(): Promise<void> {
@@ -75,10 +78,13 @@ class EbookView extends ViewInterface {
             });
             ul.append(li);
         }
-        const li = document.createElement('li');
-        li.textContent = `Сложные слова`;
-        li.classList.add('group-list__group');
+        if(this.userController.isSignin()){
+            const li = document.createElement('li');
+            li.textContent = `Сложные слова`;
+            li.classList.add('group-list__group');
+            
         ul.append(li);
+        }
         return ul;
     }
 
@@ -86,12 +92,8 @@ class EbookView extends ViewInterface {
         const wordCard = template;
         wordCard.id = word.id;
         assertDefined(wordCard.querySelector('.word-card')).classList.add(`group${this.group}`);
-        const markHard = assertDefined(wordCard.querySelector('#hardMark')) as HTMLButtonElement;
-        markHard.addEventListener('click', (ev) => this.markHard(ev));
         const audioBtn = assertDefined(wordCard.querySelector('#audioBtn')) as HTMLButtonElement;
         this.addAudioAction(word.audio, word.audioMeaning, word.audioExample, audioBtn);
-        const learnedMark = assertDefined(wordCard.querySelector('#learnedMark')) as HTMLButtonElement;
-        learnedMark.addEventListener('click', (ev) => this.markLearned(ev));
         const img = assertDefined(wordCard.querySelector('#wordImg')) as HTMLImageElement;
         img.src = `${HOST}\\${word.image}`;
         const wordInfo = assertDefined(wordCard.querySelector('#word')) as HTMLParagraphElement;
@@ -104,40 +106,48 @@ class EbookView extends ViewInterface {
         example.insertAdjacentHTML('afterbegin', word.textExample);
         const exampleTransalte = assertDefined(wordCard.querySelector('#exampleTransalte')) as HTMLParagraphElement;
         exampleTransalte.innerText = word.textExampleTranslate;
+        const markHard = assertDefined(wordCard.querySelector('#hardMark')) as HTMLButtonElement;
+        const learnedMark = assertDefined(wordCard.querySelector('#learnedMark')) as HTMLButtonElement;
+        if(this.userController.isSignin()){
+            markHard.addEventListener('click', (ev) => this.markHard(ev));
+            learnedMark.addEventListener('click', (ev) => this.markLearned(ev));
+        } else {
+            markHard.remove();
+            learnedMark.remove();
+        }
         return wordCard;
     }
     private addAudioAction(audio: string, audioMeaning: string, audioExample: string, playBtn: HTMLButtonElement) {
         const wordAudio = new Audio();
-
-        wordAudio.onended = function (e) {
-            var target = e.target as HTMLAudioElement;
+        wordAudio.setAttribute('src', `${HOST}\\${audio}`);
+        wordAudio.addEventListener('ended', (ev) => {
+            var target = ev.target as HTMLAudioElement;
             var cur_src = target.getAttribute('src');
             switch (cur_src) {
                 case `${HOST}\\${audio}`: target.setAttribute('src', `${HOST}\\${audioMeaning}`); break;
                 case `${HOST}\\${audioMeaning}`: target.setAttribute('src', `${HOST}\\${audioExample}`); break;
-                case `${HOST}\\${audioExample}`: target.setAttribute('src', `${HOST}\\${audio}`); break;
+                case `${HOST}\\${audioExample}`: 
+                    target.setAttribute('src', `${HOST}\\${audio}`); 
+                    this.togleAudioBtn(playBtn);
+                    return;
             }
             target.play();
-        };
-        wordAudio.setAttribute('src', `${HOST}\\${audio}`);
-
+        })
         playBtn.addEventListener('click', (ev: Event) => {
             const target = ev.target as HTMLButtonElement;
             let currentAudio = wordAudio;
-            if (target.classList.contains('audio_start')) {
+            if (target.classList.contains('word-action__audio_start')) {
                 currentAudio.play();
                 this.togleAudioBtn(playBtn)
             } else {
                 currentAudio.pause();
-                this.togleAudioBtn(playBtn)
+                this.togleAudioBtn(playBtn);
             }
         });
-        // wordAudio.addEventListener('play', () => this.togleAudioBtn(playBtn));
-        // wordAudio.addEventListener('pause', () => this.togleAudioBtn(playBtn));
     }
     private togleAudioBtn(target: HTMLButtonElement) {
-        target.classList.toggle('audio_start');
-        target.classList.toggle('audio_stop');
+        target.classList.toggle('word-action__audio_start');
+        target.classList.toggle('word-action__audio_stop');
     }
 
     private markHard(ev: Event): void {

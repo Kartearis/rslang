@@ -5,6 +5,7 @@ import TestView from '../views/test';
 import { ViewConstructor } from '../views/viewInterface';
 import RegistrationView from '../views/registrationView';
 import LogoutView from '../views/logoutView';
+import SigninView from '../views/signinView';
 
 export type RouteConfig = Record<string, ViewConstructor>;
 
