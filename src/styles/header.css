@@ -1,0 +1,54 @@
+header {
+  background-color: #F5F5F5;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 50px;
+}
+
+header .wrapper {
+  width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+header ul {
+  display: flex;
+  align-items: center;
+
+
+}
+
+header li { 
+  list-style-type: none;
+  margin-right: 20px;
+}
+
+header li a {
+  background-color: #528FE9;
+  text-decoration: none;
+  color: white;
+    font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  padding: 7px 15px;
+  border-radius: 15px;
+  display: block;
+  font-family: 'Inter', sans-serif;
+  transition: .3s;
+}
+
+header li a:hover {
+  transform: scale(1.1);
+}
+
+.auth-logo {
+  cursor: pointer;
+  transition: .3s;
+}
+
+.auth-logo:hover {
+  transform: scale(1.2);
+}
