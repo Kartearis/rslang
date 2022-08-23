@@ -18,7 +18,6 @@ class EBookController {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${jwt}`,
-
             },
         });
         if (response.status === 200) {
@@ -30,7 +29,8 @@ class EBookController {
     }
     async getHardWordsUser(): Promise<wordType[] | null> {
         const { userId, jwt } = localStorage;
-        const response = await fetch(`${HOST}/users/${userId}/aggregatedWords?filter={"userWord.difficulty":"hard"}`, {
+        const max_words = 999;
+        const response = await fetch(`${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${max_words}&filter={"userWord.difficulty":"hard"}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',

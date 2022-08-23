@@ -4,21 +4,21 @@ import { wordProperty, wordStatus, wordType } from '../helpers/types';
 import Pagination from '../helpers/pagination';
 import ViewInterface from './viewInterface';
 import UserController from '../controllers/userController';
-import WordController from '../controllers/wordController';
+import UserWordController from '../controllers/wordController';
 
 class EbookView extends ViewInterface {
     group = 0;
     pagination: Pagination;
     eBookController: EBookController;
     userController: UserController;
-    wordController: WordController;
+    wordController: UserWordController;
     constructor(rootElement: HTMLElement) {
         super(rootElement);
         this.eBookController = new EBookController();
         this.pagination = new Pagination();
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
-        this.wordController = WordController.getInstance();
+        this.wordController = UserWordController.getInstance();
     }
 
     async show(): Promise<void> {
@@ -33,7 +33,7 @@ class EbookView extends ViewInterface {
         if (this.group === 6) {
             words = await this.eBookController.getHardWordsUser();
         } else {
-            const words = this.userController.isSignin() ?
+            words = this.userController.isSignin() ?
                 await this.eBookController.getGroupWordsUser(this.group, this.pagination.page) :
                 await this.eBookController.getGroupWords(this.group, this.pagination.page);
         }
@@ -45,7 +45,6 @@ class EbookView extends ViewInterface {
                 bookContainer.append(wordCard);
             });
         }
-
         this.rootElement.append(bookContainer);
     }
 
@@ -77,44 +76,32 @@ class EbookView extends ViewInterface {
         const ul = document.createElement('ul');
         ul.classList.add('group-list');
         for (let i = 0; i < MAX_GROUP; i++) {
-            const li = document.createElement('li');
-            li.textContent = `ГРУППА ${i + 1}`;
-            li.classList.add('group-list__group');
-            if (this.group === i) li.classList.add('active-group');
-            li.dataset.group = `${i}`;
-            li.addEventListener('click', (ev: Event) => {
-                const target = ev.target as HTMLButtonElement;
-                this.group = Number(target.dataset.group);
-                this.pagination.toFirstPage();
-                localStorage.setItem('group', this.group.toString());
-                assertDefined(document.querySelector('.active-group')).classList.remove('active-group');
-                target.classList.add('active-group');
-                this.reDraw();
-            });
+            const li = this.getGroupLi(`ГРУППА ${i + 1}`, i);
             ul.append(li);
         }
         if (this.userController.isSignin()) {
-            const li = document.createElement('li');
-            li.textContent = `Сложные слова`;
-            li.classList.add('group-list__group');
-            if (this.group === 6) li.classList.add('active-group');
-            li.dataset.group = `6`;
-            li.addEventListener('click', (ev: Event) => {
-                const target = ev.target as HTMLButtonElement;
-                this.group = Number(target.dataset.group);
-                this.pagination.toFirstPage();
-                localStorage.setItem('group', this.group.toString());
-                assertDefined(document.querySelector('.active-group')).classList.remove('active-group');
-                target.classList.add('active-group');
-                this.reDraw();
-            });
-            ul.append(li);
-
+            const li = this.getGroupLi(`Сложные слова`, 6);
             ul.append(li);
         }
         return ul;
     }
-
+    private getGroupLi(groupName: string, groupNum: number): HTMLLIElement {
+        const li = document.createElement('li');
+        li.textContent = groupName;
+        li.classList.add('group-list__group');
+        if (this.group === groupNum) li.classList.add('active-group');
+        li.dataset.group = groupNum.toString();
+        li.addEventListener('click', (ev: Event) => {
+            const target = ev.target as HTMLButtonElement;
+            this.group = Number(target.dataset.group);
+            this.pagination.toFirstPage();
+            localStorage.setItem('group', this.group.toString());
+            assertDefined(document.querySelector('.active-group')).classList.remove('active-group');
+            target.classList.add('active-group');
+            this.reDraw();
+        });
+        return li;
+    }
     getWordCard(word: wordType, template: HTMLDivElement): HTMLElement {
         const wordCard = template;
         const card = assertDefined(wordCard.querySelector('.word-card')) as HTMLDivElement;
@@ -199,7 +186,7 @@ class EbookView extends ViewInterface {
                 target.disabled = true;
                 console.log(group);
             }
-            await this.wordController.addStatus(id, wortUpdate, succesAction);
+            await this.wordController.addUserWord(id, wortUpdate, succesAction);
         } else {
             const markHard = assertDefined(card.querySelector('#hardMark')) as HTMLButtonElement;
             const succesAction = () => {
@@ -213,9 +200,9 @@ class EbookView extends ViewInterface {
                 };
             }
             if (card.classList.contains(`word-card_${wordStatus.hard}`)) {
-                await this.wordController.updateStatus(id, wortUpdate, succesAction);
+                await this.wordController.updateUserWord(id, wortUpdate, succesAction);
             } else {
-                await this.wordController.addStatus(id, wortUpdate, succesAction);
+                await this.wordController.addUserWord(id, wortUpdate, succesAction);
 
             }
         }

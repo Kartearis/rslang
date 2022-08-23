@@ -1,6 +1,6 @@
 import UserController from '../controllers/userController';
 import { assertDefined } from '../helpers/helpers';
-import FormService from '../service/formService';
+import FormService from '../helpers/formService';
 import ViewInterface from './viewInterface';
 import './authView.css';
 class SigninView extends ViewInterface {
@@ -24,11 +24,14 @@ class SigninView extends ViewInterface {
         const email = FormService.getInput(['login-form__login'], 'email', 'email...', 'email');
         form.append(email);
         const pass = FormService.getInput(['login-form__pass'], 'password', 'Пароль...', 'password');
+        email.required = true;
         form.append(pass);
+        pass.minLength = 8;
+        pass.required = true;
         const submit = FormService.getSubmitBtn(['login-form__submit'], 'Войти', this.signinAction);
         form.append(submit);
     }
-    private signinAction(){
+    private signinAction() {
         const email = assertDefined(document.querySelector<HTMLInputElement>('#email')).value;
         const password = assertDefined(document.querySelector<HTMLInputElement>('#password')).value;
         UserController.getInstance().signIn(email, password);
