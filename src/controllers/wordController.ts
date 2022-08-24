@@ -11,7 +11,7 @@ class UserWordController {
         return UserWordController.instance;
     }
 
-    async addUserWord(wordId: string, word: wordProperty, succesAction: () => void) {
+    async addUserWord(wordId: string, word: wordProperty): Promise<void> {
         const { jwt, userId } = localStorage;
         const resp = await fetch(`${HOST}/users/${userId}/words/${wordId}`, {
             method: 'POST',
@@ -22,11 +22,11 @@ class UserWordController {
             },
             body: JSON.stringify(word),
         });
-        if (resp.ok) {
-            succesAction();
+        if (!resp.ok) {
+            throw Error('Access token is missing or invalid');
         }
     }
-    async updateUserWord(wordId: string, word: wordProperty, succesAction: () => void) {
+    async updateUserWord(wordId: string, word: wordProperty) {
         const { jwt, userId } = localStorage;
         const resp = await fetch(`${HOST}/users/${userId}/words/${wordId}`, {
             method: 'PUT',
@@ -37,11 +37,11 @@ class UserWordController {
             },
             body: JSON.stringify(word),
         });
-        if (resp.ok) {
-            succesAction();
+        if (!resp.ok) {
+            throw Error('Access token is missing or invalid');
         }
     }
-    async deleteUserWord(wordId: string, succesAction: () => void) {
+    async deleteUserWord(wordId: string) {
         const { jwt, userId } = localStorage;
         const resp = await fetch(`${HOST}/users/${userId}/words/${wordId}`, {
             method: 'DELETE',
@@ -50,8 +50,8 @@ class UserWordController {
                 Accept: 'application/json',
             },
         });
-        if (resp.ok) {
-            succesAction();
+        if (!resp.ok) {
+            throw Error('Access token is missing or invalid');
         }
     }
 }
