@@ -2,6 +2,7 @@ import MainView from '../views/mainView';
 import TestView from '../views/test';
 import { ViewConstructor } from '../views/viewInterface';
 import StatView from '../views/statView';
+import SprintGameView from "../views/sprintGameView";
 
 export type RouteConfig = Record<string, ViewConstructor>;
 
@@ -25,6 +26,7 @@ export default class RouterController {
             '/': MainView,
             '/test': TestView,
             '/stats': StatView,
+            '/sprint': SprintGameView
         };
         this.history = window.history;
         window.addEventListener('popstate', (event: PopStateEvent) => this.processStatePop(event));
