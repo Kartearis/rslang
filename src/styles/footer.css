@@ -1,11 +1,11 @@
-footer {
+.footer {
   height: 50px;
   background-color: #F5F5F5;
   display: flex;
   justify-content: space-around;
 }
 
-footer .wrapper {
+.footer-wrapper {
   width: 1400px;
   display: flex;
   justify-content: space-between;
@@ -18,13 +18,13 @@ footer .wrapper {
   display: flex;
 }
 
-.rs-group img {
+.rs-group__img{
   display: block;
   transform: scale(1);
   transition: .3s;
 }
 
-.rs-group a:hover img {
+.rs-group__link:hover .rs-group__img {
   transform: scale(1.1);
 } 
 
@@ -37,16 +37,16 @@ footer .wrapper {
   display: flex;
 }
 
-.git-group a{
+.git-group__link{
   margin-left: 20px;
   display: block;
 }
 
-.git-group a img {
+.git-group__img {
   display: block;
   transition: .3s;
 }
 
-.git-group a:hover img {
+.git-group__link:hover .git-group__img {
   transform: scale(1.1);
 } 

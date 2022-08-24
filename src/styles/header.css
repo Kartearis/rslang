@@ -1,4 +1,4 @@
-header {
+.header {
   background-color: #F5F5F5;
   display: flex;
   justify-content: space-around;
@@ -6,7 +6,7 @@ header {
   height: 50px;
 }
 
-header .wrapper {
+.header-wrapper {
   width: 1400px;
   display: flex;
   justify-content: space-between;
@@ -14,23 +14,21 @@ header .wrapper {
   padding: 0 20px;
 }
 
-header ul {
+.menu-list {
   display: flex;
   align-items: center;
-
-
 }
 
-header li { 
+.menu-list__menu-item { 
   list-style-type: none;
   margin-right: 20px;
 }
 
-header li a {
+.menu-list__menu-link {
   background-color: #528FE9;
   text-decoration: none;
   color: white;
-    font-style: normal;
+  font-style: normal;
   font-weight: 400;
   font-size: 12px;
   padding: 7px 15px;
@@ -40,7 +38,7 @@ header li a {
   transition: .3s;
 }
 
-header li a:hover {
+.menu-list__menu-link:hover {
   transform: scale(1.1);
 }
 
