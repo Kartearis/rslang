@@ -15,7 +15,7 @@ class EbookView extends ViewInterface {
     constructor(rootElement: HTMLElement) {
         super(rootElement);
         this.eBookController = new EBookController();
-        this.pagination = new Pagination();
+        this.pagination = new Pagination(async () => await this.reDraw());
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
@@ -24,7 +24,7 @@ class EbookView extends ViewInterface {
     async show(): Promise<void> {
         this.rootElement.innerText = '';
         const groups = this.getGroups();
-        const pagination = this.pagination.getPagination(() => this.reDraw());
+        const pagination = this.pagination.getPagination();
         this.rootElement.append(groups);
         this.rootElement.append(pagination);
         const bookContainer = document.createElement('div');
@@ -92,10 +92,10 @@ class EbookView extends ViewInterface {
         if (this.group === groupNum) li.classList.add('group-list__group_active');
         li.dataset.group = groupNum.toString();
         li.addEventListener('click', (ev: Event) => {
+            localStorage.setItem('group', this.group.toString());
             const target = ev.target as HTMLButtonElement;
             this.group = Number(target.dataset.group);
-            this.pagination.toFirstPage();
-            localStorage.setItem('group', this.group.toString());
+            this.pagination.toFirstPage(this.group);
             assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
                 'group-list__group_active'
             );
