@@ -12,10 +12,16 @@ template.innerHTML = `
         
         </div>
         <div class="sprint-game__controls-container">
-       
+            <button class="game-button">M</button>
+            <button class="game-button">X</button>
         </div>
         <div class="sprint-game__game">
-            
+            <div class="sprint-game__combo-counter"></div>
+            <div class="sprint-game__word-container"></div>
+            <div class="sprint-game__game-controls">
+                <button class="game-button game-button--wide game-button--wrong">Wrong</button>
+                <button class="game-button game-button--wide game-button--correct">Right</button>
+            </div>
         </div>
     </div>
 `;
