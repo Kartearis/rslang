@@ -1,5 +1,5 @@
 .header {
-  background-color: #F5F5F5;
+  background-color: var(--color-background);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -25,16 +25,16 @@
 }
 
 .menu-list__menu-link {
-  background-color: #528FE9;
+  background-color: var(--color-header);
   text-decoration: none;
   color: white;
   font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
+  font-weight: var(--font-weight-default);
+  font-size: var(--font-7);
   padding: 7px 15px;
   border-radius: 15px;
   display: block;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-default);
   transition: .3s;
 }
 
