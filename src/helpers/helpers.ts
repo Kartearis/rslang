@@ -7,3 +7,4 @@ export const TOKEN_NAME = 'jwt';
 export const USER_NAME = 'userId';
 export const GROUP_NAME = 'group';
 export const HARD_WORD_PAGE_NUM = 6;
+export const WORDS_ON_PAGE = 20;

@@ -1,5 +1,5 @@
 //word have id, but words has _id field and userWord obhect
-type wordType = {
+export type wordType = {
     id: string;
     _id?: string;
     group: 0;
@@ -17,22 +17,36 @@ type wordType = {
     textExampleTranslate: string;
     userWord?: wordProperty;
 };
-type signInResponceType = {
+export type signInResponceType = {
     message: string;
     token: string;
     refreshToken: string;
     userId: string;
     name: string;
 };
-enum wordStatus {
+export enum wordStatus {
     hard = 'hard',
     easy = 'easy',
 }
-type wordProperty = {
+export enum filterForUserWords {
+    hard = '{"userWord.difficulty":"hard"}',
+    learned = '{"$or":[{"userWord.difficulty":"easy"},{"userWord.difficulty":"hard"}]}',
+}
+export type wordProperty = {
     difficulty: wordStatus;
     optional: {
         //linter error on empty object{}, after add any field remove id
         id?: number;
     };
 };
-export { signInResponceType, wordType, wordStatus, wordProperty };
+export type responceUserWords = [
+    {
+        paginatedResults: wordType[],
+        //all words whith mark
+        totalCount: [
+            {
+              count: string
+            }
+          ]
+    }
+]

@@ -14,7 +14,7 @@ class EbookView extends ViewInterface {
     wordController: UserWordController;
     constructor(rootElement: HTMLElement) {
         super(rootElement);
-        this.eBookController = new EBookController();
+        this.eBookController = EBookController.getInstance();
         this.pagination = new Pagination(async () => await this.reDraw());
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
@@ -26,7 +26,7 @@ class EbookView extends ViewInterface {
         const groups = this.getGroups();
         const pagination = this.pagination.getPagination();
         this.rootElement.append(groups);
-        this.rootElement.append(pagination);
+        this.rootElement.append(await pagination);
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
         let words: wordType[] | null = [];
@@ -34,7 +34,7 @@ class EbookView extends ViewInterface {
             words = await this.eBookController.getHardWordsUser();
         } else {
             words = this.userController.isSignin()
-                ? await this.eBookController.getGroupWordsUser(this.group, this.pagination.page)
+                ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
                 : await this.eBookController.getGroupWords(this.group, this.pagination.page);
         }
         const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
@@ -57,7 +57,7 @@ class EbookView extends ViewInterface {
             words = await this.eBookController.getHardWordsUser();
         } else {
             words = this.userController.isSignin()
-                ? await this.eBookController.getGroupWordsUser(this.group, this.pagination.page)
+                ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
                 : await this.eBookController.getGroupWords(this.group, this.pagination.page);
         }
         const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
