@@ -8,6 +8,7 @@ import UserWordController from '../controllers/wordController';
 import './eBook.css';
 class EbookView extends ViewInterface {
     group = 0;
+    templateCard: HTMLTemplateElement;
     pagination: Pagination;
     eBookController: EBookController;
     userController: UserController;
@@ -19,6 +20,24 @@ class EbookView extends ViewInterface {
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
+        this.templateCard = document.createElement('template');
+        this.templateCard.innerHTML = `<div class="word-card" data-word-id="">
+                <div class="word-card__img-container">
+                    <img class="word-card__img" id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
+                </div>
+                <div class="word-card__info word-info">
+                    <p id="word"></p>
+                    <p class="word-info__meaning" id="meaning"></p>
+                    <p class="word-info__meaning_translate" id="meaningTransalte"></p>
+                    <p class="word-info__example" id="example"></p>
+                    <p class="word-info__example_translate" id="exampleTransalte"></p>
+                </div>
+                <div class="word-card__action word-action">
+                    <button id="hardMark" class="word-action__hardMark">!</button>
+                    <button id="audioBtn" class="word-action__audio word-action__audio_start"></button>
+                    <button id="learnedMark" class="word-action__learnedMark">✓</button>
+                </div>
+            </div>`;
     }
 
     async show(): Promise<void> {
@@ -37,10 +56,9 @@ class EbookView extends ViewInterface {
                 ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
                 : await this.eBookController.getGroupWords(this.group, this.pagination.page);
         }
-        const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
         if (words !== null) {
             words.forEach((w) => {
-                const clone = template.content.cloneNode(true) as HTMLDivElement;
+                const clone = this.templateCard.content.cloneNode(true) as HTMLDivElement;
                 const wordCard = this.getWordCard(w, clone);
                 bookContainer.append(wordCard);
             });
@@ -60,10 +78,9 @@ class EbookView extends ViewInterface {
                 ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
                 : await this.eBookController.getGroupWords(this.group, this.pagination.page);
         }
-        const template = assertDefined(document.querySelector<HTMLTemplateElement>('#wordCardTemplate'));
         if (words !== null) {
             words.forEach((w) => {
-                const clone = template.content.cloneNode(true) as HTMLDivElement;
+                const clone = this.templateCard.content.cloneNode(true) as HTMLDivElement;
                 const wordBlock = this.getWordCard(w, clone);
                 bookContainer.append(wordBlock);
             });
@@ -188,11 +205,10 @@ class EbookView extends ViewInterface {
         };
         const group = this.group;
         if (status === wordStatus.hard) {
-            const succesAction = () => {
+            await this.wordController.addUserWord(id, wortUpdate).then(() => {
                 card.classList.add(`word-card_${status}`);
                 target.disabled = true;
-            };
-            await this.wordController.addUserWord(id, wortUpdate, succesAction);
+            });
         } else {
             const markHard = assertDefined(card.querySelector('#hardMark')) as HTMLButtonElement;
             const succesAction = () => {
@@ -208,9 +224,9 @@ class EbookView extends ViewInterface {
             };
             //if word in hard group - change, else that new user word and create
             if (card.classList.contains(`word-card_${wordStatus.hard}`)) {
-                await this.wordController.updateUserWord(id, wortUpdate, succesAction);
+                await this.wordController.updateUserWord(id, wortUpdate).then(() => succesAction());
             } else {
-                await this.wordController.addUserWord(id, wortUpdate, succesAction);
+                await this.wordController.addUserWord(id, wortUpdate).then(() => succesAction());
             }
         }
     }
