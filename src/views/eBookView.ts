@@ -1,5 +1,5 @@
 import EBookController from '../controllers/eBookController';
-import { assertDefined, HARD_WORD_PAGE_NUM, HOST } from '../helpers/helpers';
+import { assertDefined, HARD_WORD_PAGE_NUM, HOST, WORDS_ON_PAGE } from '../helpers/helpers';
 import { wordProperty, wordStatus, wordType } from '../helpers/types';
 import Pagination from '../helpers/pagination';
 import ViewInterface from './viewInterface';
@@ -112,7 +112,6 @@ class EbookView extends ViewInterface {
             const target = ev.target as HTMLButtonElement;
             this.group = Number(target.dataset.group);
             localStorage.setItem('group', this.group.toString());
-
             this.pagination.toFirstPage(this.group);
             assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
                 'group-list__group_active'
@@ -131,6 +130,7 @@ class EbookView extends ViewInterface {
         this.addAudioAction(word.audio, word.audioMeaning, word.audioExample, audioBtn);
         const img = assertDefined(wordCard.querySelector('#wordImg')) as HTMLImageElement;
         img.src = `${HOST}\\${word.image}`;
+        img.alt = word.word;
         const wordInfo = assertDefined(wordCard.querySelector('#word')) as HTMLParagraphElement;
         wordInfo.innerText = `${word.word} ${word.transcription} - ${word.wordTranslate}`;
         const meaning = assertDefined(wordCard.querySelector('#meaning')) as HTMLParagraphElement;
@@ -229,6 +229,10 @@ class EbookView extends ViewInterface {
                 await this.wordController.addUserWord(id, wortUpdate).then(() => succesAction());
             }
         }
+        const counHard = document.querySelectorAll(`.word-card_${wordStatus.hard}`).length;
+        const counLearned = document.querySelectorAll(`.word-card_${wordStatus.easy}`).length;
+        if (counHard + counLearned === WORDS_ON_PAGE)
+            assertDefined(document.querySelector('.current-page')).classList.add('page-page-num_learned');
     }
 }
 

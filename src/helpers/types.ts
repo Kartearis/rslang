@@ -41,12 +41,12 @@ export type wordProperty = {
 };
 export type responceUserWords = [
     {
-        paginatedResults: wordType[],
+        paginatedResults: wordType[];
         //all words whith mark
         totalCount: [
             {
-              count: string
+                count: string;
             }
-          ]
+        ];
     }
-]
+];
