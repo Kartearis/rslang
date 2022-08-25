@@ -23,6 +23,10 @@
     width: 100px;
 }
 
+.word-info__audio_play {
+    animation: playAudio 0.5s linear infinite;
+}
+
 .audiocall__word-info {
     display: flex;
     justify-content: center;
@@ -69,4 +73,14 @@
 .audiocall__buttons {
     display: flex;
     justify-content: center;
+}
+
+@keyframes playAudio {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
 }
