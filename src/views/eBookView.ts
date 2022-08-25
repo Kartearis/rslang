@@ -6,6 +6,8 @@ import ViewInterface from './viewInterface';
 import UserController from '../controllers/userController';
 import UserWordController from '../controllers/wordController';
 import './eBook.css';
+import AudiocallView from './audiocallView';
+
 
 const template = `<div class="word-card" data-word-id="">
 <div class="word-card__img-container">
@@ -31,6 +33,8 @@ class EbookView extends ViewInterface {
     eBookController: EBookController;
     userController: UserController;
     wordController: UserWordController;
+    audiocallView: AudiocallView;
+    words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
         super(rootElement);
         this.eBookController = EBookController.getInstance();
@@ -38,34 +42,37 @@ class EbookView extends ViewInterface {
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
+        this.audiocallView = new AudiocallView(assertDefined(document.querySelector<HTMLElement>('.content')));
     }
 
     async show(): Promise<void> {
         this.rootElement.innerText = '';
         const groups = this.getGroups();
         const pagination = await this.pagination.getPagination();
+        const grouNavigation = document.createElement('div');
+        grouNavigation.classList.add('group-navigation');
+        const games = document.createElement('div');
+        grouNavigation.classList.add('games');
+        const audioCall = document.createElement('btn');
+        audioCall.innerText = 'Аудиовызов';
+        audioCall.addEventListener('click', () => this.audiocallView.gameFromPage(this.words));
+        games.append(audioCall);
+
+        grouNavigation.append(pagination);
+        grouNavigation.append(games);
+
         this.rootElement.append(groups);
-        this.rootElement.append( pagination);
-        
+        this.rootElement.append(grouNavigation);
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-        let words: wordType[] | null = [];
-        if (this.userController.isSignin() && this.group === HARD_WORD_PAGE_NUM) {
-            words = await this.eBookController.getHardWordsUser();
-        } else {
-            words = this.userController.isSignin()
-                ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
-                : await this.eBookController.getGroupWords(this.group, this.pagination.page);
-        }
-        if (words !== null) {
-            words.forEach((w) => {
-                const templateCard = document.createElement('template');
-                templateCard.innerHTML = template;
-                const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
-                const wordCard = this.getWordCard(w, clone);
-                bookContainer.append(wordCard);
-            });
-        }
+        await this.loadWords();
+        this.words.forEach((w) => {
+            const templateCard = document.createElement('template');
+            templateCard.innerHTML = template;
+            const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
+            const wordCard = this.getWordCard(w, clone);
+            bookContainer.append(wordCard);
+        });
         this.rootElement.append(bookContainer);
     }
 
@@ -74,25 +81,25 @@ class EbookView extends ViewInterface {
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
         let words: wordType[] | null = [];
-        if (this.group === HARD_WORD_PAGE_NUM) {
-            words = await this.eBookController.getHardWordsUser();
+        await this.loadWords();
+        this.words.forEach((w) => {
+            const templateCard = document.createElement('template');
+            templateCard.innerHTML = template;
+            const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
+            const wordBlock = this.getWordCard(w, clone);
+            bookContainer.append(wordBlock);
+        });
+        this.rootElement.append(bookContainer);
+    }
+    private async loadWords() {
+        if (this.userController.isSignin() && this.group === HARD_WORD_PAGE_NUM) {
+            this.words = await this.eBookController.getHardWordsUser();
         } else {
-            words = this.userController.isSignin()
+            this.words = this.userController.isSignin()
                 ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
                 : await this.eBookController.getGroupWords(this.group, this.pagination.page);
         }
-        if (words !== null) {
-            words.forEach((w) => {
-                const templateCard = document.createElement('template');
-                templateCard.innerHTML = template;
-                const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
-                const wordBlock = this.getWordCard(w, clone);
-                bookContainer.append(wordBlock);
-            });
-        }
-        this.rootElement.append(bookContainer);
     }
-
     getGroups(): HTMLUListElement {
         const MAX_GROUP = 6;
         const ul = document.createElement('ul');

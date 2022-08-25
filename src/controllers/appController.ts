@@ -13,6 +13,7 @@ export default class AppController {
         assertDefined(document.querySelector('#garage')).addEventListener('click', () => router.navigate('/'));
         assertDefined(document.querySelector('#records')).addEventListener('click', () => router.navigate('/test'));
         assertDefined(document.querySelector('#ebook')).addEventListener('click', () => router.navigate('/ebook'));
+        assertDefined(document.querySelector('#audiocall')).addEventListener('click', () => router.navigate('/audocall'));
         assertDefined(document.querySelector('#signin')).addEventListener('click', () => router.navigate('/signin'));
         assertDefined(document.querySelector('#registration')).addEventListener('click', () =>
             router.navigate('/registration')

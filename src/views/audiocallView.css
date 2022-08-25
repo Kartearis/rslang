@@ -1,0 +1,72 @@
+.hidden {
+    display: none;
+}
+
+.audiocall {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.audiocall__button {
+    cursor: pointer;
+    user-select: none;
+}
+
+.audiocall__button_asc {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+}
+
+.word-info__audio {
+    width: 100px;
+}
+
+.audiocall__word-info {
+    display: flex;
+    justify-content: center;
+}
+
+.audiocall__words {
+    display: flex;
+    justify-content: center;
+    gap: 20px
+}
+
+.audiocall__button_response {
+    width: 200px;
+    height: 30px;
+    background: none;
+    border: none;
+    font-size: 24px;
+}
+
+.response__word_right {
+    background-color: greenyellow;
+    display: inline-block;
+    margin-right: 20px;
+    width: 30px;
+    border-radius: 15px;
+}
+
+.response__word_right::after {
+    content: '✓';
+}
+
+.response__word_wrong {
+    background-color: red;
+    display: inline-block;
+    margin-right: 20px;
+    width: 30px;
+    border-radius: 15px;
+}
+
+.response__word_wrong::after {
+    content: '✖';
+}
+
+.audiocall__buttons {
+    display: flex;
+    justify-content: center;
+}
