@@ -1,9 +1,9 @@
-import EBookController from './eBookController';
-import UserController from './userController';
+import EBookController from '../controllers/eBookController';
+import UserController from '../controllers/userController';
 import { assertDefined, GROUP_NAME, HARD_WORD_PAGE_NUM, WORDS_ON_PAGE } from '../helpers/helpers';
 import './pagination.css';
 
-class Pagination {
+class PaginationComponent {
     page: number;
     limitPage: number;
     reDraw: () => Promise<void>;
@@ -169,4 +169,4 @@ class Pagination {
         return count === WORDS_ON_PAGE;
     }
 }
-export default Pagination;
+export default PaginationComponent;
