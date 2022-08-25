@@ -6,9 +6,27 @@ import ViewInterface from './viewInterface';
 import UserController from '../controllers/userController';
 import UserWordController from '../controllers/wordController';
 import './eBook.css';
+
+const template = `<div class="word-card" data-word-id="">
+<div class="word-card__img-container">
+    <img class="word-card__img" id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
+</div>
+<div class="word-card__info word-info">
+    <p id="word"></p>
+    <p class="word-info__meaning" id="meaning"></p>
+    <p class="word-info__meaning_translate" id="meaningTransalte"></p>
+    <p class="word-info__example" id="example"></p>
+    <p class="word-info__example_translate" id="exampleTransalte"></p>
+</div>
+<div class="word-card__action word-action">
+    <button id="hardMark" class="word-action__hardMark">!</button>
+    <button id="audioBtn" class="word-action__audio word-action__audio_start"></button>
+    <button id="learnedMark" class="word-action__learnedMark">✓</button>
+</div>
+</div>`;
+
 class EbookView extends ViewInterface {
     group = 0;
-    templateCard: HTMLTemplateElement;
     pagination: Pagination;
     eBookController: EBookController;
     userController: UserController;
@@ -20,24 +38,6 @@ class EbookView extends ViewInterface {
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
-        this.templateCard = document.createElement('template');
-        this.templateCard.innerHTML = `<div class="word-card" data-word-id="">
-                <div class="word-card__img-container">
-                    <img class="word-card__img" id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
-                </div>
-                <div class="word-card__info word-info">
-                    <p id="word"></p>
-                    <p class="word-info__meaning" id="meaning"></p>
-                    <p class="word-info__meaning_translate" id="meaningTransalte"></p>
-                    <p class="word-info__example" id="example"></p>
-                    <p class="word-info__example_translate" id="exampleTransalte"></p>
-                </div>
-                <div class="word-card__action word-action">
-                    <button id="hardMark" class="word-action__hardMark">!</button>
-                    <button id="audioBtn" class="word-action__audio word-action__audio_start"></button>
-                    <button id="learnedMark" class="word-action__learnedMark">✓</button>
-                </div>
-            </div>`;
     }
 
     async show(): Promise<void> {
@@ -58,7 +58,9 @@ class EbookView extends ViewInterface {
         }
         if (words !== null) {
             words.forEach((w) => {
-                const clone = this.templateCard.content.cloneNode(true) as HTMLDivElement;
+                const templateCard = document.createElement('template');
+                templateCard.innerHTML = template;
+                const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
                 const wordCard = this.getWordCard(w, clone);
                 bookContainer.append(wordCard);
             });
@@ -80,7 +82,9 @@ class EbookView extends ViewInterface {
         }
         if (words !== null) {
             words.forEach((w) => {
-                const clone = this.templateCard.content.cloneNode(true) as HTMLDivElement;
+                const templateCard = document.createElement('template');
+                templateCard.innerHTML = template;
+                const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
                 const wordBlock = this.getWordCard(w, clone);
                 bookContainer.append(wordBlock);
             });

@@ -147,6 +147,7 @@ class Pagination {
             this.reDrawPaginationPages();
             this.lockBtn();
             this.reDraw();
+            
         });
         return numPageBtn;
     }
