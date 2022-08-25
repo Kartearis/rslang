@@ -50,7 +50,10 @@
 .group-list__group:nth-child(7) {
     background-color: var(--color-accent-6);
 }
-
+.group-navigation{
+    display: flex;
+    justify-content: center;
+}
 .ebook-container {
     display: grid;
     background-color: var(--color-backgroud);
