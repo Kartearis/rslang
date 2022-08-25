@@ -1,7 +1,7 @@
 import EBookController from '../controllers/eBookController';
 import { assertDefined, HARD_WORD_PAGE_NUM, HOST, WORDS_ON_PAGE } from '../helpers/helpers';
 import { wordProperty, wordStatus, wordType } from '../helpers/types';
-import Pagination from '../helpers/pagination';
+import PaginationComponent from '../components/paginationComponent';
 import ViewInterface from './viewInterface';
 import UserController from '../controllers/userController';
 import UserWordController from '../controllers/wordController';
@@ -27,14 +27,14 @@ const template = `<div class="word-card" data-word-id="">
 
 class EbookView extends ViewInterface {
     group = 0;
-    pagination: Pagination;
+    pagination: PaginationComponent;
     eBookController: EBookController;
     userController: UserController;
     wordController: UserWordController;
     constructor(rootElement: HTMLElement) {
         super(rootElement);
         this.eBookController = EBookController.getInstance();
-        this.pagination = new Pagination(async () => await this.reDraw());
+        this.pagination = new PaginationComponent(async () => await this.reDraw());
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
@@ -43,13 +43,14 @@ class EbookView extends ViewInterface {
     async show(): Promise<void> {
         this.rootElement.innerText = '';
         const groups = this.getGroups();
-        const pagination = this.pagination.getPagination();
+        const pagination = await this.pagination.getPagination();
         this.rootElement.append(groups);
-        this.rootElement.append(await pagination);
+        this.rootElement.append( pagination);
+        
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
         let words: wordType[] | null = [];
-        if (this.group === HARD_WORD_PAGE_NUM) {
+        if (this.userController.isSignin() && this.group === HARD_WORD_PAGE_NUM) {
             words = await this.eBookController.getHardWordsUser();
         } else {
             words = this.userController.isSignin()

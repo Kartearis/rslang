@@ -1,17 +1,20 @@
 import EBookController from '../controllers/eBookController';
-import { assertDefined, GROUP_NAME, HARD_WORD_PAGE_NUM, WORDS_ON_PAGE } from './helpers';
+import UserController from '../controllers/userController';
+import { assertDefined, GROUP_NAME, HARD_WORD_PAGE_NUM, WORDS_ON_PAGE } from '../helpers/helpers';
 import './pagination.css';
 
-class Pagination {
+class PaginationComponent {
     page: number;
     limitPage: number;
     reDraw: () => Promise<void>;
     eBookController: EBookController;
+    userController;
     constructor(reDraw: () => Promise<void>) {
         this.page = sessionStorage.getItem('lastPage') !== undefined ? Number(sessionStorage.getItem('lastPage')) : 0;
         this.limitPage = 30;
         this.reDraw = reDraw;
         this.eBookController = EBookController.getInstance();
+        this.userController = UserController.getInstance();
     }
     private lockBtn = (prev: HTMLButtonElement | null = null, next: HTMLButtonElement | null = null) => {
         if (prev == null && next === null) {
@@ -136,7 +139,7 @@ class Pagination {
         } else {
             numPageBtn.innerText = num.toString();
             numPageBtn.dataset.pageNum = num.toString();
-            if (await this.isLearnedPage(num - 1)) {
+            if (this.userController.isSignin() && await this.isLearnedPage(num - 1)) {
                 numPageBtn.classList.add('page-page-num_learned');
             }
         }
@@ -166,4 +169,4 @@ class Pagination {
         return count === WORDS_ON_PAGE;
     }
 }
-export default Pagination;
+export default PaginationComponent;
