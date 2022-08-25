@@ -12,7 +12,11 @@ html, body {
     height: 100%;
 }
 
+body {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 @import './styles/header.css';
-@import './styles/main.css';
 @import './styles/footer.css';

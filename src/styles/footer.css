@@ -3,6 +3,10 @@
   background-color: var(--color-background);
   display: flex;
   justify-content: space-around;
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  position: fixed;
 }
 
 .footer-wrapper {
