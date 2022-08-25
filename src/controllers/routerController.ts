@@ -1,6 +1,11 @@
+import EbookView from '../views/eBookView';
+
 import MainView from '../views/mainView';
 import TestView from '../views/test';
 import { ViewConstructor } from '../views/viewInterface';
+import RegistrationView from '../views/registrationView';
+import LogoutView from '../views/logoutView';
+import SigninView from '../views/signinView';
 import StatView from '../views/statView';
 
 export type RouteConfig = Record<string, ViewConstructor>;
@@ -25,6 +30,10 @@ export default class RouterController {
             '/': MainView,
             '/test': TestView,
             '/stats': StatView,
+            '/ebook': EbookView,
+            '/signin': SigninView,
+            '/registration': RegistrationView,
+            '/logout': LogoutView,
         };
         this.history = window.history;
         window.addEventListener('popstate', (event: PopStateEvent) => this.processStatePop(event));

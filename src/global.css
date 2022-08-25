@@ -34,11 +34,12 @@
     font-weight: 800;
 }
 
-.burger-button{
+.burger-button {
     display: none;
 }
 
 @media (max-width: 767px) {
+
     html,
     .container {
         height: 100%;
@@ -145,12 +146,15 @@
     color: #333;
     text-align: center;
 }
+
 .footer__copyright-link {
     color: #444;
 }
+
 .footer__copyright-link:hover {
     color: #555;
 }
+
 .footer__copyright:before {
     content: '©';
 }
