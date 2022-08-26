@@ -30,7 +30,8 @@ export enum wordStatus {
 }
 export enum filterForUserWords {
     hard = '{"userWord.difficulty":"hard"}',
-    learned = '{"$or":[{"userWord.difficulty":"easy"},{"userWord.difficulty":"hard"}]}',
+    learned = '{"userWord":{"$exists":"true"}}',
+    
 }
 export type wordProperty = {
     difficulty: wordStatus;
@@ -38,6 +39,10 @@ export type wordProperty = {
         //linter error on empty object{}, after add any field remove id
         id?: number;
     };
+};
+export type userWordIndo  =  wordProperty & {
+    id:string;
+    wordId:string;
 };
 export type responceUserWords = [
     {

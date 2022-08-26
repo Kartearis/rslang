@@ -97,7 +97,7 @@ class EbookView extends ViewInterface {
         } else {
             this.words = this.userController.isSignin()
                 ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
-                : await this.eBookController.getGroupWords(this.group, this.pagination.page);
+                : await this.eBookController.getPageWordsOnGroup(this.group, this.pagination.page);
         }
     }
     getGroups(): HTMLUListElement {
@@ -211,13 +211,13 @@ class EbookView extends ViewInterface {
         const target = ev.target as HTMLButtonElement;
         const card = assertDefined(target.closest<HTMLElement>('.word-card'));
         const id = assertDefined(card.dataset.cardId);
-        const wortUpdate: wordProperty = {
+        const wordUpdate: wordProperty = {
             difficulty: status,
             optional: {},
         };
         const group = this.group;
         if (status === wordStatus.hard) {
-            await this.wordController.addUserWord(id, wortUpdate).then(() => {
+            await this.wordController.addUserWord(id, wordUpdate).then(() => {
                 card.classList.add(`word-card_${status}`);
                 target.disabled = true;
             });
@@ -236,9 +236,9 @@ class EbookView extends ViewInterface {
             };
             //if word in hard group - change, else that new user word and create
             if (card.classList.contains(`word-card_${wordStatus.hard}`)) {
-                await this.wordController.updateUserWord(id, wortUpdate).then(() => succesAction());
+                await this.wordController.updateUserWord(id, wordUpdate).then(() => succesAction());
             } else {
-                await this.wordController.addUserWord(id, wortUpdate).then(() => succesAction());
+                await this.wordController.addUserWord(id, wordUpdate).then(() => succesAction());
             }
         }
         const counHard = document.querySelectorAll(`.word-card_${wordStatus.hard}`).length;
