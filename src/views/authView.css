@@ -1,0 +1,35 @@
+.errMesage {
+    color: red;
+}
+
+.hidden {
+    display: none;
+}
+.signin-form{
+    background-color: #555;
+    padding: 20px 40px;
+    border-radius: 10px;
+    gap: 20px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 316px;
+}
+
+.reg-form__name,
+.reg-form__login,
+.reg-form__pass,
+.login-form__pass,
+.login-form__login{
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+}
+
+.reg-form__submit,
+.login-form__submit{
+    border: none;
+    border-radius: 10px;
+    width: 160px;
+    height: 30px;
+}

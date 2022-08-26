@@ -29,4 +29,8 @@
     --color-accent-4: #FFBC42;
     --color-accent-5: #FF8E4C;
     --color-accent-6: #FE5F55;
+
+    --color-border-hard: red;
+    --color-border-learned: green;
+    --color-pagination-learned: orange;
 }
