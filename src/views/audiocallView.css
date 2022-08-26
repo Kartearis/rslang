@@ -18,7 +18,16 @@
     height: 200px;
     border-radius: 100px;
 }
-
+.response{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.response__img{
+    border-radius: 150px;
+    width: 300px;
+    height: 300px;
+}
 .word-info__audio {
     width: 100px;
 }
@@ -32,20 +41,32 @@
     justify-content: center;
 }
 
-.audiocall__words {
+.audiocall__options {
     display: flex;
     justify-content: center;
     gap: 20px
 }
-
-.audiocall__button_response {
+.option{
     width: 200px;
     height: 30px;
     background: none;
     border: none;
     font-size: 24px;
 }
+.response__audio {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
 
+
+}
+.response__audio-img{
+    width: 80%;
+}
+.response__word{
+    display: flex;
+    justify-content: space-evenly;
+}
 .response__word_right {
     background-color: greenyellow;
     display: inline-block;
@@ -74,7 +95,20 @@
     display: flex;
     justify-content: center;
 }
-
+.audiocall__buttons_dont-know,
+.audiocall__buttons_next
+{
+    width: 200px;
+    border: none;
+    border-radius: 8px;
+    height: 35px;
+}
+.audiocall__buttons_dont-know{
+    background-color: blue;
+}
+.audiocall__buttons_next{
+    background-color: greenyellow;
+}
 @keyframes playAudio {
     0% {
         opacity: 1;

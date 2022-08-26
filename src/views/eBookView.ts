@@ -7,6 +7,7 @@ import UserController from '../controllers/userController';
 import UserWordController from '../controllers/wordController';
 import './eBook.css';
 import AudiocallView from './audiocallView';
+import AudiocallController from '../controllers/audiocallController';
 
 
 const template = `<div class="word-card" data-word-id="">
@@ -55,7 +56,9 @@ class EbookView extends ViewInterface {
         grouNavigation.classList.add('games');
         const audioCall = document.createElement('btn');
         audioCall.innerText = 'Аудиовызов';
-        audioCall.addEventListener('click', () => this.audiocallView.gameFromPage(this.words));
+        audioCall.addEventListener('click', () => {
+            this.audiocallView.draw(this.words)
+        });
         games.append(audioCall);
 
         grouNavigation.append(pagination);

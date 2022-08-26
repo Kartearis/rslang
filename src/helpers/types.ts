@@ -44,6 +44,14 @@ export type userWordIndo  =  wordProperty & {
     id:string;
     wordId:string;
 };
+export type wordForGame  = {
+    _id: string;
+    word: string;
+    image: string;
+    audio: string;
+    wordTranslate: string;
+    rigth: boolean,
+};
 export type responceUserWords = [
     {
         paginatedResults: wordType[];

@@ -1,30 +1,32 @@
-import { wordType } from '../helpers/types';
+import { wordForGame, wordType } from '../helpers/types';
 import ViewInterface from './viewInterface';
 import './audiocallView.css'
 import { assertDefined, HOST } from '../helpers/helpers';
 import audio from '../assets/audio.png';
-const COUNT_RESPONSE_WORD = 4;
+import AudiocallController from '../controllers/audiocallController';
 const audiocallBlock = `
     <div class='audiocall__word-info word-info'>
         <button id="ascPlayBtn" class="audiocall__button audiocall__button_asc">
             <img class="word-info__audio" id="playImg" src="${audio}" />
         </button>
-        <div id="answer" class='word-info__answer answer hidden'>
-            <img class="answer__img" id="answerImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />    
-            <button id="answerPlayBtn" class="audiocall__button audiocall__button_answer ">]
-                <img class="word-info__response-audio" id="responsePlayImg" src="${audio}" />
+        <div id="response" class='word-info__response response hidden'>
+            <img class="response__img" id="responseImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />    
+           <div class="response__word">
+            <button id="responsePlayBtn" class="audiocall__button response__audio ">
+                <img class="response__audio-img" id="responsePlayImg" src="${audio}" />
             </button>
             <p id="responseWord" class="response__word"></p>
+           </div>
         </div>
     </div>
-    <div id="words" class="audiocall__words "></div>
+    <div id="words" class="audiocall__options response-option"></div>
     <div class="audiocall__buttons">
-        <button id="donkKnowBtn" class="audiocall__button audiocall__buttons_dont-know">ХЗ</button>
-        <button id="nextBtn" class="audiocall__button audiocall__buttons_next">Next</button>
+        <button id="donkKnowBtn" class="audiocall__button audiocall__buttons_dont-know">Не знаю</button>
+        <button id="nextBtn" class="audiocall__button audiocall__buttons_next hidden">→</button>
     </div>
 `;
-export default class AudiocallView extends ViewInterface {
-    words: wordType[] = [];
+class AudiocallView extends ViewInterface {
+    audiocallController: AudiocallController = new AudiocallController([]);
     constructor(rootElement: HTMLElement) {
         super(rootElement);
     }
@@ -32,51 +34,75 @@ export default class AudiocallView extends ViewInterface {
     show(): void {
         this.rootElement.innerText = 'Audio';
     }
-    gameFromPage(words: wordType[]) {
-        this.words = this.shufleArray(words);
-        const word = words[0];
+    draw(words: wordType[]){
+        this.audiocallController = new AudiocallController(words);
+        const options = this.audiocallController.getResponseWords();
         this.rootElement.innerText = '';
         const audiocallDiv = document.createElement('div');
         audiocallDiv.id = 'audiocall';
         audiocallDiv.classList.add('audiocall');
         audiocallDiv.innerHTML = audiocallBlock;
-        const wordsDiv = assertDefined(audiocallDiv.querySelector('#words'));
-        const playImg = assertDefined(audiocallDiv.querySelector<HTMLImageElement>('#playImg'));
-        const audio = this.geAudio(`${HOST}/${word.audio}`, playImg);
-        const playBtn = assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#ascPlayBtn'));
-        playBtn.addEventListener('click', () => {
-            audio.play();
+        this.rootElement.append(audiocallDiv);
+        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#nextBtn')).addEventListener('click', () => {
+            const rightBtn = assertDefined(document.querySelector('.response__word_right'));
+            const res = !rightBtn.classList.contains('hidden');
+            this.audiocallController.saveResult(res);
+            const options = this.audiocallController.getNextWord();
+            this.fillPage(options);
         });
-        const responsePlayImg = assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#responsePlayImg'));
-        responsePlayImg.addEventListener('click', () => {
-            audio.play();
+        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#donkKnowBtn')).addEventListener('click', () => {
+            this.audiocallController.saveResult(false);
+            const options = this.audiocallController.getNextWord();
+            this.fillPage(options);
         });
-        audio.autoplay = true;
-        const arrRandomSufledId = this.getRandomWordsId(0);
-        for (let i = 0; i < COUNT_RESPONSE_WORD; i += 1) {
-            const tmpId = arrRandomSufledId[i];
-            const tmpWord = words[tmpId];
+        this.fillPage(options);
+    }
 
-            const answerMark = document.createElement('span');
-            answerMark.classList.add('response-mark');
-            const responseMarkClass = 0 === tmpId ? 'response__word_right' : 'response__word_wrong';
-            answerMark.classList.add(responseMarkClass);
-            answerMark.classList.add('hidden');
+    private fillPage(words: wordForGame[]): void{
+        words.forEach(word => {
+            const wordsDiv = assertDefined(document.querySelector('#words'));
+            const responseMark = document.createElement('span');
+            responseMark.classList.add('response-mark');
+            responseMark.classList.add('hidden');
             const btn = document.createElement('button');
-            btn.dataset.wirdId = tmpWord._id;
-            btn.append(answerMark);
-            btn.innerHTML += tmpWord.wordTranslate;
+            btn.dataset.wirdId = word._id;
+            btn.append(responseMark);
+            btn.innerHTML += word.wordTranslate;
             btn.classList.add('audiocall__button');
-            btn.classList.add('audiocall__button_response');
+            btn.classList.add('option');
             btn.addEventListener('click', (ev: Event) => {
                 const target = ev.target as HTMLButtonElement;
                 assertDefined(target.querySelector('.response-mark')).classList.toggle('hidden');
-                document.querySelectorAll<HTMLButtonElement>('.audiocall__button_response').
+                this.toggleResponse();
+                document.querySelectorAll<HTMLButtonElement>('.option').
                     forEach(btn => btn.disabled = true);
             });
             wordsDiv.append(btn);
-        }
-        this.rootElement.append(audiocallDiv);
+            if(word.rigth){
+                console.log(responseMark);
+                responseMark.classList.add('response__word_right');
+                assertDefined(document.querySelector('#responseWord')).innerHTML = word.word;
+                const playImg = assertDefined(document.querySelector<HTMLImageElement>('#playImg'));
+                const audio = this.geAudio(`${HOST}/${word.audio}`, playImg);
+                const playBtn = assertDefined(document.querySelector<HTMLButtonElement>('#ascPlayBtn'));
+                playBtn.addEventListener('click', () => {
+                    audio.play();
+                });
+                const responsePlayBtn = assertDefined(document.querySelector<HTMLButtonElement>('#responsePlayBtn'));
+                responsePlayBtn.addEventListener('click', () => {
+                    audio.play();
+                });
+                audio.autoplay = true;
+            } else {
+                responseMark.classList.add('response__word_wrong');
+            }
+        })
+    }
+    private toggleResponse(){
+        assertDefined(document.querySelector('#ascPlayBtn')).classList.toggle('hidden');
+        assertDefined(document.querySelector('#response')).classList.toggle('hidden');
+        assertDefined(document.querySelector('#donkKnowBtn')).classList.toggle('hidden');
+        assertDefined(document.querySelector('#nextBtn')).classList.toggle('hidden');
     }
     private geAudio(src: string, playImg: HTMLImageElement): HTMLAudioElement {
         const audio = new Audio();
@@ -89,26 +115,6 @@ export default class AudiocallView extends ViewInterface {
         });
         return audio;
     }
-    private getRandomWordsId(curentWordId: number): number[] {
-        let arrId = [curentWordId];
-        let testId = -1;
-        while (arrId.length !== COUNT_RESPONSE_WORD) {
-            testId = this.getRandomNum(this.words.length);
-            if (!arrId.includes(testId)) {
-                arrId.push(testId);
-            }
-        }
-        const shufledArr = this.shufleArray(arrId);
-        return shufledArr;
-    }
-    private shufleArray<T>(arr: T[]): T[] {
-        for (let i = arr.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-    private getRandomNum(max: number): number {
-        return Math.floor(Math.random() * max)
-    }
 }
+
+export default AudiocallView;
