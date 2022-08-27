@@ -1,6 +1,11 @@
+import EbookView from '../views/eBookView';
+
 import MainView from '../views/mainView';
 import TestView from '../views/test';
 import { ViewConstructor } from '../views/viewInterface';
+import RegistrationView from '../views/registrationView';
+import LogoutView from '../views/logoutView';
+import SigninView from '../views/signinView';
 import StatView from '../views/statView';
 import SprintGameView from "../views/sprintGameView";
 
@@ -26,6 +31,10 @@ export default class RouterController {
             '/': MainView,
             '/test': TestView,
             '/stats': StatView,
+            '/ebook': EbookView,
+            '/signin': SigninView,
+            '/registration': RegistrationView,
+            '/logout': LogoutView,
             '/sprint': SprintGameView
         };
         this.history = window.history;

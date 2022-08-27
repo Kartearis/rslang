@@ -1,33 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Async race</title>
+    <title>RSLang</title>
+    <link rel="icon" href="./assets/logo/lang.ico" />
 </head>
+
 <body class="container">
-    <header class="header-container">
-        <h1 class="app-header">Async race</h1>
-        <ul class="nav-list">
-            <li class="nav-list__link" id="garage">Garage</li>
-            <li class="nav-list__link" id="records">Records</li>
-        </ul>
-        <!--      <div class="burger-button">-->
-        <!--          <div class="burger-button__icon"></div>-->
-        <!--      </div>-->
+    <header class="header">
+        <div class="header-wrapper">
+            <nav>
+                <ul class="menu-list">
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" href="#">Саванна</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" href="#">Аудиовызов</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" href="#">Спринт</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" href="#">О команде</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="ebook" href="#">Учебник</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="registration" href="#">Вход</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="signin" href="#">Регистрация</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="logout" href="#">Выход</a></li>
+                </ul>
+            </nav>
+            <div class="header-auth">
+                <img src="./assets/logo/auth.svg" alt="" class="auth-logo">
+            </div>
+        </div>
     </header>
-    <main class="content">
-    </main>
+    <main class="content"></main>
     <footer class="footer">
-        <p class="footer__copyright">
-            <a class="footer__copyright-link" href="https://github.com/Kartearis">Kartearis</a>, 2022
-        </p>
-        <div class="rs-logo">
-            <a class="rs-logo__link" href="https://rs.school/js/">
-                <img alt="Rs school logo" class="rs-logo__icon" src="assets/logo/rs_school_js.svg">
-            </a>
+        <div class="footer-wrapper">
+            <div class="rs-group">
+                <a class="rs-group__link" href="https://rs.school/">
+                    <img class="rs-group__img" src="./assets/logo/rs-school.svg" alt="" >
+                </a>
+            </div>
+            <span class="year-group">
+                2022
+            </span>
+            <div class="git-group">
+                <a class="git-group__link" href="https://github.com/Kartearis">
+                    <img class="git-group__img" src="./assets/logo/git.svg" alt=""></a>
+                <a class="git-group__link" href="https://github.com/palasja">
+                    <img class="git-group__img" src="./assets/logo/git.svg" alt=""></a>
+                <a class="git-group__link" href="https://github.com/Evg2ChainzDev">
+                    <img class="git-group__img" src="./assets/logo/git.svg" alt=""></a>
+            </div>
         </div>
     </footer>
 </body>
+
 </html>
