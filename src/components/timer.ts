@@ -21,6 +21,7 @@ export default class Timer extends HTMLElement {
     }
 
     startTimer(): void {
+        this.stopTimer();
         this.currentTime = this.timeLimit;
         this.redraw();
         this.timerId = window.setInterval(() => this.timerTick(), 1000);
