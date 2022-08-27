@@ -2,6 +2,7 @@ import ViewInterface from './viewInterface';
 import './sprint-game.css';
 import Timer from "../components/timer";
 import {assertDefined} from "../helpers/helpers";
+import ComboCounter from "../components/comboCounter";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -21,7 +22,7 @@ template.innerHTML = `
                     <span class="icon icon--size-1 icon--sound"></span>
                 </button>
             </div>
-            <div class="sprint-game__combo-counter">2</div>
+            <div class="sprint-game__combo-container"></div>
             <div class="sprint-game__word-container">
                 <div class="sprint-game__original-word">Cat</div>
                 <div class="sprint-game__translation">Кот</div>
@@ -35,13 +36,25 @@ template.innerHTML = `
 `;
 
 export default class SprintGameView extends ViewInterface {
-    private timer: Timer | null = null
+    private timer: Timer
+    private comboCounter: ComboCounter
+
+    constructor(rootElement: HTMLElement) {
+        super(rootElement);
+        this.timer = new Timer(60);
+        this.comboCounter = new ComboCounter();
+    }
 
     show(): void {
+        this.rootElement.innerHTML = "";
         this.rootElement.append(template.content.cloneNode(true));
         const timerContainer = assertDefined(this.rootElement.querySelector('.sprint-game__timer-container'));
-        this.timer = new Timer(60);
         timerContainer.append(this.timer);
         this.timer.startTimer();
+        const comboContainer = assertDefined(this.rootElement.querySelector('.sprint-game__combo-container'));
+        comboContainer.append(this.comboCounter);
+        this.comboCounter.reset();
+        const rightButton = assertDefined(this.rootElement.querySelector('.game-button--right'));
+        rightButton.addEventListener('click', () => this.comboCounter.up());
     }
 }
