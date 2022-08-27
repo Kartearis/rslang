@@ -1,0 +1,46 @@
+@import '../../icons.css';
+
+.sprint-intro {
+    background-color: var(--color-backgroud);
+    color: var(--color-shaded);
+    display: grid;
+    grid-template-rows: 70px 1fr 50px;
+    min-height: 370px;
+}
+
+.sprint-intro__controls-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.sprint-intro__timer-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.intro-button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--color-shaded);
+    padding: 5px;
+    transition: transform 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.intro-button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.sprint-intro__motivation {
+    align-self: center;
+    justify-self: center;
+    font-size: var(--font-2);
+    font-weight: var(--font-weight-emphasis);
+    color: var(--color-accent-0);
+}
+
+.icon--cross {
+    --path: url('../../assets/icons/bi_x.svg');
+}

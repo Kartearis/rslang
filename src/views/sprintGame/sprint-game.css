@@ -1,4 +1,4 @@
-@import '../icons.css';
+@import '../../icons.css';
 
 .sprint-game {
     padding: 10px;
@@ -120,17 +120,17 @@
 }
 
 .icon--volume {
-    --path: url('../assets/icons/bi_volume-up.svg');
+    --path: url('../../assets/icons/bi_volume-up.svg');
 }
 
 .icon--mute {
-    --path: url('../assets/icons/bi_volume-mute.svg');
+    --path: url('../../assets/icons/bi_volume-mute.svg');
 }
 
 .icon--cross {
-    --path: url('../assets/icons/bi_x.svg');
+    --path: url('../../assets/icons/bi_x.svg');
 }
 
 .icon--sound {
-    --path: url('../assets/icons/bi_music-note.svg');
+    --path: url('../../assets/icons/bi_music-note.svg');
 }
