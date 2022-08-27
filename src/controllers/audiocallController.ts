@@ -1,40 +1,44 @@
-import { assertDefined, COUNT_GAME_RESPONSE_WORD } from "../helpers/helpers";
-import { wordForGame, wordType } from "../helpers/types";
-import AudiocallView from "../views/audiocallView";
+import { COUNT_GAME_RESPONSE_WORD } from '../helpers/helpers';
+import { audiocallWord, wordGame, wordType } from '../helpers/types';
+import GameController from './gameController';
 
-class AudiocallController{
-    words: wordType[];
-    results: boolean[];
-    counter = 0;
-    constructor(_words:wordType[]){
-        this.words = this.shufleArray(_words);
-        this.results = new Array(_words.length);
+class AudiocallController extends GameController {
+    audiocallResults: wordGame[];
+    constructor(_words: wordType[]) {
+        super(_words);
+        this.audiocallResults = [];
     }
-    getNextWord():wordForGame[]{
-        this.counter += 1;
+
+    itterator = 0;
+    getNextWord(): audiocallWord[] {
+        this.itterator += 1;
+        this.words;
         return this.getResponseWords();
     }
-    getResponseWords():wordForGame[]{
-        const responseOptionsIndex = this.getResponseWordId(this.counter);
-        const responseOptionsWords = responseOptionsIndex.map<wordForGame>(index => {
-            const word = this.words[index];
-            const id = word._id === undefined ? '' : word._id;
-            return {
-                _id: id,
-                audio: word.audio,
-                image:word.image,
-                word: word.word,
-                wordTranslate: word.wordTranslate,
-                rigth: index === this.counter ? true : false,
+    getResponseWords(): audiocallWord[] {
+        const responseOptionsIndex = this.getResponseWordId(this.itterator);
+        const responseOptionsWords = responseOptionsIndex.map<audiocallWord>((index) => {
+            const wordGameResult = {
+                wordGame: this.words[index],
+                right: index === this.itterator ? true : false,
+                result: false,
             };
+            return wordGameResult;
         });
         return responseOptionsWords;
     }
-    saveResult(res: boolean){
-        this.results[this.counter] = res;
+    async rememberResult(_result: boolean) {
+        this.audiocallResults.push({
+            wordGame: this.words[this.itterator],
+            result: _result,
+        });
+        if (this.itterator === this.words.length - 1) {
+            await this.saveResult(this.audiocallResults);
+        }
     }
+    //get shufled word array of number
     private getResponseWordId(curentWordId: number): number[] {
-        let arrId = [curentWordId];
+        const arrId = [curentWordId];
         let testId = -1;
         while (arrId.length !== COUNT_GAME_RESPONSE_WORD) {
             testId = this.getRandomNum(this.words.length);
@@ -45,16 +49,6 @@ class AudiocallController{
         const shufledArr = this.shufleArray(arrId);
         return shufledArr;
     }
-    private shufleArray<T>(arr: T[]): T[] {
-        for (let i = arr.length - 1; i > 0; i--) {
-            let j = this.getRandomNum(i+1);
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-    private getRandomNum(max: number): number {
-        return Math.floor(Math.random() * max)
-    }
 }
 
-export default AudiocallController
+export default AudiocallController;

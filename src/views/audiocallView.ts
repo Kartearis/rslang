@@ -1,6 +1,6 @@
-import { wordForGame, wordType } from '../helpers/types';
+import { audiocallWord, wordType } from '../helpers/types';
 import ViewInterface from './viewInterface';
-import './audiocallView.css'
+import './audiocallView.css';
 import { assertDefined, HOST } from '../helpers/helpers';
 import audio from '../assets/audio.png';
 import AudiocallController from '../controllers/audiocallController';
@@ -34,7 +34,7 @@ class AudiocallView extends ViewInterface {
     show(): void {
         this.rootElement.innerText = 'Audio';
     }
-    draw(words: wordType[]){
+    draw(words: wordType[]) {
         this.audiocallController = new AudiocallController(words);
         const options = this.audiocallController.getResponseWords();
         this.rootElement.innerText = '';
@@ -46,26 +46,34 @@ class AudiocallView extends ViewInterface {
         assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#nextBtn')).addEventListener('click', () => {
             const rightBtn = assertDefined(document.querySelector('.response__word_right'));
             const res = !rightBtn.classList.contains('hidden');
-            this.audiocallController.saveResult(res);
+            this.audiocallController.rememberResult(res);
             const options = this.audiocallController.getNextWord();
+            this.toggleResponse();
             this.fillPage(options);
         });
         assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#donkKnowBtn')).addEventListener('click', () => {
-            this.audiocallController.saveResult(false);
+            this.audiocallController.rememberResult(false);
             const options = this.audiocallController.getNextWord();
+            this.toggleResponse();
             this.fillPage(options);
         });
         this.fillPage(options);
     }
 
-    private fillPage(words: wordForGame[]): void{
-        words.forEach(word => {
+    private fillPage(words: audiocallWord[]): void {
+        assertDefined(document.querySelector<HTMLDivElement>('#words')).innerText = '';
+        words.forEach((wordForGame) => {
+            const word = wordForGame.wordGame;
             const wordsDiv = assertDefined(document.querySelector('#words'));
             const responseMark = document.createElement('span');
             responseMark.classList.add('response-mark');
             responseMark.classList.add('hidden');
+            wordForGame.right
+                ? responseMark.classList.add('response__word_right')
+                : responseMark.classList.add('response__word_wrong');
+            assertDefined(document.querySelector<HTMLImageElement>('#responseImg')).src = `${HOST}/${word.image}`;
             const btn = document.createElement('button');
-            btn.dataset.wirdId = word._id;
+            btn.dataset.wirdId = word.id;
             btn.append(responseMark);
             btn.innerHTML += word.wordTranslate;
             btn.classList.add('audiocall__button');
@@ -74,13 +82,10 @@ class AudiocallView extends ViewInterface {
                 const target = ev.target as HTMLButtonElement;
                 assertDefined(target.querySelector('.response-mark')).classList.toggle('hidden');
                 this.toggleResponse();
-                document.querySelectorAll<HTMLButtonElement>('.option').
-                    forEach(btn => btn.disabled = true);
+                document.querySelectorAll<HTMLButtonElement>('.option').forEach((btn) => (btn.disabled = true));
             });
             wordsDiv.append(btn);
-            if(word.rigth){
-                console.log(responseMark);
-                responseMark.classList.add('response__word_right');
+            if (wordForGame.right) {
                 assertDefined(document.querySelector('#responseWord')).innerHTML = word.word;
                 const playImg = assertDefined(document.querySelector<HTMLImageElement>('#playImg'));
                 const audio = this.geAudio(`${HOST}/${word.audio}`, playImg);
@@ -93,12 +98,10 @@ class AudiocallView extends ViewInterface {
                     audio.play();
                 });
                 audio.autoplay = true;
-            } else {
-                responseMark.classList.add('response__word_wrong');
             }
-        })
+        });
     }
-    private toggleResponse(){
+    private toggleResponse() {
         assertDefined(document.querySelector('#ascPlayBtn')).classList.toggle('hidden');
         assertDefined(document.querySelector('#response')).classList.toggle('hidden');
         assertDefined(document.querySelector('#donkKnowBtn')).classList.toggle('hidden');

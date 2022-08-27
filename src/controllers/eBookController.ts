@@ -1,5 +1,5 @@
-import { HOST, WORDS_ON_PAGE } from '../helpers/helpers';
-import { filterForUserWords, responceUserWords, userWordIndo, wordProperty, wordType } from '../helpers/types';
+import { HOST } from '../helpers/helpers';
+import { filterForUserWords, responceUserWords, wordType } from '../helpers/types';
 
 class EBookController {
     private static instance: EBookController;
@@ -41,12 +41,12 @@ class EBookController {
     async getWordsUserOnPage(group: number, page: number): Promise<wordType[]> {
         const words = await this.getPageWordsOnGroup(group, page);
         const userWordsOnGroup = await this.getGroupUserWords(group);
-        words.forEach(word => {
-            const userWord = userWordsOnGroup.find( userWord => userWord.word === word.word);
-            if(userWord !== undefined){
+        words.forEach((word) => {
+            const userWord = userWordsOnGroup.find((userWord) => userWord.word === word.word);
+            if (userWord !== undefined) {
                 word.userWord = userWord.userWord;
             }
-        })
+        });
         return words;
     }
     // async getWordsUserOnPage(group: number, page: number): Promise<wordType[]> {
