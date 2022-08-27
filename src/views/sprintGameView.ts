@@ -9,18 +9,26 @@ template.innerHTML = `
         <div class="sprint-game__timer-container">
         </div>
         <div class="sprint-game__point-container">
-        
+            0
         </div>
         <div class="sprint-game__controls-container">
-            <button class="game-button">M</button>
-            <button class="game-button">X</button>
+            <button class="game-button game-button--transparent"><span class="icon icon--size-1 icon--mute"></span></button>
+            <button class="game-button game-button--transparent"><span class="icon icon--size-1 icon--cross"></span></button>
         </div>
         <div class="sprint-game__game">
-            <div class="sprint-game__combo-counter"></div>
-            <div class="sprint-game__word-container"></div>
+            <div class="sprint-game__word-controls-container">
+                <button class="game-button game-button--transparent">
+                    <span class="icon icon--size-1 icon--sound"></span>
+                </button>
+            </div>
+            <div class="sprint-game__combo-counter">2</div>
+            <div class="sprint-game__word-container">
+                <div class="sprint-game__original-word">Cat</div>
+                <div class="sprint-game__translation">Кот</div>
+            </div>
             <div class="sprint-game__game-controls">
                 <button class="game-button game-button--wide game-button--wrong">Wrong</button>
-                <button class="game-button game-button--wide game-button--correct">Right</button>
+                <button class="game-button game-button--wide game-button--right">Right</button>
             </div>
         </div>
     </div>
