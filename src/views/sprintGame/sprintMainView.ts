@@ -3,7 +3,7 @@ import './sprint-game.css';
 import Timer from "../../components/timer";
 import {assertDefined} from "../../helpers/helpers";
 import ComboCounter from "../../components/comboCounter";
-import SprintGameController from "../../controllers/sprintGameController";
+import SprintGameController, {SprintWord} from "../../controllers/sprintGameController";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -29,8 +29,8 @@ template.innerHTML = `
                 <div class="sprint-game__translation">Кот</div>
             </div>
             <div class="sprint-game__game-controls">
-                <button class="game-button game-button--wide game-button--wrong">Wrong</button>
-                <button class="game-button game-button--wide game-button--right">Right</button>
+                <button data-answer="wrong" class="game-button game-button--wide game-button--wrong">Wrong</button>
+                <button data-answer="right" class="game-button game-button--wide game-button--right">Right</button>
             </div>
         </div>
     </div>
@@ -39,11 +39,16 @@ template.innerHTML = `
 export default class SprintMainView extends ViewInterface {
     private timer: Timer
     private comboCounter: ComboCounter
+    private wordContainer: HTMLElement | null = null
+    private translationContainer: HTMLElement | null = null
+    private pointsContainer: HTMLElement | null = null
+    private controller: SprintGameController
 
-    constructor(rootElement: HTMLElement, timer: Timer, controller: SprintGameController) {
+    constructor(rootElement: HTMLElement, timer: Timer, comboCounter: ComboCounter, controller: SprintGameController) {
         super(rootElement);
         this.timer = timer;
-        this.comboCounter = new ComboCounter();
+        this.comboCounter = comboCounter;
+        this.controller = controller;
     }
 
     show(): void {
@@ -56,6 +61,28 @@ export default class SprintMainView extends ViewInterface {
         comboContainer.append(this.comboCounter);
         this.comboCounter.reset();
         const rightButton = assertDefined(this.rootElement.querySelector('.game-button--right'));
-        rightButton.addEventListener('click', () => this.comboCounter.up());
+        rightButton.addEventListener('click', () => this.handleAnswer("right"));
+        const wrongButton = assertDefined(this.rootElement.querySelector('.game-button--wrong'));
+        wrongButton.addEventListener('click', () => this.handleAnswer("wrong"));
+        this.wordContainer = this.rootElement.querySelector('.sprint-game__original-word');
+        this.translationContainer = this.rootElement.querySelector('.sprint-game__translation');
+        this.pointsContainer = this.rootElement.querySelector('.sprint-game__point-container')
+    }
+
+    handleAnswer(answer: "wrong" | "right"): void {
+        this.controller.handleUserAnswer(
+            answer,
+            assertDefined(this.wordContainer).innerText,
+            assertDefined(this.translationContainer).innerText
+        );
+    }
+
+    updatePoints(points: number): void {
+        assertDefined(this.pointsContainer).innerText = points.toString();
+    }
+
+    showNewWord(word: SprintWord): void {
+        assertDefined(this.wordContainer).innerText = word.word;
+        assertDefined(this.translationContainer).innerText = word.translation;
     }
 }
