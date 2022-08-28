@@ -40,7 +40,7 @@ export type wordProperty = {
         success: string | null;
         successRow: string | null;
         learnedDate: string | null;
-        lastAttemps: string | null;
+        lastAttempt: string | null;
     };
 };
 export type wordGame = {

@@ -27,13 +27,13 @@ class AudiocallController extends GameController {
         });
         return responseOptionsWords;
     }
-    async rememberResult(_result: boolean) {
+    rememberResult(_result: boolean) {
         this.audiocallResults.push({
             wordGame: this.words[this.itterator],
             result: _result,
         });
         if (this.itterator === this.words.length - 1) {
-            await this.saveResult(this.audiocallResults);
+            this.saveResult(this.audiocallResults);
         }
     }
     //get shufled word array of number
@@ -46,7 +46,7 @@ class AudiocallController extends GameController {
                 arrId.push(testId);
             }
         }
-        const shufledArr = this.shufleArray(arrId);
+        const shufledArr = this.shuffleArray(arrId);
         return shufledArr;
     }
 }

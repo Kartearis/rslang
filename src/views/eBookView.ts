@@ -233,7 +233,7 @@ class EbookView extends ViewInterface {
                 successRow: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
                 learnedDate:
                     status === wordStatus.easy ? `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}` : null,
-                lastAttemps: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttemps,
+                lastAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttempt,
             },
         };
         const group = this.group;
