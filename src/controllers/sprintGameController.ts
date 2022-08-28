@@ -51,16 +51,24 @@ export default class SprintGameController {
         this.view = new SprintMainView(this.rootElement, this.timer, this.comboCounter, this);
         this.index = 0;
         this.points = 0;
+        this.timer.addEventListener('timeUp', () => this.showResults());
         this.view.show();
         this.showWord();
     }
 
     showResults(): void {
+        // Should actually defined on all views (via base view) and called without typeguard
+        // TODO: refactor
+        if (this.view instanceof SprintMainView)
+            this.view.removeGlobalHandlers();
         this.view = new SprintOutroView(this.rootElement, this);
         this.view.show();
     }
 
     exit(): void {
+        // TODO: refactor
+        if (this.view instanceof SprintMainView)
+            this.view.removeGlobalHandlers();
         this.router.back();
     }
 

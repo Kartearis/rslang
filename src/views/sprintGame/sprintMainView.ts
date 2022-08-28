@@ -5,6 +5,8 @@ import {assertDefined} from "../../helpers/helpers";
 import ComboCounter from "../../components/comboCounter";
 import SprintGameController, {SprintWord} from "../../controllers/sprintGameController";
 
+const KEYCODE_WRONG = 'ArrowLeft', KEYCODE_RIGHT = 'ArrowRight';
+
 const template = document.createElement('template');
 template.innerHTML = `
     <div class="sprint-game">
@@ -43,6 +45,8 @@ export default class SprintMainView extends ViewInterface {
     private translationContainer: HTMLElement | null = null
     private pointsContainer: HTMLElement | null = null
     private controller: SprintGameController
+    private buttonState: {wrong: boolean, right: boolean} = {wrong: false, right: false}
+    private registeredGlobalHandlers: {handler: (event: KeyboardEvent) => void, eventName: string}[] = []
 
     constructor(rootElement: HTMLElement, timer: Timer, comboCounter: ComboCounter, controller: SprintGameController) {
         super(rootElement);
@@ -66,7 +70,26 @@ export default class SprintMainView extends ViewInterface {
         wrongButton.addEventListener('click', () => this.handleAnswer("wrong"));
         this.wordContainer = this.rootElement.querySelector('.sprint-game__original-word');
         this.translationContainer = this.rootElement.querySelector('.sprint-game__translation');
-        this.pointsContainer = this.rootElement.querySelector('.sprint-game__point-container')
+        this.pointsContainer = this.rootElement.querySelector('.sprint-game__point-container');
+        this.installGlobalHandlers();
+    }
+
+    handleKeyDown(event: KeyboardEvent) {
+        if (event.code === KEYCODE_WRONG && !event.repeat)
+            this.handleAnswer("wrong");
+        if (event.code === KEYCODE_RIGHT && !event.repeat)
+            this.handleAnswer("right");
+    }
+
+    installGlobalHandlers() {
+        const downHandler = (event: KeyboardEvent) => this.handleKeyDown(event);
+        document.addEventListener('keydown', downHandler);
+        this.registeredGlobalHandlers.push({eventName: 'keydown', handler: downHandler});
+    }
+
+    removeGlobalHandlers() {
+        this.registeredGlobalHandlers
+            .forEach((data) => document.removeEventListener(data.eventName, data.handler as EventListener));
     }
 
     handleAnswer(answer: "wrong" | "right"): void {
