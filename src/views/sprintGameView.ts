@@ -139,5 +139,6 @@ export default class SprintGameView extends ViewInterface {
         ];
         this.controller = new SprintGameController(this.rootElement, words);
         this.controller.showIntro();
+        // this.controller.showResults();
     }
 }

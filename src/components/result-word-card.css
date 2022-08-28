@@ -1,0 +1,38 @@
+@import '../icons.css';
+
+.result-word-card {
+    padding: 5px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-family-default);
+    color: var(--color-shaded);
+}
+
+.result-word-card__word {
+    font-weight: var(--font-weight-emphasis);
+    color: var(--color-accent-0);
+}
+
+.result-word-card__separator {
+
+}
+
+.result-word-card__button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--color-shaded);
+    padding: 5px;
+    transition: transform 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.result-word-card__button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.icon--sound {
+    --path: url('../assets/icons/bi_music-note.svg');
+}

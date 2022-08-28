@@ -61,7 +61,7 @@ export default class SprintGameController {
         // TODO: refactor
         if (this.view instanceof SprintMainView)
             this.view.removeGlobalHandlers();
-        this.view = new SprintOutroView(this.rootElement, this);
+        this.view = new SprintOutroView(this.rootElement, this, this.points, this.history);
         this.view.show();
     }
 
