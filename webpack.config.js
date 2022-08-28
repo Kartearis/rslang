@@ -31,7 +31,7 @@ const baseConfig = {
                 options: {
                     name: '[name].[ext]',
                 },
-            }
+            },
         ],
     },
     resolve: {
