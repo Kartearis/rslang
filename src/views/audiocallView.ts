@@ -2,18 +2,18 @@ import { audiocallWord, wordType } from '../helpers/types';
 import ViewInterface from './viewInterface';
 import './audiocallView.css';
 import { assertDefined, HOST } from '../helpers/helpers';
-import audio from '../assets/audio.png';
+import audioImg from '../assets/audio.png';
 import AudiocallController from '../controllers/audiocallController';
 const audiocallBlock = `
     <div class='audiocall__word-info word-info'>
         <button id="ascPlayBtn" class="audiocall__button audiocall__button_asc">
-            <img class="word-info__audio" id="playImg" src="${audio}" />
+            <img class="word-info__audio" id="playImg" src="${audioImg}" />
         </button>
         <div id="response" class='word-info__response response hidden'>
             <img class="response__img" id="responseImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />    
            <div class="response__word">
             <button id="responsePlayBtn" class="audiocall__button response__audio ">
-                <img class="response__audio-img" id="responsePlayImg" src="${audio}" />
+                <img class="response__audio-img" id="responsePlayImg" src="${audioImg}" />
             </button>
             <p id="responseWord" class="response__word"></p>
            </div>
@@ -25,6 +25,7 @@ const audiocallBlock = `
         <button id="nextBtn" class="audiocall__button audiocall__buttons_next hidden">→</button>
     </div>
 `;
+const audio = new Audio();
 class AudiocallView extends ViewInterface {
     audiocallController: AudiocallController = new AudiocallController([]);
     constructor(rootElement: HTMLElement) {
@@ -88,7 +89,8 @@ class AudiocallView extends ViewInterface {
             if (wordForGame.right) {
                 assertDefined(document.querySelector('#responseWord')).innerHTML = word.word;
                 const playImg = assertDefined(document.querySelector<HTMLImageElement>('#playImg'));
-                const audio = this.geAudio(`${HOST}/${word.audio}`, playImg);
+
+                this.geAudio(`${HOST}/${word.audio}`, playImg);
                 const playBtn = assertDefined(document.querySelector<HTMLButtonElement>('#ascPlayBtn'));
                 playBtn.addEventListener('click', () => {
                     audio.play();
@@ -107,16 +109,15 @@ class AudiocallView extends ViewInterface {
         assertDefined(document.querySelector('#donkKnowBtn')).classList.toggle('hidden');
         assertDefined(document.querySelector('#nextBtn')).classList.toggle('hidden');
     }
-    private geAudio(src: string, playImg: HTMLImageElement): HTMLAudioElement {
-        const audio = new Audio();
+    private geAudio(src: string, playImg: HTMLImageElement) {
         audio.src = src;
+        audio.load();
         audio.addEventListener('play', () => {
             playImg.classList.toggle('word-info__audio_play');
         });
         audio.addEventListener('pause', () => {
             playImg.classList.toggle('word-info__audio_play');
         });
-        return audio;
     }
 }
 

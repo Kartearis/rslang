@@ -1,0 +1,56 @@
+.footer {
+  height: 50px;
+  background-color: var(--color-background);
+  display: flex;
+  justify-content: space-around;
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  position: fixed;
+}
+
+.footer-wrapper {
+  width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+
+.rs-group {
+  display: flex;
+}
+
+.rs-group__img{
+  display: block;
+  transform: scale(1);
+  transition: .3s;
+}
+
+.rs-group__link:hover .rs-group__img {
+  transform: scale(1.1);
+} 
+
+.year-group {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.git-group {
+  display: flex;
+}
+
+.git-group__link{
+  margin-left: 20px;
+  display: block;
+}
+
+.git-group__img {
+  display: block;
+  transition: .3s;
+}
+
+.git-group__link:hover .git-group__img {
+  transform: scale(1.1);
+} 

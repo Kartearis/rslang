@@ -100,7 +100,6 @@ class EbookView extends ViewInterface {
                 ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
                 : await this.eBookController.getPageWordsOnGroup(this.group, this.pagination.page);
         }
-        console.log(this.words);
     }
     getGroups(): HTMLUListElement {
         const MAX_GROUP = 6;
@@ -267,13 +266,6 @@ class EbookView extends ViewInterface {
             await this.wordController.updateUserWord(wordId, wordUpdate);
         }
     }
-    // isEmpty(obj: wordProperty) {
-    //     for (const key in obj) {
-    //         // если тело цикла начнет выполняться - значит в объекте есть свойства
-    //         return false;
-    //     }
-    //     return true;
-    // }
 }
 
 export default EbookView;
