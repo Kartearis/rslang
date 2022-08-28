@@ -20,13 +20,13 @@ class UserWordController {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(word),
+            body: JSON.stringify(word, (k, v) => (v === null ? 'null' : v)),
         });
         if (!resp.ok) {
             throw Error('Access token is missing or invalid');
         }
     }
-    async updateUserWord(wordId: string, word: wordProperty) {
+    async updateUserWord(wordId: string, word: wordProperty): Promise<void> {
         const { jwt, userId } = localStorage;
         const resp = await fetch(`${HOST}/users/${userId}/words/${wordId}`, {
             method: 'PUT',
@@ -35,15 +35,15 @@ class UserWordController {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(word),
+            body: JSON.stringify(word, (k, v) => (v === null ? 'null' : v)),
         });
         if (!resp.ok) {
             throw Error('Access token is missing or invalid');
         }
     }
-    async deleteUserWord(wordId: string) {
+    async deleteUserWord(userWordId: string) {
         const { jwt, userId } = localStorage;
-        const resp = await fetch(`${HOST}/users/${userId}/words/${wordId}`, {
+        const resp = await fetch(`${HOST}/users/${userId}/words/${userWordId}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${jwt}`,

@@ -7,6 +7,7 @@ import RegistrationView from '../views/registrationView';
 import LogoutView from '../views/logoutView';
 import SigninView from '../views/signinView';
 import StatView from '../views/statView';
+import AudiocallView from '../views/audiocallView';
 
 export type RouteConfig = Record<string, ViewConstructor>;
 
@@ -31,6 +32,7 @@ export default class RouterController {
             '/test': TestView,
             '/stats': StatView,
             '/ebook': EbookView,
+            '/audocall': AudiocallView,
             '/signin': SigninView,
             '/registration': RegistrationView,
             '/logout': LogoutView,

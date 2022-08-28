@@ -1,11 +1,13 @@
 import EBookController from '../controllers/eBookController';
-import { assertDefined, HARD_WORD_PAGE_NUM, HOST, WORDS_ON_PAGE } from '../helpers/helpers';
+import { assertDefined, HARD_WORD_GROUP_NUM, HOST, WORDS_ON_PAGE } from '../helpers/helpers';
 import { wordProperty, wordStatus, wordType } from '../helpers/types';
 import PaginationComponent from '../components/paginationComponent';
 import ViewInterface from './viewInterface';
 import UserController from '../controllers/userController';
-import UserWordController from '../controllers/wordController';
+import UserWordController from '../controllers/userWordController';
 import './eBook.css';
+import AudiocallView from './audiocallView';
+// import AudiocallView from './audiocallView';
 
 const template = `<div class="word-card" data-word-id="">
 <div class="word-card__img-container">
@@ -31,6 +33,8 @@ class EbookView extends ViewInterface {
     eBookController: EBookController;
     userController: UserController;
     wordController: UserWordController;
+    audiocallView: AudiocallView;
+    words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
         super(rootElement);
         this.eBookController = EBookController.getInstance();
@@ -38,34 +42,39 @@ class EbookView extends ViewInterface {
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
+        this.audiocallView = new AudiocallView(assertDefined(document.querySelector<HTMLElement>('.content')));
     }
 
     async show(): Promise<void> {
         this.rootElement.innerText = '';
         const groups = this.getGroups();
         const pagination = await this.pagination.getPagination();
+        const grouNavigation = document.createElement('div');
+        grouNavigation.classList.add('group-navigation');
+        const games = document.createElement('div');
+        grouNavigation.classList.add('games');
+        const audioCall = document.createElement('btn');
+        audioCall.innerText = 'Аудиовызов';
+        audioCall.addEventListener('click', () => {
+            this.audiocallView.draw(this.words);
+        });
+        games.append(audioCall);
+
+        grouNavigation.append(pagination);
+        grouNavigation.append(games);
+
         this.rootElement.append(groups);
-        this.rootElement.append( pagination);
-        
+        this.rootElement.append(grouNavigation);
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-        let words: wordType[] | null = [];
-        if (this.userController.isSignin() && this.group === HARD_WORD_PAGE_NUM) {
-            words = await this.eBookController.getHardWordsUser();
-        } else {
-            words = this.userController.isSignin()
-                ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
-                : await this.eBookController.getGroupWords(this.group, this.pagination.page);
-        }
-        if (words !== null) {
-            words.forEach((w) => {
-                const templateCard = document.createElement('template');
-                templateCard.innerHTML = template;
-                const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
-                const wordCard = this.getWordCard(w, clone);
-                bookContainer.append(wordCard);
-            });
-        }
+        await this.loadWords();
+        this.words.forEach((w) => {
+            const templateCard = document.createElement('template');
+            templateCard.innerHTML = template;
+            const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
+            const wordCard = this.getWordCard(w, clone);
+            bookContainer.append(wordCard);
+        });
         this.rootElement.append(bookContainer);
     }
 
@@ -73,26 +82,25 @@ class EbookView extends ViewInterface {
         assertDefined(document.querySelector('.ebook-container')).remove();
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-        let words: wordType[] | null = [];
-        if (this.group === HARD_WORD_PAGE_NUM) {
-            words = await this.eBookController.getHardWordsUser();
-        } else {
-            words = this.userController.isSignin()
-                ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
-                : await this.eBookController.getGroupWords(this.group, this.pagination.page);
-        }
-        if (words !== null) {
-            words.forEach((w) => {
-                const templateCard = document.createElement('template');
-                templateCard.innerHTML = template;
-                const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
-                const wordBlock = this.getWordCard(w, clone);
-                bookContainer.append(wordBlock);
-            });
-        }
+        await this.loadWords();
+        this.words.forEach((w) => {
+            const templateCard = document.createElement('template');
+            templateCard.innerHTML = template;
+            const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
+            const wordBlock = this.getWordCard(w, clone);
+            bookContainer.append(wordBlock);
+        });
         this.rootElement.append(bookContainer);
     }
-
+    private async loadWords() {
+        if (this.userController.isSignin() && this.group === HARD_WORD_GROUP_NUM) {
+            this.words = await this.eBookController.getHardWordsUser();
+        } else {
+            this.words = this.userController.isSignin()
+                ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
+                : await this.eBookController.getPageWordsOnGroup(this.group, this.pagination.page);
+        }
+    }
     getGroups(): HTMLUListElement {
         const MAX_GROUP = 6;
         const ul = document.createElement('ul');
@@ -102,7 +110,7 @@ class EbookView extends ViewInterface {
             ul.append(li);
         }
         if (this.userController.isSignin()) {
-            const li = this.getGroupLi(`Сложные слова`, HARD_WORD_PAGE_NUM);
+            const li = this.getGroupLi(`Сложные слова`, HARD_WORD_GROUP_NUM);
             ul.append(li);
         }
         return ul;
@@ -130,7 +138,11 @@ class EbookView extends ViewInterface {
         const wordCard = template;
         const card = assertDefined(wordCard.querySelector('.word-card')) as HTMLDivElement;
         card.classList.add(`group${this.group}`);
-        card.dataset.cardId = word._id === undefined ? word.id : word._id;
+        card.dataset.wordId = word.id;
+
+        if (word.userWord !== undefined) {
+            card.dataset.wordStatus = word.userWord.difficulty;
+        }
         const audioBtn = assertDefined(wordCard.querySelector('#audioBtn')) as HTMLButtonElement;
         this.addAudioAction(word.audio, word.audioMeaning, word.audioExample, audioBtn);
         const img = assertDefined(wordCard.querySelector('#wordImg')) as HTMLImageElement;
@@ -151,9 +163,14 @@ class EbookView extends ViewInterface {
 
         if (this.userController.isSignin()) {
             if (word.userWord !== undefined) {
-                if (word.userWord.difficulty === wordStatus.easy) learnedMark.disabled = true;
-                card.classList.add(`word-card_${word.userWord.difficulty}`);
-                markHard.disabled = true;
+                if (word.userWord.difficulty === wordStatus.easy) {
+                    card.classList.add(`word-card_easy`);
+                    learnedMark.disabled = true;
+                    markHard.disabled = true;
+                } else if (word.userWord.difficulty === wordStatus.hard) {
+                    card.classList.add(`word-card_hard`);
+                    markHard.disabled = true;
+                }
             }
             markHard.addEventListener('click', (ev) => this.markCard(ev, wordStatus.hard));
             learnedMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
@@ -203,41 +220,51 @@ class EbookView extends ViewInterface {
     private async markCard(ev: Event, status: wordStatus) {
         const target = ev.target as HTMLButtonElement;
         const card = assertDefined(target.closest<HTMLElement>('.word-card'));
-        const id = assertDefined(card.dataset.cardId);
-        const wortUpdate: wordProperty = {
+        const wordId = assertDefined(card.dataset.wordId);
+        const date = new Date();
+
+        const currentWord = assertDefined(this.words.find((word) => word.id === wordId));
+        const currentWordProperty = currentWord.userWord;
+        const wordUpdate: wordProperty = {
             difficulty: status,
-            optional: {},
+            optional: {
+                failed: currentWordProperty === undefined ? null : currentWordProperty.optional.failed,
+                success: currentWordProperty === undefined ? null : currentWordProperty.optional.success,
+                successRow: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
+                learnedDate:
+                    status === wordStatus.easy ? `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}` : null,
+                lastAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttempt,
+            },
         };
         const group = this.group;
-        if (status === wordStatus.hard) {
-            await this.wordController.addUserWord(id, wortUpdate).then(() => {
-                card.classList.add(`word-card_${status}`);
+        await this.saveCardState(wordId, wordUpdate, card.dataset.wordStatus).then(() => {
+            if (status === wordStatus.hard) {
+                card.classList.add(`word-card_hard`);
                 target.disabled = true;
-            });
-        } else {
-            const markHard = assertDefined(card.querySelector('#hardMark')) as HTMLButtonElement;
-            const succesAction = () => {
-                //if group is hard remove from page, else change style
-                if (group === HARD_WORD_PAGE_NUM) {
+                card.dataset.wordStatus = wordStatus.hard;
+            } else {
+                if (group === HARD_WORD_GROUP_NUM) {
                     card.remove();
                 } else {
-                    card.classList.remove(`word-card_${wordStatus.hard}`);
-                    card.classList.add(`word-card_${status}`);
+                    card.classList.remove(`word-card_hard`);
+                    card.classList.add(`word-card_easy`);
                     target.disabled = true;
-                    markHard.disabled = true;
+                    assertDefined(card.querySelector<HTMLButtonElement>('#hardMark')).disabled = true;
+                    card.dataset.wordStatus = status;
                 }
-            };
-            //if word in hard group - change, else that new user word and create
-            if (card.classList.contains(`word-card_${wordStatus.hard}`)) {
-                await this.wordController.updateUserWord(id, wortUpdate).then(() => succesAction());
-            } else {
-                await this.wordController.addUserWord(id, wortUpdate).then(() => succesAction());
             }
-        }
+        });
         const counHard = document.querySelectorAll(`.word-card_${wordStatus.hard}`).length;
         const counLearned = document.querySelectorAll(`.word-card_${wordStatus.easy}`).length;
         if (counHard + counLearned === WORDS_ON_PAGE)
             assertDefined(document.querySelector('.current-page')).classList.add('page-page-num_learned');
+    }
+    async saveCardState(wordId: string, wordUpdate: wordProperty, status: string | undefined) {
+        if (status === undefined) {
+            await this.wordController.addUserWord(wordId, wordUpdate);
+        } else {
+            await this.wordController.updateUserWord(wordId, wordUpdate);
+        }
     }
 }
 
