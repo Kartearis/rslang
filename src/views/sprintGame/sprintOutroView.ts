@@ -19,8 +19,8 @@ template.innerHTML = `
             </div>
         </div>
         <div class="sprint-outro__controls-container">
-            <button class="outro-button">Продолжить</button>
-            <button class="outro-button">Выйти</button>
+            <button class="outro-button" id="sprint-outro-continue">Продолжить</button>
+            <button class="outro-button" id="sprint-outro-exit">Выйти</button>
         </div>
     </div>
 `;
@@ -53,7 +53,10 @@ export default class SprintOutroView extends ViewInterface {
         errorCnt.innerText = this.errorCount.toString();
         correctCnt.innerText = this.correctCount.toString();
         (assertDefined(this.rootElement.querySelector('#outro-points')) as HTMLElement).innerText = this.points.toString();
-
+        assertDefined(this.rootElement.querySelector('#sprint-outro-continue'))
+            .addEventListener('click', () => this.controller.continue());
+        assertDefined(this.rootElement.querySelector('#sprint-outro-exit'))
+            .addEventListener('click', () => this.controller.exit());
     }
 
     addToStats(word: wordGame): void {

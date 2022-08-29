@@ -96,8 +96,14 @@ export default class SprintGameController extends GameController{
     }
 
     exit(): void {
+        // TODO: Maybe make all timers on controller or all timers in views?
         this.timer.stopTimer();
         this.routerController.back();
+    }
+
+    continue(): void {
+        this.timer.stopTimer();
+        this.showIntro();
     }
 
     awardPoints(): void {
