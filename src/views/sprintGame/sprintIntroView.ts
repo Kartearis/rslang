@@ -9,7 +9,7 @@ const template = document.createElement('template');
 template.innerHTML = `
     <div class = "sprint-intro">
         <div class="sprint-intro__controls-container">
-            <button class="intro-button" id="sprint-intro-mute"><span class="icon icon--size-1 icon--mute"></span></button>
+            <button class="intro-button" id="sprint-intro-mute"><span class="icon icon--size-1 icon--volume"></span></button>
             <button class="intro-button" id="sprint-intro-exit"><span class="icon icon--size-1 icon--cross"></span></button>
         </div>
         <div class="sprint-intro__timer-container">
@@ -41,8 +41,20 @@ export default class SprintIntroView extends ViewInterface {
         timerContainer.append(this.timer);
         assertDefined(this.rootElement.querySelector('#sprint-intro-exit'))
             .addEventListener('click', () => this.controller.exit());
+        const muteButtonIcon = assertDefined(this.rootElement.querySelector('#sprint-intro-mute .icon')) as HTMLElement;
         assertDefined(this.rootElement.querySelector('#sprint-intro-mute'))
-            .addEventListener('click', () => this.controller.toggleMute());
+            .addEventListener('click', (event) => {
+                this.controller.toggleMute();
+                if (this.controller.isMute())
+                {
+                    muteButtonIcon.classList.remove('icon--volume');
+                    muteButtonIcon.classList.add('icon--mute');
+                }
+                else {
+                    muteButtonIcon.classList.remove('icon--mute');
+                    muteButtonIcon.classList.add('icon--volume');
+                }
+            });
 
         this.timer.startTimer();
     }

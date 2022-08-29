@@ -91,6 +91,10 @@ export default class SprintGameController extends GameController{
             .forEach((key) => this.audioControllers[key].toggleMute());
     }
 
+    isMute(): boolean {
+        return Object.values(this.audioControllers).some((controller) => controller.isMute());
+    }
+
     exit(): void {
         // TODO: refactor
         if (this.view instanceof SprintMainView)

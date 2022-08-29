@@ -16,13 +16,13 @@ template.innerHTML = `
             0
         </div>
         <div class="sprint-game__controls-container">
-            <button class="game-button game-button--transparent" id="sprint-mute"><span class="icon icon--size-1 icon--mute"></span></button>
+            <button class="game-button game-button--transparent" id="sprint-mute"><span class="icon icon--size-1 icon--volume"></span></button>
             <button class="game-button game-button--transparent" id="sprint-exit"><span class="icon icon--size-1 icon--cross"></span></button>
         </div>
         <div class="sprint-game__game">
             <div class="sprint-game__word-controls-container">
                 <button class="game-button game-button--transparent" id="sprint-word-sound">
-                    <span class="icon icon--size-1 icon--sound"></span>
+                    <span class="icon icon--size-2 icon--sound"></span>
                 </button>
             </div>
             <div class="sprint-game__combo-container"></div>
@@ -45,7 +45,6 @@ export default class SprintMainView extends ViewInterface {
     private translationContainer: HTMLElement | null = null
     private pointsContainer: HTMLElement | null = null
     private controller: SprintGameController
-    private buttonState: {wrong: boolean, right: boolean} = {wrong: false, right: false}
     private registeredGlobalHandlers: {handler: (event: KeyboardEvent) => void, eventName: string}[] = []
 
     constructor(rootElement: HTMLElement, timer: Timer, comboCounter: ComboCounter, controller: SprintGameController) {
@@ -71,10 +70,26 @@ export default class SprintMainView extends ViewInterface {
         this.wordContainer = this.rootElement.querySelector('.sprint-game__original-word');
         this.translationContainer = this.rootElement.querySelector('.sprint-game__translation');
         this.pointsContainer = this.rootElement.querySelector('.sprint-game__point-container');
+        const muteButton = assertDefined(this.rootElement.querySelector('#sprint-mute'));
+        const muteButtonIcon = muteButton.querySelector('.icon') as HTMLElement;
+        if (this.controller.isMute()) {
+            muteButtonIcon.classList.remove('icon--volume');
+            muteButtonIcon.classList.add('icon--mute');
+        }
         assertDefined(this.rootElement.querySelector('#sprint-word-sound'))
             .addEventListener('click', () => this.controller.playSound('word'));
-        assertDefined(this.rootElement.querySelector('#sprint-mute'))
-            .addEventListener('click', () => this.controller.toggleMute());
+        muteButton.addEventListener('click', (event) => {
+                this.controller.toggleMute();
+                if (this.controller.isMute())
+                {
+                    muteButtonIcon.classList.remove('icon--volume');
+                    muteButtonIcon.classList.add('icon--mute');
+                }
+                else {
+                    muteButtonIcon.classList.remove('icon--mute');
+                    muteButtonIcon.classList.add('icon--volume');
+                }
+            });
         assertDefined(this.rootElement.querySelector('#sprint-exit'))
             .addEventListener('click', () => this.controller.exit());
         this.installGlobalHandlers();

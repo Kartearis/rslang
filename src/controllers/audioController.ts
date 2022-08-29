@@ -45,6 +45,10 @@ export default class AudioController {
         return this;
     }
 
+    isMute(): boolean {
+        return this.audioElement.muted;
+    }
+
     setVolume(volume: number = 0.5): AudioController {
         this.audioElement.volume = volume;
         return this;
