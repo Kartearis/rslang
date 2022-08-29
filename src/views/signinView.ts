@@ -12,16 +12,20 @@ class SigninView extends ViewInterface {
 
     show(): void {
         const form = FormService.getAuthForm();
+        form.classList.add('signin-form');
         this.fillLoginForm(form);
         form.addEventListener('input', () =>
             assertDefined(form.querySelector<HTMLParagraphElement>('#errMesage')).classList.add('hidden')
         );
         this.rootElement.innerText = '';
-        this.rootElement.append(form);
+        const formContainer = document.createElement('div');
+        formContainer.classList.add('auth-container')
+        formContainer.append(form);
+        this.rootElement.append(formContainer);
     }
 
     private fillLoginForm(form: HTMLElement) {
-        const email = FormService.getInput(['login-form__login'], 'email', 'email...', 'email');
+        const email = FormService.getInput(['login-form__login'], 'email', 'Email...', 'email');
         form.append(email);
         const pass = FormService.getInput(['login-form__pass'], 'password', 'Пароль...', 'password');
         email.required = true;
@@ -39,3 +43,4 @@ class SigninView extends ViewInterface {
 }
 
 export default SigninView;
+;

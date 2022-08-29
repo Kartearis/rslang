@@ -12,18 +12,22 @@ class RegistrationView extends ViewInterface {
 
     show(): void {
         const form = FormService.getAuthForm();
+        form.classList.add('registration-form');
         this.fillRegistrationForm(form);
         form.addEventListener('input', () =>
             assertDefined(form.querySelector<HTMLParagraphElement>('#errMesage')).classList.add('hidden')
         );
         this.rootElement.innerText = '';
-        this.rootElement.append(form);
+        const formContainer = document.createElement('div');
+        formContainer.classList.add('auth-container')
+        formContainer.append(form);
+        this.rootElement.append(formContainer);
     }
 
     private fillRegistrationForm(form: HTMLElement) {
         const name = FormService.getInput(['reg-form__name'], 'text', 'Имя...', 'name');
         form.append(name);
-        const email = FormService.getInput(['reg-form__login'], 'email', 'email...', 'email');
+        const email = FormService.getInput(['reg-form__login'], 'email', 'Email...', 'email');
         email.required = true;
         form.append(email);
         const pass = FormService.getInput(['reg-form__pass'], 'password', 'Пароль...', 'password');
