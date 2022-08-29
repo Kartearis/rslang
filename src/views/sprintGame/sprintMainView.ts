@@ -16,12 +16,12 @@ template.innerHTML = `
             0
         </div>
         <div class="sprint-game__controls-container">
-            <button class="game-button game-button--transparent"><span class="icon icon--size-1 icon--mute"></span></button>
-            <button class="game-button game-button--transparent"><span class="icon icon--size-1 icon--cross"></span></button>
+            <button class="game-button game-button--transparent" id="sprint-mute"><span class="icon icon--size-1 icon--mute"></span></button>
+            <button class="game-button game-button--transparent" id="sprint-exit"><span class="icon icon--size-1 icon--cross"></span></button>
         </div>
         <div class="sprint-game__game">
             <div class="sprint-game__word-controls-container">
-                <button class="game-button game-button--transparent">
+                <button class="game-button game-button--transparent" id="sprint-word-sound">
                     <span class="icon icon--size-1 icon--sound"></span>
                 </button>
             </div>
@@ -31,8 +31,8 @@ template.innerHTML = `
                 <div class="sprint-game__translation">Кот</div>
             </div>
             <div class="sprint-game__game-controls">
-                <button data-answer="wrong" class="game-button game-button--wide game-button--wrong">Wrong</button>
-                <button data-answer="right" class="game-button game-button--wide game-button--right">Right</button>
+                <button class="game-button game-button--wide game-button--wrong">Wrong</button>
+                <button class="game-button game-button--wide game-button--right">Right</button>
             </div>
         </div>
     </div>
@@ -71,6 +71,12 @@ export default class SprintMainView extends ViewInterface {
         this.wordContainer = this.rootElement.querySelector('.sprint-game__original-word');
         this.translationContainer = this.rootElement.querySelector('.sprint-game__translation');
         this.pointsContainer = this.rootElement.querySelector('.sprint-game__point-container');
+        assertDefined(this.rootElement.querySelector('#sprint-word-sound'))
+            .addEventListener('click', () => this.controller.playSound('word'));
+        assertDefined(this.rootElement.querySelector('#sprint-mute'))
+            .addEventListener('click', () => this.controller.toggleMute());
+        assertDefined(this.rootElement.querySelector('#sprint-exit'))
+            .addEventListener('click', () => this.controller.exit());
         this.installGlobalHandlers();
     }
 

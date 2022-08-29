@@ -49,12 +49,12 @@ export default class Timer extends HTMLElement {
         this.timerId = null;
     }
 
-    emitTimeStage(currentTime: number): void {
+    protected emitTimeStage(currentTime: number): void {
         const event: CustomEvent<number> = new CustomEvent('timeStage', {detail: currentTime});
         this.dispatchEvent(event);
     }
 
-    emitTimeUp(): void {
+    protected emitTimeUp(): void {
         const event: CustomEvent<void> = new CustomEvent('timeUp');
         this.dispatchEvent(event);
     }

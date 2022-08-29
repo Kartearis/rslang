@@ -9,7 +9,8 @@ const template = document.createElement('template');
 template.innerHTML = `
     <div class = "sprint-intro">
         <div class="sprint-intro__controls-container">
-            <button class="intro-button"><span class="icon icon--size-1 icon--cross"></span></button>
+            <button class="intro-button" id="sprint-intro-mute"><span class="icon icon--size-1 icon--mute"></span></button>
+            <button class="intro-button" id="sprint-intro-exit"><span class="icon icon--size-1 icon--cross"></span></button>
         </div>
         <div class="sprint-intro__timer-container">
         </div>
@@ -26,7 +27,10 @@ export default class SprintIntroView extends ViewInterface {
     constructor(rootElement: HTMLElement, controller: SprintGameController) {
         super(rootElement);
         this.timer = new Timer(5);
+        this.timer.setTimeStages([4,3,2,1,0]);
         this.controller = controller;
+        this.timer.addEventListener('timeStage', () => this.controller.playSound('ping'));
+        this.timer.addEventListener('timeUp', () => this.controller.startGame());
     }
 
 
@@ -35,9 +39,11 @@ export default class SprintIntroView extends ViewInterface {
         this.rootElement.append(template.content.cloneNode(true));
         const timerContainer = assertDefined(this.rootElement.querySelector('.sprint-intro__timer-container'));
         timerContainer.append(this.timer);
-        assertDefined(this.rootElement.querySelector('.intro-button'))
+        assertDefined(this.rootElement.querySelector('#sprint-intro-exit'))
             .addEventListener('click', () => this.controller.exit());
-        this.timer.addEventListener('timeUp', () => this.controller.startGame());
+        assertDefined(this.rootElement.querySelector('#sprint-intro-mute'))
+            .addEventListener('click', () => this.controller.toggleMute());
+
         this.timer.startTimer();
     }
 }

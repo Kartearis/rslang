@@ -41,6 +41,14 @@
     color: var(--color-accent-0);
 }
 
+.icon--volume {
+    --path: url('../../assets/icons/bi_volume-up.svg');
+}
+
+.icon--mute {
+    --path: url('../../assets/icons/bi_volume-mute.svg');
+}
+
 .icon--cross {
     --path: url('../../assets/icons/bi_x.svg');
 }
