@@ -129,4 +129,9 @@ export default class SprintMainView extends ViewInterface {
         assertDefined(this.wordContainer).innerText = word.word;
         assertDefined(this.translationContainer).innerText = word.translation;
     }
+
+    destroy() {
+        this.removeGlobalHandlers();
+        this.timer.stopTimer();
+    }
 }

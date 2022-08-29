@@ -40,7 +40,10 @@ export default class SprintIntroView extends ViewInterface {
         const timerContainer = assertDefined(this.rootElement.querySelector('.sprint-intro__timer-container'));
         timerContainer.append(this.timer);
         assertDefined(this.rootElement.querySelector('#sprint-intro-exit'))
-            .addEventListener('click', () => this.controller.exit());
+            .addEventListener('click', () => {
+                this.timer.stopTimer();
+                this.controller.exit();
+            });
         const muteButtonIcon = assertDefined(this.rootElement.querySelector('#sprint-intro-mute .icon')) as HTMLElement;
         assertDefined(this.rootElement.querySelector('#sprint-intro-mute'))
             .addEventListener('click', (event) => {
@@ -57,5 +60,9 @@ export default class SprintIntroView extends ViewInterface {
             });
 
         this.timer.startTimer();
+    }
+
+    destroy() {
+        this.timer.stopTimer();
     }
 }

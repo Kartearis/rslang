@@ -54,11 +54,13 @@ export default class SprintGameController extends GameController{
     }
 
     showIntro(): void {
+        this.view?.destroy();
         this.view = new SprintIntroView(this.rootElement, this);
         this.view.show();
     }
 
     startGame(): void {
+        this.view?.destroy();
         this.view = new SprintMainView(this.rootElement, this.timer, this.comboCounter, this);
         this.index = 0;
         this.points = 0;
@@ -68,9 +70,7 @@ export default class SprintGameController extends GameController{
 
     showResults(): void {
         // Should actually defined on all views (via base view) and called without typeguard
-        // TODO: refactor
-        if (this.view instanceof SprintMainView)
-            this.view.removeGlobalHandlers();
+        this.view?.destroy();
         this.view = new SprintOutroView(this.rootElement, this, this.points, this.history);
         this.view.show();
         // Will be enabled when words are not placeholders
@@ -96,9 +96,6 @@ export default class SprintGameController extends GameController{
     }
 
     exit(): void {
-        // TODO: refactor
-        if (this.view instanceof SprintMainView)
-            this.view.removeGlobalHandlers();
         this.timer.stopTimer();
         this.routerController.back();
     }
@@ -162,6 +159,10 @@ export default class SprintGameController extends GameController{
                 audio: word.audio
             };
         }
+    }
+
+    destroy(): void {
+        this.view?.destroy();
     }
 }
 

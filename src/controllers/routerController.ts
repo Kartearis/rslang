@@ -2,7 +2,7 @@ import EbookView from '../views/eBookView';
 
 import MainView from '../views/mainView';
 import TestView from '../views/test';
-import { ViewConstructor } from '../views/viewInterface';
+import ViewInterface, { ViewConstructor } from '../views/viewInterface';
 import RegistrationView from '../views/registrationView';
 import LogoutView from '../views/logoutView';
 import SigninView from '../views/signinView';
@@ -18,6 +18,7 @@ export default class RouterController {
     private routeConfig: RouteConfig;
     private history: History;
     private rootElement: HTMLElement = document.body;
+    private lastView: ViewInterface | null = null
 
     public static getInstance(): RouterController {
         if (!RouterController.instance) {
@@ -57,7 +58,10 @@ export default class RouterController {
     }
 
     private renderView(to: string): void {
+        if (this.lastView)
+            this.lastView.destroy();
         const view = new this.routeConfig[to](this.rootElement);
+        this.lastView = view;
         view.show();
     }
 

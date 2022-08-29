@@ -12,4 +12,9 @@ export default abstract class ViewInterface {
     }
 
     abstract show(): void;
+
+    // Called e.g. on router exit and should finalize everything (remove listeners, stop timers, etc)
+    destroy(): void {
+
+    }
 }

@@ -141,4 +141,8 @@ export default class SprintGameView extends ViewInterface {
         this.controller.showIntro();
         // this.controller.showResults();
     }
+
+    destroy() {
+        this.controller?.destroy();
+    }
 }
