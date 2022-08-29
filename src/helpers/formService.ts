@@ -19,8 +19,6 @@ class FormService {
     }
     static getAuthForm(): HTMLDivElement {
         const form = document.createElement('div');
-        form.classList.add('signin-form');
-
         const errMesage = document.createElement('p');
         errMesage.innerText = 'Некоректный логин или пароль';
         errMesage.classList.add('errMesage');
