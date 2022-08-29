@@ -4,9 +4,9 @@ import RouterController from './routerController';
 import UserWordController from './userWordController';
 
 abstract class GameController {
-    words: wordType[];
-    userWordController;
-    routerController;
+    protected words: wordType[];
+    protected userWordController: UserWordController;
+    protected routerController: RouterController;
     constructor(_words: wordType[]) {
         this.words = this.shuffleArray(_words);
         this.userWordController = UserWordController.getInstance();

@@ -1,5 +1,6 @@
 import ViewInterface from "../viewInterface";
-import SprintGameController, {WordState} from "../../controllers/sprintGameController";
+import SprintGameController from "../../controllers/sprintGameController";
+import {wordGame} from "../../helpers/types";
 
 import './sprint-outro.css';
 import ResultWordCard from "../../components/wordCard";
@@ -27,14 +28,14 @@ template.innerHTML = `
 
 export default class SprintOutroView extends ViewInterface {
     private controller: SprintGameController
-    private results: WordState[]
+    private results: wordGame[]
     private errorContainer: HTMLElement | null = null
     private correctContainer: HTMLElement | null = null
     private correctCount: number = 0
     private errorCount: number = 0
     private points: number
 
-    constructor(rootElement: HTMLElement, controller: SprintGameController, points: number, results: WordState[]) {
+    constructor(rootElement: HTMLElement, controller: SprintGameController, points: number, results: wordGame[]) {
         super(rootElement);
         this.controller = controller;
         this.results = results;
@@ -55,8 +56,8 @@ export default class SprintOutroView extends ViewInterface {
 
     }
 
-    addToStats(word: WordState): void {
-        const wordElement = new ResultWordCard(word.word);
+    addToStats(word: wordGame): void {
+        const wordElement = new ResultWordCard(word.wordGame);
         if (word.result) {
             assertDefined(this.correctContainer).append(wordElement);
             this.correctCount++;

@@ -5,41 +5,35 @@ import SprintIntroView from "../views/sprintGame/sprintIntroView";
 import SprintMainView from "../views/sprintGame/sprintMainView";
 import SprintOutroView from "../views/sprintGame/sprintOutroView";
 import RouterController from "./routerController";
-import {wordType} from "../helpers/types";
+import {wordType, wordGame} from "../helpers/types";
 import {assertDefined} from "../helpers/helpers";
+import GameController from "./gameController";
 
 const ChanceOfCorrect = 0.6;
-
-export type WordState = {
-    word: wordType,
-    result: boolean
-}
 
 export type SprintWord = {
     word: string,
     translation: string
 }
 
-export default class SprintGameController {
-    private words: wordType[] = []
-    private history: WordState[] = []
+export default class SprintGameController extends GameController{
+    // private words: wordType[] = []
+    private history: wordGame[] = []
     private translations: string[] = []
     private comboCounter: ComboCounter
     private timer: Timer
     private view: ViewInterface | null = null
     private rootElement: HTMLElement
-    private router: RouterController
 
     private points: number = 0
     private index: number = 0
 
     constructor(rootElement: HTMLElement, words: wordType[]) {
+        super(words);
         this.rootElement = rootElement;
-        this.words = words;
         this.translations = this.words.map((word) => word.wordTranslate);
         this.timer = new Timer(60);
         this.comboCounter = new ComboCounter();
-        this.router = RouterController.getInstance();
     }
 
     showIntro(): void {
@@ -69,7 +63,7 @@ export default class SprintGameController {
         // TODO: refactor
         if (this.view instanceof SprintMainView)
             this.view.removeGlobalHandlers();
-        this.router.back();
+        this.routerController.back();
     }
 
     awardPoints(): void {
@@ -85,7 +79,7 @@ export default class SprintGameController {
         const correctAnswer = translation === originalWord.wordTranslate ? 'right' : 'wrong';
         if (correctAnswer === answer) {
             this.history.push({
-                word: originalWord,
+                wordGame: originalWord,
                 result: true
             });
             this.awardPoints();
@@ -93,7 +87,7 @@ export default class SprintGameController {
         }
         else {
             this.history.push({
-                word: originalWord,
+                wordGame: originalWord,
                 result: false
             });
             this.comboCounter.reset();
