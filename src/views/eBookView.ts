@@ -121,16 +121,16 @@ class EbookView extends ViewInterface {
         li.classList.add('group-list__group');
         if (this.group === groupNum) li.classList.add('group-list__group_active');
         li.dataset.group = groupNum.toString();
-        li.addEventListener('click', (ev: Event) => {
+        li.addEventListener('click', async (ev: Event) => {
             const target = ev.target as HTMLButtonElement;
             this.group = Number(target.dataset.group);
             localStorage.setItem('group', this.group.toString());
-            this.pagination.toFirstPage(this.group);
             assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
                 'group-list__group_active'
             );
             target.classList.add('group-list__group_active');
-            this.reDraw();
+            await this.pagination.toFirstPage(this.group);
+
         });
         return li;
     }

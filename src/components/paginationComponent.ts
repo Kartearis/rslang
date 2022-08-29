@@ -12,7 +12,7 @@ class PaginationComponent {
     userController;
     constructor(reDraw: () => Promise<void>) {
         this.page = sessionStorage.getItem('lastPage') !== undefined ? Number(sessionStorage.getItem('lastPage')) : 0;
-        this.limitPage = 30;
+        this.limitPage = PAGE_ON_GROUP;
         this.reDraw = () => reDraw().then(() => {
             assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = false);
             this.lockBtn();
@@ -20,61 +20,86 @@ class PaginationComponent {
         this.eBookController = EBookController.getInstance();
         this.userController = UserController.getInstance();
     }
-    private lockBtn = (prev: HTMLButtonElement | null = null, next: HTMLButtonElement | null = null) => {
-        if (prev == null && next === null) {
-            prev = document.querySelector<HTMLButtonElement>('#prevBtn');
-            next = document.querySelector<HTMLButtonElement>('#nextBtn');
-        }
+    private lockBtn = (pagination: HTMLElement | null = null) => {
+        let prev: HTMLButtonElement;
+        let next: HTMLButtonElement;
+        let prev5: HTMLButtonElement;
+        let next5: HTMLButtonElement;
 
-        if (prev !== null && next !== null) {
-            if (this.page === 0) {
-                prev.disabled = true;
-            } else {
-                prev.disabled = false;
-            }
-            if (this.page === this.limitPage) {
-                next.disabled = true;
-            } else {
-                next.disabled = false;
-            }
-        }
+        if(pagination === null) pagination = assertDefined(document.querySelector('#pagination'));
+        prev = assertDefined(pagination.querySelector<HTMLButtonElement>('#prevBtn'));
+        next = assertDefined(pagination.querySelector<HTMLButtonElement>('#nextBtn'));
+        prev5 = assertDefined(pagination.querySelector<HTMLButtonElement>('#prev5Btn'));
+        next5 = assertDefined(pagination.querySelector<HTMLButtonElement>('#next5Btn'));
+        
+        prev.disabled = this.page === 0 ? true : false;
+        next.disabled = this.page === this.limitPage ? true : false;
+        prev5.disabled = this.page <= 2 ? true : false;
+        next5.disabled = this.page >= this.limitPage - 2 ? true : false;
     };
-    toFirstPage(group: number) {
+    async toFirstPage(group: number) {
         sessionStorage.setItem('lastPage', '0');
         this.page = 0;
         if (group === HARD_WORD_GROUP_NUM) {
             const pagination = assertDefined(document.querySelector('.pagination'));
             pagination.querySelectorAll('button').forEach((btn) => (btn.disabled = true));
-            pagination.querySelectorAll<HTMLButtonElement>('.page-page-num').forEach((btn, i) => {
+            pagination.querySelectorAll<HTMLButtonElement>('.pages__page-num').forEach((btn, i) => {
                 btn.innerText = i === 2 ? '1' : '';
             });
+            await this.reDraw();
         } else {
-            this.reDrawPaginationPages();
-            this.lockBtn();
+            await this.reDrawPaginationPages();
         }
+
     }
     async getPagination() {
         const pagination = document.createElement('div');
         pagination.id = 'pagination';
         pagination.classList.add('pagination');
         const pagesBlock = this.getPaginationPagesBlock();
+        const prev5Btn = document.createElement('button');
+        prev5Btn.innerText = '<<';
+        prev5Btn.id = 'prev5Btn';
+        prev5Btn.classList.add('pagination__btn');
+        prev5Btn.addEventListener('click', async () => this.toPrev5Page());
+        pagination.append(prev5Btn);
         const prevBtn = document.createElement('button');
         prevBtn.innerText = '➙';
         prevBtn.id = 'prevBtn';
-        prevBtn.classList.add('prev-page-btn');
+        prevBtn.classList.add('pagination__btn');
+        prevBtn.classList.add('pagination__btn_prev');
         prevBtn.addEventListener('click', async () => await this.toPrevPage());
         const nextBtn = document.createElement('button');
         nextBtn.innerText = '➙';
         nextBtn.id = 'nextBtn';
-        nextBtn.classList.add('next-page-btn');
+        nextBtn.classList.add('pagination__btn');
+        nextBtn.classList.add('pagination__btn_next');
         nextBtn.addEventListener('click', async () => await this.toNextPage());
-        this.lockBtn(prevBtn, nextBtn);
+        const next5Btn = document.createElement('button');
+        next5Btn.classList.add('pagination__btn');
+        next5Btn.innerText = '>>';
+        next5Btn.id = 'next5Btn';
+        next5Btn.addEventListener('click', async () => this.toNext5Page());
+        pagination.append(prev5Btn);
         pagination.append(prevBtn);
         pagination.append(await pagesBlock);
         pagination.append(nextBtn);
+        pagination.append(next5Btn);
+        this.lockBtn(pagination);
         return pagination;
     }
-
+    private async toPrev5Page(): Promise<void>{
+        assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = true);
+        this.page = this.page < 5 ? 0 : this.page -= 5;
+        sessionStorage.setItem('lastPage', `${this.page}`);
+        await this.reDrawPaginationPages(); 
+    }
+    private async toNext5Page(): Promise<void>{
+        assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = true);
+        this.page = this.page > PAGE_ON_GROUP - 5 ? PAGE_ON_GROUP : this.page += 5;
+        sessionStorage.setItem('lastPage', `${this.page}`);
+        await this.reDrawPaginationPages(); 
+    }
     private async toNextPage(): Promise<void> {
         assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = true);
         this.page += 1;
@@ -99,18 +124,18 @@ class PaginationComponent {
                     btn.innerText = `${this.page + 3}`;
                     btn.dataset.pageNum = `${this.page + 2}`;
                     if (await this.isLearnedPage(this.page + 2)) {
-                        btn.classList.add('page-page-num_learned');
+                        btn.classList.add('pages__page-num_learned');
                     } else {
-                        btn.classList.remove('page-page-num_learned');
+                        btn.classList.remove('pages__page-num_learned');
                     }
                 } else {
                     btn.innerText = `${Number(btn.innerText) + 1}`;
                     btn.dataset.pageNum = `${Number(btn.dataset.pageNum) + 1}`;
                     const nextBtn = assertDefined(btn.nextElementSibling) as HTMLButtonElement;
-                    if (nextBtn.classList.contains('page-page-num_learned')) {
-                        btn.classList.add('page-page-num_learned');
+                    if (nextBtn.classList.contains('pages__page-num_learned')) {
+                        btn.classList.add('pages__page-num_learned');
                     } else {
-                        btn.classList.remove('page-page-num_learned');
+                        btn.classList.remove('pages__page-num_learned');
                     }
                 }
             }
@@ -139,18 +164,18 @@ class PaginationComponent {
                     btn.innerText = `${this.page - 1}`;
                     btn.dataset.pageNum = `${this.page - 2}`;
                     if (await this.isLearnedPage(this.page - 2)) {
-                        btn.classList.add('page-page-num_learned');
+                        btn.classList.add('pages__page-num_learned');
                     } else {
-                        btn.classList.remove('page-page-num_learned');
+                        btn.classList.remove('pages__page-num_learned');
                     }
                 } else {
                     btn.innerText = `${Number(btn.innerText) - 1}`;
                     btn.dataset.pageNum = `${Number(btn.dataset.pageNum) - 1}`;
                     const prevBtn = assertDefined(btn.previousElementSibling) as HTMLButtonElement;
-                    if (prevBtn.classList.contains('page-page-num_learned')) {
-                        btn.classList.add('page-page-num_learned');
+                    if (prevBtn.classList.contains('pages__page-num_learned')) {
+                        btn.classList.add('pages__page-num_learned');
                     } else {
-                        btn.classList.remove('page-page-num_learned');
+                        btn.classList.remove('pages__page-num_learned');
                     }
                 }
             }
@@ -160,13 +185,15 @@ class PaginationComponent {
     private async getPaginationPagesBlock(): Promise<HTMLDivElement> {
         const paginationNums = document.createElement('div');
         paginationNums.classList.add('pagination__pages');
-
+        paginationNums.classList.add('pages');
         let coef = -2;
-        if (this.page < 2) {
-            coef = 0;
-        } else if (this.page > PAGE_ON_GROUP - 2) {
-            coef = -4;
+        switch(true){
+            case(this.page === 0): coef = 0; break;
+            case(this.page === 1): coef = -1; break;
+            case(this.page === PAGE_ON_GROUP ): coef = -4; break;
+            case(this.page === PAGE_ON_GROUP - 1): coef = -3; break;
         }
+
         const minPage = await this.getPageButton(this.page + coef);
         const prevPave = await this.getPageButton(this.page + 1 + coef);
         const curPage = await this.getPageButton(this.page + 2 + coef);
@@ -181,32 +208,33 @@ class PaginationComponent {
     }
     private async getPageButton(num: number): Promise<HTMLButtonElement> {
         const numPageBtn = document.createElement('button');
-        numPageBtn.classList.add('page-page-num');
-        switch (true) {
-            case (this.page === 1 && num === 1): numPageBtn.classList.add('current-page'); break;
-            case (this.page === PAGE_ON_GROUP - 1 && num === PAGE_ON_GROUP - 1): numPageBtn.classList.add('current-page'); break;
-            case (num === this.page): numPageBtn.classList.add('current-page');
-        }
+        numPageBtn.classList.add('pages__page-num');
+        if (this.page === num ) numPageBtn.classList.add('current-page');
         numPageBtn.innerText = `${num + 1}`;
         numPageBtn.dataset.pageNum = num.toString();
         if (this.userController.isSignin() && (await this.isLearnedPage(num))) {
-            numPageBtn.classList.add('page-page-num_learned');
+            numPageBtn.classList.add('pages__page-num_learned');
         }
         numPageBtn.addEventListener('click', async (ev) => {
             const target = ev.target as HTMLButtonElement;
             this.page = Number(target.dataset.pageNum);
             sessionStorage.setItem('lastPage', this.page.toString());
             await this.reDrawPaginationPages();
-            await this.reDraw();
         });
         return numPageBtn;
     }
 
     private async reDrawPaginationPages(): Promise<void> {
-        const pageBlock = await this.getPaginationPagesBlock();
-        const prevBtn = assertDefined(document.querySelector('.prev-page-btn'));
-        assertDefined(document.querySelector('.pagination__pages')).remove();
-        prevBtn.after(pageBlock);
+        assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = true);
+        await this.getPaginationPagesBlock().then( async (pageBlock) => {
+            const prevBtn = assertDefined(document.querySelector('.pagination__btn_prev'));
+            assertDefined(document.querySelector('.pagination__pages')).remove();
+            prevBtn.after(pageBlock);
+            this.lockBtn();
+            await this.reDraw()
+        });
+
+       
     }
 
     private async isLearnedPage(page: number, _group: number | null = null): Promise<boolean> {
