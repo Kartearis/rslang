@@ -43,7 +43,7 @@ export default class SprintGameController extends GameController{
         this.timer = new Timer(60);
         this.comboCounter = new ComboCounter();
         this.audioControllers = {
-            'ping': new AudioController(pingSound).setVolume(0.7),
+            'ping': (new AudioController(pingSound)).setVolume(0.3),
             'word': new AudioController(getHostPath(this.words[0].audio)),
             'alert': (new AudioController(suspenseSound)).setLoop().setVolume(0.5)
         };
