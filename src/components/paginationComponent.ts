@@ -1,6 +1,6 @@
 import EBookController from '../controllers/eBookController';
 import UserController from '../controllers/userController';
-import { assertDefined, GROUP_NAME, HARD_WORD_PAGE_NUM, WORDS_ON_PAGE } from '../helpers/helpers';
+import { assertDefined, GROUP_NAME, HARD_WORD_GROUP_NUM, WORDS_ON_PAGE } from '../helpers/helpers';
 import './pagination.css';
 
 class PaginationComponent {
@@ -38,7 +38,7 @@ class PaginationComponent {
     toFirstPage(group: number) {
         sessionStorage.setItem('lastPage', '0');
         this.page = 0;
-        if (group === HARD_WORD_PAGE_NUM) {
+        if (group === HARD_WORD_GROUP_NUM) {
             const pagination = assertDefined(document.querySelector('.pagination'));
             pagination.querySelectorAll('button').forEach((btn) => (btn.disabled = true));
             pagination.querySelectorAll<HTMLButtonElement>('.page-page-num').forEach((btn, i) => {
@@ -139,7 +139,7 @@ class PaginationComponent {
         } else {
             numPageBtn.innerText = num.toString();
             numPageBtn.dataset.pageNum = num.toString();
-            if (this.userController.isSignin() && await this.isLearnedPage(num - 1)) {
+            if (this.userController.isSignin() && (await this.isLearnedPage(num - 1))) {
                 numPageBtn.classList.add('page-page-num_learned');
             }
         }
@@ -150,7 +150,6 @@ class PaginationComponent {
             this.reDrawPaginationPages();
             this.lockBtn();
             this.reDraw();
-            
         });
         return numPageBtn;
     }
