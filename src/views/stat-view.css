@@ -4,7 +4,7 @@
     gap: 30px;
     align-items: stretch;
     padding: 20px;
-    background-color: var(--color-backgroud);
+    background-color: var(--color-background);
     color: var(--color-shaded);
     font-family: var(--font-family-default);
     font-weight: var(--font-weight-default);

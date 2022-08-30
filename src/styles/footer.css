@@ -1,6 +1,6 @@
 .footer {
   height: 50px;
-  background-color: var(--color-backgroud);
+  background-color: var(--color-background);
   display: flex;
   justify-content: space-around;
   position: absolute;

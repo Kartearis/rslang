@@ -79,7 +79,7 @@
 
 .ebook-container {
     display: grid;
-    background-color: var(--color-backgroud);
+    background-color: var(--color-background);
     row-gap: 20px;
     justify-items: center;
     grid-template-columns: repeat(4, 1fr);

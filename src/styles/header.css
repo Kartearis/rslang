@@ -1,5 +1,5 @@
 .header {
-  background-color: var(--color-backgroud);
+  background-color: var(--color-background);
   display: flex;
   justify-content: space-around;
   align-items: center;

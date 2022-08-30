@@ -1,7 +1,7 @@
 @import '../../icons.css';
 
 .sprint-intro {
-    background-color: var(--color-backgroud);
+    background-color: var(--color-background);
     color: var(--color-shaded);
     display: grid;
     grid-template-rows: 70px 1fr 50px;
