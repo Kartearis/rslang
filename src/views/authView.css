@@ -47,15 +47,18 @@
     font-size: 20px;
     border-radius: 15px;
     border: none;
+    outline-offset: 3px;
+    padding-left: 10px;
+    outline: 0;
 }
 
-.reg-form__name::placeholder,
+/* .reg-form__name::placeholder,
 .reg-form__login::placeholder,
 .reg-form__pass::placeholder,
 .login-form__pass::placeholder,
 .login-form__login::placeholder {
     padding-left: 15px;
-}
+} */
 
 .reg-form__submit,
 .login-form__submit {
@@ -63,4 +66,9 @@
     border-radius: 15px;
     width: 160px;
     height: 30px;
+}
+
+.reg-form__submit:hover,
+.login-form__submit:hover {
+    cursor: pointer;
 }
