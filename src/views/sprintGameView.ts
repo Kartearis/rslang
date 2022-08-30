@@ -1,11 +1,10 @@
-import ViewInterface from "./viewInterface";
-import SprintGameController from "../controllers/sprintGameController";
-import {wordType} from "../helpers/types";
-import {assertDefined} from "../helpers/helpers";
-
+import ViewInterface from './viewInterface';
+import SprintGameController from '../controllers/sprintGameController';
+import { wordType } from '../helpers/types';
+import { assertDefined } from '../helpers/helpers';
 
 export default class SprintGameView extends ViewInterface {
-    private controller: SprintGameController | null = null
+    private controller: SprintGameController | null = null;
 
     show() {
         // Will throw if no data provided!

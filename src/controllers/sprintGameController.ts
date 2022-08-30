@@ -1,14 +1,13 @@
-import ComboCounter from "../components/comboCounter";
-import Timer from "../components/timer";
-import ViewInterface from "../views/viewInterface";
-import SprintIntroView from "../views/sprintGame/sprintIntroView";
-import SprintMainView from "../views/sprintGame/sprintMainView";
-import SprintOutroView from "../views/sprintGame/sprintOutroView";
-import RouterController from "./routerController";
-import {wordType, wordGame} from "../helpers/types";
-import {assertDefined, getHostPath} from "../helpers/helpers";
-import GameController from "./gameController";
-import AudioController from "./audioController";
+import ComboCounter from '../components/comboCounter';
+import Timer from '../components/timer';
+import ViewInterface from '../views/viewInterface';
+import SprintIntroView from '../views/sprintGame/sprintIntroView';
+import SprintMainView from '../views/sprintGame/sprintMainView';
+import SprintOutroView from '../views/sprintGame/sprintOutroView';
+import { wordType, wordGame } from '../helpers/types';
+import { assertDefined, getHostPath } from '../helpers/helpers';
+import GameController from './gameController';
+import AudioController from './audioController';
 
 import pingSound from '../assets/audio/ping.mp3';
 import suspenseSound from '../assets/audio/suspense.mp3';
@@ -16,25 +15,25 @@ import suspenseSound from '../assets/audio/suspense.mp3';
 const ChanceOfCorrect = 0.6;
 
 export type SprintWord = {
-    word: string,
-    translation: string,
-    audio: string
-}
+    word: string;
+    translation: string;
+    audio: string;
+};
 
-type SoundKeys = "ping" | "word" | "alert";
+type SoundKeys = 'ping' | 'word' | 'alert';
 
-export default class SprintGameController extends GameController{
+export default class SprintGameController extends GameController {
     // private words: wordType[] = []
-    private history: wordGame[] = []
-    private translations: string[] = []
-    private comboCounter: ComboCounter
-    private timer: Timer
-    private view: ViewInterface | null = null
-    private rootElement: HTMLElement
-    private audioControllers: Record<SoundKeys, AudioController>
+    private history: wordGame[] = [];
+    private translations: string[] = [];
+    private comboCounter: ComboCounter;
+    private timer: Timer;
+    private view: ViewInterface | null = null;
+    private rootElement: HTMLElement;
+    private audioControllers: Record<SoundKeys, AudioController>;
 
-    private points: number = 0
-    private index: number = 0
+    private points = 0;
+    private index = 0;
 
     constructor(rootElement: HTMLElement, words: wordType[]) {
         super(words);
@@ -43,14 +42,14 @@ export default class SprintGameController extends GameController{
         this.timer = new Timer(60);
         this.comboCounter = new ComboCounter();
         this.audioControllers = {
-            'ping': (new AudioController(pingSound)).setVolume(0.3),
-            'word': new AudioController(getHostPath(this.words[0].audio)),
-            'alert': (new AudioController(suspenseSound)).setLoop().setVolume(0.5)
+            ping: new AudioController(pingSound).setVolume(0.3),
+            word: new AudioController(getHostPath(this.words[0].audio)),
+            alert: new AudioController(suspenseSound).setLoop().setVolume(0.5),
         };
         this.timer.setTimeStages([10]);
         this.timer.addEventListener('timeUp', () => this.showResults());
         this.timer.addEventListener('timeUp', () => this.stopSound('alert'));
-        this.timer.addEventListener('timeStage', () => this.playSound('alert'))
+        this.timer.addEventListener('timeStage', () => this.playSound('alert'));
     }
 
     showIntro(): void {
@@ -86,8 +85,7 @@ export default class SprintGameController extends GameController{
     }
 
     toggleMute(): void {
-        (Object.keys(this.audioControllers) as SoundKeys[])
-            .forEach((key) => this.audioControllers[key].toggleMute());
+        (Object.keys(this.audioControllers) as SoundKeys[]).forEach((key) => this.audioControllers[key].toggleMute());
     }
 
     isMute(): boolean {
@@ -108,26 +106,24 @@ export default class SprintGameController extends GameController{
     awardPoints(): void {
         const points = 20 * (this.comboCounter.combo + 1);
         this.points += points;
-        if (this.view instanceof SprintMainView)
-            this.view.updatePoints(this.points);
+        if (this.view instanceof SprintMainView) this.view.updatePoints(this.points);
     }
 
     // TODO: String literals may be remade to enum
-    handleUserAnswer(answer: "wrong" | "right", word: string, translation: string): void {
+    handleUserAnswer(answer: 'wrong' | 'right', word: string, translation: string): void {
         const originalWord: wordType = assertDefined(this.words.find((w) => w.word === word));
         const correctAnswer = translation === originalWord.wordTranslate ? 'right' : 'wrong';
         if (correctAnswer === answer) {
             this.history.push({
                 wordGame: originalWord,
-                result: true
+                result: true,
             });
             this.awardPoints();
             this.comboCounter.up();
-        }
-        else {
+        } else {
             this.history.push({
                 wordGame: originalWord,
-                result: false
+                result: false,
             });
             this.comboCounter.reset();
         }
@@ -137,9 +133,8 @@ export default class SprintGameController extends GameController{
 
     showWord(): void {
         const newWord = this.getNextWord();
-        this.audioControllers['word'].loadPath(getHostPath(newWord.audio))
-        if (this.view instanceof SprintMainView)
-            this.view.showNewWord(newWord);
+        this.audioControllers['word'].loadPath(getHostPath(newWord.audio));
+        if (this.view instanceof SprintMainView) this.view.showNewWord(newWord);
     }
 
     getNextWord(): SprintWord {
@@ -152,7 +147,7 @@ export default class SprintGameController extends GameController{
             return {
                 word: word.word,
                 translation: word.wordTranslate,
-                audio: word.audio
+                audio: word.audio,
             };
         else {
             let randomTranslation = this.translations[Math.floor(Math.random() * this.translations.length)];
@@ -161,7 +156,7 @@ export default class SprintGameController extends GameController{
             return {
                 word: word.word,
                 translation: randomTranslation,
-                audio: word.audio
+                audio: word.audio,
             };
         }
     }
@@ -170,4 +165,3 @@ export default class SprintGameController extends GameController{
         this.view?.destroy();
     }
 }
-

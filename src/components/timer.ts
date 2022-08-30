@@ -2,11 +2,10 @@
 import './timer.css';
 
 export default class Timer extends HTMLElement {
-    private timeStages: number[]
-    private timeLimit: number
-    private currentTime: number = 0
-    private timerId: number | null = null
-
+    private timeStages: number[];
+    private timeLimit: number;
+    private currentTime = 0;
+    private timerId: number | null = null;
 
     constructor(timeLimit: number, timeStages: number[] = []) {
         super();
@@ -34,8 +33,7 @@ export default class Timer extends HTMLElement {
 
     timerTick() {
         this.currentTime -= 1;
-        if (this.timeStages.includes(this.currentTime))
-            this.emitTimeStage(this.currentTime);
+        if (this.timeStages.includes(this.currentTime)) this.emitTimeStage(this.currentTime);
         if (this.currentTime === 0) {
             this.emitTimeUp();
             this.stopTimer();
@@ -44,13 +42,12 @@ export default class Timer extends HTMLElement {
     }
 
     stopTimer(): void {
-        if (this.timerId)
-            window.clearInterval(this.timerId);
+        if (this.timerId) window.clearInterval(this.timerId);
         this.timerId = null;
     }
 
     protected emitTimeStage(currentTime: number): void {
-        const event: CustomEvent<number> = new CustomEvent('timeStage', {detail: currentTime});
+        const event: CustomEvent<number> = new CustomEvent('timeStage', { detail: currentTime });
         this.dispatchEvent(event);
     }
 

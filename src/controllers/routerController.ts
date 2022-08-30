@@ -6,9 +6,9 @@ import RegistrationView from '../views/registrationView';
 import LogoutView from '../views/logoutView';
 import SigninView from '../views/signinView';
 import StatView from '../views/statView';
-import SprintGameView from "../views/sprintGameView";
+import SprintGameView from '../views/sprintGameView';
 import AudiocallView from '../views/audiocallView';
-import StorageController from "./storageController";
+import StorageController from './storageController';
 
 export type RouteConfig = Record<string, ViewConstructor>;
 
@@ -18,8 +18,8 @@ export default class RouterController {
     private routeConfig: RouteConfig;
     private history: History;
     private rootElement: HTMLElement = document.body;
-    private lastView: ViewInterface | null = null
-    private storage: StorageController
+    private lastView: ViewInterface | null = null;
+    private storage: StorageController;
 
     public static getInstance(): RouterController {
         if (!RouterController.instance) {
@@ -38,7 +38,7 @@ export default class RouterController {
             '/signin': SigninView,
             '/registration': RegistrationView,
             '/logout': LogoutView,
-            '/sprint': SprintGameView
+            '/sprint': SprintGameView,
         };
         this.history = window.history;
         this.storage = new StorageController('router-data');
@@ -59,13 +59,11 @@ export default class RouterController {
     }
 
     private renderView(to: string, data: null | unknown = null): void {
-        if (this.lastView)
-            this.lastView.destroy();
+        if (this.lastView) this.lastView.destroy();
         const view = new this.routeConfig[to](this.rootElement, data);
         this.lastView = view;
         // Maybe its more effective to do it on navigation and popstate
-        if (data !== null)
-            this.storage.write('lastData', data);
+        if (data !== null) this.storage.write('lastData', data);
         else this.storage.remove('lastData');
         view.show();
     }
@@ -76,8 +74,7 @@ export default class RouterController {
         if (path in this.routeConfig) {
             const data = this.storage.check('lastData') ? this.storage.read('lastData') : null;
             this.renderView(path, data);
-        }
-        else this.renderView('/');
+        } else this.renderView('/');
     }
 
     navigate(to: string, data: null | unknown = null): void {

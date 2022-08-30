@@ -1,12 +1,10 @@
-
-
 export default class AudioController {
-    private audioElement: HTMLAudioElement
-    private dataLoaded: boolean = false
+    private audioElement: HTMLAudioElement;
+    private dataLoaded = false;
 
     constructor(soundPath: string) {
         this.audioElement = new Audio(soundPath);
-        this.audioElement.addEventListener('canplaythrough', () => this.dataLoaded = true)
+        this.audioElement.addEventListener('canplaythrough', () => (this.dataLoaded = true));
     }
 
     // Returns promise, resolving on play start (throwing if impossible)
@@ -22,15 +20,14 @@ export default class AudioController {
 
     // Will not play sound if data is not loaded
     syncPlay(): void {
-        if (this.dataLoaded)
-            this.audioElement.play();
+        if (this.dataLoaded) this.audioElement.play();
     }
 
     pause(): void {
         this.audioElement.pause();
     }
 
-    setMute(state: boolean = true): AudioController {
+    setMute(state = true): AudioController {
         this.audioElement.muted = state;
         return this;
     }
@@ -49,7 +46,7 @@ export default class AudioController {
         return this.audioElement.muted;
     }
 
-    setVolume(volume: number = 0.5): AudioController {
+    setVolume(volume = 0.5): AudioController {
         this.audioElement.volume = volume;
         return this;
     }
@@ -58,5 +55,4 @@ export default class AudioController {
         this.audioElement.currentTime = 0;
         return this;
     }
-
 }

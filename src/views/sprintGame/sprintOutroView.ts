@@ -1,10 +1,10 @@
-import ViewInterface from "../viewInterface";
-import SprintGameController from "../../controllers/sprintGameController";
-import {wordGame} from "../../helpers/types";
+import ViewInterface from '../viewInterface';
+import SprintGameController from '../../controllers/sprintGameController';
+import { wordGame } from '../../helpers/types';
 
 import './sprint-outro.css';
-import ResultWordCard from "../../components/wordCard";
-import {assertDefined} from "../../helpers/helpers";
+import ResultWordCard from '../../components/wordCard';
+import { assertDefined } from '../../helpers/helpers';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -25,15 +25,14 @@ template.innerHTML = `
     </div>
 `;
 
-
 export default class SprintOutroView extends ViewInterface {
-    private controller: SprintGameController
-    private results: wordGame[]
-    private errorContainer: HTMLElement | null = null
-    private correctContainer: HTMLElement | null = null
-    private correctCount: number = 0
-    private errorCount: number = 0
-    private points: number
+    private controller: SprintGameController;
+    private results: wordGame[];
+    private errorContainer: HTMLElement | null = null;
+    private correctContainer: HTMLElement | null = null;
+    private correctCount = 0;
+    private errorCount = 0;
+    private points: number;
 
     constructor(rootElement: HTMLElement, controller: SprintGameController, points: number, results: wordGame[]) {
         super(rootElement);
@@ -43,7 +42,7 @@ export default class SprintOutroView extends ViewInterface {
     }
 
     show() {
-        this.rootElement.innerHTML = "";
+        this.rootElement.innerHTML = '';
         this.rootElement.append(template.content.cloneNode(true));
         this.errorContainer = this.rootElement.querySelector('#outro-errors');
         this.correctContainer = this.rootElement.querySelector('#outro-correct');
@@ -52,11 +51,15 @@ export default class SprintOutroView extends ViewInterface {
         const correctCnt = assertDefined(this.rootElement.querySelector('#outro-correct-cnt')) as HTMLElement;
         errorCnt.innerText = this.errorCount.toString();
         correctCnt.innerText = this.correctCount.toString();
-        (assertDefined(this.rootElement.querySelector('#outro-points')) as HTMLElement).innerText = this.points.toString();
-        assertDefined(this.rootElement.querySelector('#sprint-outro-continue'))
-            .addEventListener('click', () => this.controller.continue());
-        assertDefined(this.rootElement.querySelector('#sprint-outro-exit'))
-            .addEventListener('click', () => this.controller.exit());
+        (assertDefined(
+            this.rootElement.querySelector('#outro-points')
+        ) as HTMLElement).innerText = this.points.toString();
+        assertDefined(this.rootElement.querySelector('#sprint-outro-continue')).addEventListener('click', () =>
+            this.controller.continue()
+        );
+        assertDefined(this.rootElement.querySelector('#sprint-outro-exit')).addEventListener('click', () =>
+            this.controller.exit()
+        );
     }
 
     addToStats(word: wordGame): void {
@@ -64,8 +67,7 @@ export default class SprintOutroView extends ViewInterface {
         if (word.result) {
             assertDefined(this.correctContainer).append(wordElement);
             this.correctCount++;
-        }
-        else {
+        } else {
             assertDefined(this.errorContainer).append(wordElement);
             this.errorCount++;
         }

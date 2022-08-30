@@ -6,7 +6,7 @@ export interface ViewConstructor {
 
 export default abstract class ViewInterface {
     rootElement: HTMLElement;
-    auxData: unknown
+    auxData: unknown;
 
     // It is possible to provide data to view
     constructor(rootElement: HTMLElement, data: null | unknown = null) {
@@ -16,8 +16,9 @@ export default abstract class ViewInterface {
 
     abstract show(): void;
 
-    // Called e.g. on router exit and should finalize everything (remove listeners, stop timers, etc)
     destroy(): void {
-
+        // This method is empty by default
+        // Should be overridden if something in view need finalizing
+        // Called e.g. on router exit and should finalize everything (remove listeners, stop timers, etc)
     }
 }

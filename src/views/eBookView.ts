@@ -7,7 +7,7 @@ import UserController from '../controllers/userController';
 import UserWordController from '../controllers/userWordController';
 import './eBook.css';
 import AudiocallView from './audiocallView';
-import RouterController from "../controllers/routerController";
+import RouterController from '../controllers/routerController';
 // import AudiocallView from './audiocallView';
 
 const template = `<div class="word-card" data-word-id="">
@@ -35,7 +35,7 @@ class EbookView extends ViewInterface {
     userController: UserController;
     wordController: UserWordController;
     audiocallView: AudiocallView;
-    routerController: RouterController
+    routerController: RouterController;
     words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
         super(rootElement);

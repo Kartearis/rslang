@@ -1,8 +1,6 @@
-
-
 export default class StorageController {
-    private storage: Storage
-    private prefix: string
+    private storage: Storage;
+    private prefix: string;
 
     constructor(prefix: string) {
         this.storage = window.localStorage;
@@ -18,7 +16,7 @@ export default class StorageController {
     }
 
     read(label: string): unknown {
-        return JSON.parse(this.storage.getItem(this.buildLabel(label)) || "");
+        return JSON.parse(this.storage.getItem(this.buildLabel(label)) || '');
     }
 
     check(label: string): boolean {
@@ -33,7 +31,7 @@ export default class StorageController {
         Object.keys(this.storage)
             .filter((key) => key.startsWith(this.prefix))
             .forEach((key) => {
-               this.storage.removeItem(key);
+                this.storage.removeItem(key);
             });
     }
 }
