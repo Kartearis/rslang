@@ -13,25 +13,23 @@ class PaginationComponent {
     constructor(reDraw: () => Promise<void>) {
         this.page = sessionStorage.getItem('lastPage') !== undefined ? Number(sessionStorage.getItem('lastPage')) : 0;
         this.limitPage = PAGE_ON_GROUP;
-        this.reDraw = () => reDraw().then(() => {
-            assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = false);
-            this.lockBtn();
-        });;
+        this.reDraw = () =>
+            reDraw().then(() => {
+                assertDefined(document.querySelector('#pagination'))
+                    .querySelectorAll('button')
+                    .forEach((btn) => (btn.disabled = false));
+                this.lockBtn();
+            });
         this.eBookController = EBookController.getInstance();
         this.userController = UserController.getInstance();
     }
     private lockBtn = (pagination: HTMLElement | null = null) => {
-        let prev: HTMLButtonElement;
-        let next: HTMLButtonElement;
-        let prev5: HTMLButtonElement;
-        let next5: HTMLButtonElement;
+        if (pagination === null) pagination = assertDefined(document.querySelector('#pagination'));
+        const prev = assertDefined(pagination.querySelector<HTMLButtonElement>('#prevBtn'));
+        const next = assertDefined(pagination.querySelector<HTMLButtonElement>('#nextBtn'));
+        const prev5 = assertDefined(pagination.querySelector<HTMLButtonElement>('#prev5Btn'));
+        const next5 = assertDefined(pagination.querySelector<HTMLButtonElement>('#next5Btn'));
 
-        if(pagination === null) pagination = assertDefined(document.querySelector('#pagination'));
-        prev = assertDefined(pagination.querySelector<HTMLButtonElement>('#prevBtn'));
-        next = assertDefined(pagination.querySelector<HTMLButtonElement>('#nextBtn'));
-        prev5 = assertDefined(pagination.querySelector<HTMLButtonElement>('#prev5Btn'));
-        next5 = assertDefined(pagination.querySelector<HTMLButtonElement>('#next5Btn'));
-        
         prev.disabled = this.page === 0 ? true : false;
         next.disabled = this.page === this.limitPage ? true : false;
         prev5.disabled = this.page <= 2 ? true : false;
@@ -50,7 +48,6 @@ class PaginationComponent {
         } else {
             await this.reDrawPaginationPages();
         }
-
     }
     async getPagination() {
         const pagination = document.createElement('div');
@@ -88,20 +85,26 @@ class PaginationComponent {
         this.lockBtn(pagination);
         return pagination;
     }
-    private async toPrev5Page(): Promise<void>{
-        assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = true);
-        this.page = this.page < 5 ? 0 : this.page -= 5;
+    private async toPrev5Page(): Promise<void> {
+        assertDefined(document.querySelector('#pagination'))
+            .querySelectorAll('button')
+            .forEach((btn) => (btn.disabled = true));
+        this.page = this.page < 5 ? 0 : (this.page -= 5);
         sessionStorage.setItem('lastPage', `${this.page}`);
-        await this.reDrawPaginationPages(); 
+        await this.reDrawPaginationPages();
     }
-    private async toNext5Page(): Promise<void>{
-        assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = true);
-        this.page = this.page > PAGE_ON_GROUP - 5 ? PAGE_ON_GROUP : this.page += 5;
+    private async toNext5Page(): Promise<void> {
+        assertDefined(document.querySelector('#pagination'))
+            .querySelectorAll('button')
+            .forEach((btn) => (btn.disabled = true));
+        this.page = this.page > PAGE_ON_GROUP - 5 ? PAGE_ON_GROUP : (this.page += 5);
         sessionStorage.setItem('lastPage', `${this.page}`);
-        await this.reDrawPaginationPages(); 
+        await this.reDrawPaginationPages();
     }
     private async toNextPage(): Promise<void> {
-        assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = true);
+        assertDefined(document.querySelector('#pagination'))
+            .querySelectorAll('button')
+            .forEach((btn) => (btn.disabled = true));
         this.page += 1;
         sessionStorage.setItem('lastPage', this.page.toString());
         const curPage = assertDefined(document.querySelector('.current-page'));
@@ -120,7 +123,6 @@ class PaginationComponent {
             for (let i = 0; i < buttons.length; i += 1) {
                 const btn = buttons[i];
                 if (i === buttons.length - 1 && this.page < PAGE_ON_GROUP - 1) {
-
                     btn.innerText = `${this.page + 3}`;
                     btn.dataset.pageNum = `${this.page + 2}`;
                     if (await this.isLearnedPage(this.page + 2)) {
@@ -143,7 +145,9 @@ class PaginationComponent {
         this.reDraw();
     }
     private async toPrevPage(): Promise<void> {
-        assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = true);
+        assertDefined(document.querySelector('#pagination'))
+            .querySelectorAll('button')
+            .forEach((btn) => (btn.disabled = true));
         this.page -= 1;
         sessionStorage.setItem('lastPage', this.page.toString());
         const curPage = assertDefined(document.querySelector('.current-page'));
@@ -187,11 +191,19 @@ class PaginationComponent {
         paginationNums.classList.add('pagination__pages');
         paginationNums.classList.add('pages');
         let coef = -2;
-        switch(true){
-            case(this.page === 0): coef = 0; break;
-            case(this.page === 1): coef = -1; break;
-            case(this.page === PAGE_ON_GROUP ): coef = -4; break;
-            case(this.page === PAGE_ON_GROUP - 1): coef = -3; break;
+        switch (true) {
+            case this.page === 0:
+                coef = 0;
+                break;
+            case this.page === 1:
+                coef = -1;
+                break;
+            case this.page === PAGE_ON_GROUP:
+                coef = -4;
+                break;
+            case this.page === PAGE_ON_GROUP - 1:
+                coef = -3;
+                break;
         }
 
         const minPage = await this.getPageButton(this.page + coef);
@@ -209,7 +221,7 @@ class PaginationComponent {
     private async getPageButton(num: number): Promise<HTMLButtonElement> {
         const numPageBtn = document.createElement('button');
         numPageBtn.classList.add('pages__page-num');
-        if (this.page === num ) numPageBtn.classList.add('current-page');
+        if (this.page === num) numPageBtn.classList.add('current-page');
         numPageBtn.innerText = `${num + 1}`;
         numPageBtn.dataset.pageNum = num.toString();
         if (this.userController.isSignin() && (await this.isLearnedPage(num))) {
@@ -225,22 +237,24 @@ class PaginationComponent {
     }
 
     private async reDrawPaginationPages(): Promise<void> {
-        assertDefined(document.querySelector('#pagination')).querySelectorAll('button').forEach(btn => btn.disabled = true);
-        await this.getPaginationPagesBlock().then( async (pageBlock) => {
+        assertDefined(document.querySelector('#pagination'))
+            .querySelectorAll('button')
+            .forEach((btn) => (btn.disabled = true));
+        await this.getPaginationPagesBlock().then(async (pageBlock) => {
             const prevBtn = assertDefined(document.querySelector('.pagination__btn_prev'));
             assertDefined(document.querySelector('.pagination__pages')).remove();
             prevBtn.after(pageBlock);
             this.lockBtn();
-            await this.reDraw()
+            await this.reDraw();
         });
-
-       
     }
 
     private async isLearnedPage(page: number, _group: number | null = null): Promise<boolean> {
         const group = _group === null ? Number(localStorage.getItem(GROUP_NAME)) : _group;
         const words = await this.eBookController.getWordsUserOnPage(group, page);
-        const count = words?.filter((word) => word.userWord?.difficulty === wordStatus.easy || word.userWord?.difficulty === wordStatus.hard).length;
+        const count = words?.filter(
+            (word) => word.userWord?.difficulty === wordStatus.easy || word.userWord?.difficulty === wordStatus.hard
+        ).length;
         return count === WORDS_ON_PAGE;
     }
 }

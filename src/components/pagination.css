@@ -2,7 +2,6 @@
     display: flex;
     padding: 15px;
     gap: 20px;
-    background-color: #F5F5F5;
     color: #2F4550;
     justify-content: center;
     align-items: center;
@@ -22,10 +21,12 @@
 .pagination__btn_prev {
     transform: rotate(180deg);
 }
+
 .pagination__btn:disabled,
-.pages__page-num:disabled{
+.pages__page-num:disabled {
     border-color: gray;
 }
+
 .pagination__btn,
 .pages__page-num {
     border: solid 2px #2F4550;

@@ -49,22 +49,28 @@ class EbookView extends ViewInterface {
         this.rootElement.innerText = '';
         const groups = this.getGroups();
         const pagination = await this.pagination.getPagination();
-        const grouNavigation = document.createElement('div');
-        grouNavigation.classList.add('group-navigation');
-        const games = document.createElement('div');
-        grouNavigation.classList.add('games');
+        const groupNavigation = document.createElement('div');
+        groupNavigation.classList.add('group-navigation');
+        const audiocalContainer = document.createElement('div');
+        audiocalContainer.classList.add('group-navigation__game');
+        audiocalContainer.classList.add('group-navigation__game_audiocall');
+        groupNavigation.classList.add('games');
         const audioCall = document.createElement('btn');
         audioCall.innerText = 'Аудиовызов';
         audioCall.addEventListener('click', () => {
             this.audiocallView.draw(this.words);
         });
-        games.append(audioCall);
-
-        grouNavigation.append(pagination);
-        grouNavigation.append(games);
+        const sprintContainer = document.createElement('div');
+        sprintContainer.classList.add('group-navigation__game');
+        sprintContainer.classList.add('group-navigation__game_sprint');
+        sprintContainer.innerText = 'Спринт';
+        audiocalContainer.append(audioCall);
+        groupNavigation.append(sprintContainer);
+        groupNavigation.append(pagination);
+        groupNavigation.append(audiocalContainer);
 
         this.rootElement.append(groups);
-        this.rootElement.append(grouNavigation);
+        this.rootElement.append(groupNavigation);
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
         await this.loadWords();
@@ -130,7 +136,6 @@ class EbookView extends ViewInterface {
             );
             target.classList.add('group-list__group_active');
             await this.pagination.toFirstPage(this.group);
-
         });
         return li;
     }
