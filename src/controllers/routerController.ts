@@ -9,6 +9,7 @@ import SigninView from '../views/signinView';
 import StatView from '../views/statView';
 import SprintGameView from "../views/sprintGameView";
 import AudiocallView from '../views/audiocallView';
+import StorageController from "./storageController";
 
 export type RouteConfig = Record<string, ViewConstructor>;
 
@@ -19,6 +20,7 @@ export default class RouterController {
     private history: History;
     private rootElement: HTMLElement = document.body;
     private lastView: ViewInterface | null = null
+    private storage: StorageController
 
     public static getInstance(): RouterController {
         if (!RouterController.instance) {
@@ -34,13 +36,14 @@ export default class RouterController {
             '/test': TestView,
             '/stats': StatView,
             '/ebook': EbookView,
-            '/audocall': AudiocallView,
+            '/audiocall': AudiocallView,
             '/signin': SigninView,
             '/registration': RegistrationView,
             '/logout': LogoutView,
             '/sprint': SprintGameView
         };
         this.history = window.history;
+        this.storage = new StorageController('router-data');
         window.addEventListener('popstate', (event: PopStateEvent) => this.processStatePop(event));
     }
 
@@ -62,17 +65,27 @@ export default class RouterController {
             this.lastView.destroy();
         const view = new this.routeConfig[to](this.rootElement, data);
         this.lastView = view;
+        // Maybe its more effective to do it on navigation and popstate
+        if (data !== null)
+            this.storage.write('lastData', data);
+        else this.storage.remove('lastData');
         view.show();
     }
 
     // Implement saving auxData to localStorage to facilitate reopen on reload
     reOpenCurrent(): void {
         const path = window.location.pathname;
-        if (path in this.routeConfig) this.renderView(path);
+        if (path in this.routeConfig) {
+            const data = this.storage.check('lastData') ? this.storage.read('lastData') : null;
+            this.renderView(path, data);
+        }
         else this.renderView('/');
     }
 
     navigate(to: string, data: null | unknown = null): void {
+        // If data is function - call it and pass result further. Result is cached for history and reopen,
+        // but updated on subsequent navigation
+        if (typeof data === 'function') data = data();
         this.history.pushState({ path: to, data: data }, to, to);
         this.renderView(to, data);
     }
