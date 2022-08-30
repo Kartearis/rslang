@@ -1,0 +1,36 @@
+@media (max-width: 900px) {
+
+    .menu-list {
+      position: absolute;
+      flex-direction: column;
+      left: -300px;
+      top: 0px;
+      transition: .5s;
+      padding: 55px 37px 0 7px;
+      width: 300px;
+      background-color:var(--color-background);
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .menu-list .menu-list__menu-link {
+      background-color:var(--color-background);
+      color: var(--color-header);
+      font-size: var(--font-5);
+    } 
+
+    .burger {
+      display: flex;
+      position: absolute;
+      z-index: 101;
+    }
+
+    .menu-list.active {
+      left: 0px;
+      align-items: start;
+      
+      
+    }
+
+
+  }

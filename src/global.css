@@ -13,10 +13,16 @@ html, body {
 }
 
 body {
+    position: relative;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 50px;
 }
 
 @import './styles/header.css';
+@import './styles/burger.css';
 @import './styles/footer.css';
+@import './styles/media.css';
 

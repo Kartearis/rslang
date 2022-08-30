@@ -4,9 +4,9 @@
   justify-content: space-around;
   align-items: center;
   height: 50px;
-  position:fixed;
   width: 100%;
   top: 0px;
+  position: absolute;
 }
 
 .header-wrapper {
