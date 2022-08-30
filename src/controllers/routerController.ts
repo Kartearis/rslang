@@ -46,7 +46,7 @@ export default class RouterController {
 
     private processStatePop(event: PopStateEvent) {
         if (event.state === null) this.reOpenCurrent();
-        else this.renderView(event.state.path);
+        else this.renderView(event.state.path, event.state.data ?? null);
     }
 
     setRootElement(rootElement: HTMLElement) {
@@ -57,23 +57,24 @@ export default class RouterController {
         this.routeConfig[path] = view;
     }
 
-    private renderView(to: string): void {
+    private renderView(to: string, data: null | unknown = null): void {
         if (this.lastView)
             this.lastView.destroy();
-        const view = new this.routeConfig[to](this.rootElement);
+        const view = new this.routeConfig[to](this.rootElement, data);
         this.lastView = view;
         view.show();
     }
 
+    // Implement saving auxData to localStorage to facilitate reopen on reload
     reOpenCurrent(): void {
         const path = window.location.pathname;
         if (path in this.routeConfig) this.renderView(path);
         else this.renderView('/');
     }
 
-    navigate(to: string): void {
-        this.history.pushState({ path: to }, to, to);
-        this.renderView(to);
+    navigate(to: string, data: null | unknown = null): void {
+        this.history.pushState({ path: to, data: data }, to, to);
+        this.renderView(to, data);
     }
 
     back(): void {
