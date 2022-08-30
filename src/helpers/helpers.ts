@@ -4,6 +4,7 @@ export function assertDefined<Type>(value: Type): NonNullable<Type> {
 }
 export const HOST = 'https://rs-lang-proj.herokuapp.com';
 export const TOKEN_NAME = 'jwt';
+export const REFRESH_TOKEN_NAME = 'refreshToken';
 export const USER_NAME = 'userId';
 export const GROUP_NAME = 'group';
 export const HARD_WORD_GROUP_NUM = 6;

@@ -1,4 +1,4 @@
-import { assertDefined, HOST, TOKEN_NAME, USER_NAME } from '../helpers/helpers';
+import { assertDefined, HOST, REFRESH_TOKEN_NAME, TOKEN_NAME, USER_NAME } from '../helpers/helpers';
 import { signInResponceType } from '../helpers/types';
 import RouterController from './routerController';
 
@@ -23,10 +23,10 @@ class UserController {
             }),
         });
         if (res.ok) {
-            const { token, userId } = (await res.json()) as signInResponceType;
+            const { token, userId, refreshToken } = (await res.json()) as signInResponceType;
             localStorage.setItem(TOKEN_NAME, token);
+            localStorage.setItem(REFRESH_TOKEN_NAME, refreshToken);
             localStorage.setItem(USER_NAME, userId);
-            UserController.getInstance().togleHeaderLink();
             RouterController.getInstance().navigate('/');
         } else {
             const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
@@ -56,59 +56,30 @@ class UserController {
             errMesage.classList.toggle('hidden');
         }
     }
-    async getNewToken(): Promise<boolean> {
-        const { userId, jwt } = localStorage;
-        const url = `${HOST}/users/${userId}/aggregatedWords/5e9f5ee35eb9e72bc21af4a5`;
+    async getNewToken(): Promise<void> {
+        const { userId, refreshToken } = localStorage;
+        const url = `${HOST}/users/${userId}/tokens`;
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
-                Authorization: `Bearer ${jwt}`,
+                Authorization: `Bearer ${refreshToken}`,
             },
         });
         if (response.ok) {
-            return true;
-        } else if (response.status === 401) {
-            localStorage.removeItem(TOKEN_NAME);
-            localStorage.removeItem(USER_NAME);
-            return false;
+            const { token, refreshToken } = await response.json() as signInResponceType;
+            localStorage.setItem(TOKEN_NAME, token);
+            localStorage.setItem(REFRESH_TOKEN_NAME, refreshToken);
+        } else if (response.status === 403 || response.status === 401) {
+            this.logout();
         } else {
             throw Error(`Error update token. Status  ${response.status}`);
         }
     }
-    //должно так
-    // async getNewToken(): Promise<boolean> {
-    //     const { userId, jwt } = localStorage;
-    //     const url = `${HOST}/users/${userId}/tokens`;
-    //     const response = await fetch(url, {
-    //         method: 'GET',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             Authorization: `Bearer ${jwt}`,
-    //         },
-    //     });
-    //     debugger
-    //     if (response.ok) {
-    //         const newToken: string = await response.json();
-    //         localStorage.setItem(TOKEN_NAME, newToken);
-    //         return true;
-    //     } else if (response.status === 403 || response.status === 401) {
-    //         localStorage.removeItem(TOKEN_NAME);
-    //         localStorage.removeItem(USER_NAME);
-    //         return false;
-    //     } else {
-    //         throw Error(`Error update token. Status  ${response.status}`);
-    //     }
-    // }
-    togleHeaderLink(): void {
-        assertDefined(document.querySelector('#signin')).classList.toggle('hidden');
-        assertDefined(document.querySelector('#registration')).classList.toggle('hidden');
-        assertDefined(document.querySelector('#logout')).classList.toggle('hidden');
-    }
     logout(): void {
         localStorage.removeItem(TOKEN_NAME);
         localStorage.removeItem(USER_NAME);
-        this.togleHeaderLink();
+        localStorage.removeItem(REFRESH_TOKEN_NAME);
     }
     isSignin() {
         return localStorage.getItem(TOKEN_NAME) !== null;
