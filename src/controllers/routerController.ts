@@ -1,7 +1,6 @@
 import EbookView from '../views/eBookView';
 
 import MainView from '../views/mainView';
-import TestView from '../views/test';
 import ViewInterface, { ViewConstructor } from '../views/viewInterface';
 import RegistrationView from '../views/registrationView';
 import LogoutView from '../views/logoutView';
@@ -33,7 +32,6 @@ export default class RouterController {
         // Route config must have '/'
         this.routeConfig = {
             '/': MainView,
-            '/test': TestView,
             '/stats': StatView,
             '/ebook': EbookView,
             '/audiocall': AudiocallView,
