@@ -19,7 +19,7 @@ class SigninView extends ViewInterface {
         );
         this.rootElement.innerText = '';
         const formContainer = document.createElement('div');
-        formContainer.classList.add('auth-container')
+        formContainer.classList.add('auth-container');
         formContainer.append(form);
         this.rootElement.append(formContainer);
     }
@@ -43,4 +43,3 @@ class SigninView extends ViewInterface {
 }
 
 export default SigninView;
-;

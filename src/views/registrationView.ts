@@ -19,7 +19,7 @@ class RegistrationView extends ViewInterface {
         );
         this.rootElement.innerText = '';
         const formContainer = document.createElement('div');
-        formContainer.classList.add('auth-container')
+        formContainer.classList.add('auth-container');
         formContainer.append(form);
         this.rootElement.append(formContainer);
     }

@@ -67,7 +67,7 @@ class UserController {
             },
         });
         if (response.ok) {
-            const { token, refreshToken } = await response.json() as signInResponceType;
+            const { token, refreshToken } = (await response.json()) as signInResponceType;
             localStorage.setItem(TOKEN_NAME, token);
             localStorage.setItem(REFRESH_TOKEN_NAME, refreshToken);
         } else if (response.status === 403 || response.status === 401) {
