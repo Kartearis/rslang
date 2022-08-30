@@ -37,6 +37,7 @@ class AudiocallView extends ViewInterface {
     }
     draw(words: wordType[]) {
         this.audiocallController = new AudiocallController(words);
+        document.addEventListener('keydown', this.audiocallController.addKeyListenetr);
         const options = this.audiocallController.getResponseWords();
         this.rootElement.innerText = '';
         const audiocallDiv = document.createElement('div');
@@ -44,6 +45,7 @@ class AudiocallView extends ViewInterface {
         audiocallDiv.classList.add('audiocall');
         audiocallDiv.innerHTML = audiocallBlock;
         this.rootElement.append(audiocallDiv);
+        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#nextBtn')).classList.add('answerBtn');
         assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#nextBtn')).addEventListener('click', () => {
             const rightBtn = assertDefined(document.querySelector('.response__word_right'));
             const res = !rightBtn.classList.contains('hidden');
@@ -52,6 +54,7 @@ class AudiocallView extends ViewInterface {
             this.toggleResponse();
             this.fillPage(options);
         });
+        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#donkKnowBtn')).classList.add('answerBtn');
         assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#donkKnowBtn')).addEventListener('click', () => {
             this.audiocallController.rememberResult(false);
             const options = this.audiocallController.getNextWord();

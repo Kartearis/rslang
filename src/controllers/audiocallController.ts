@@ -1,4 +1,4 @@
-import { COUNT_GAME_RESPONSE_WORD } from '../helpers/helpers';
+import { assertDefined, COUNT_AUDIOGAME_RESPONSE_WORD } from '../helpers/helpers';
 import { audiocallWord, wordGame, wordType } from '../helpers/types';
 import GameController from './gameController';
 
@@ -7,6 +7,7 @@ class AudiocallController extends GameController {
     constructor(_words: wordType[]) {
         super(_words);
         this.audiocallResults = [];
+
     }
 
     itterator = 0;
@@ -33,14 +34,25 @@ class AudiocallController extends GameController {
             result: _result,
         });
         if (this.itterator === this.words.length - 1) {
+            document.removeEventListener('keydown', this.addKeyListenetr);
             this.saveResult(this.audiocallResults);
+        }
+    }
+    addKeyListenetr(ev: KeyboardEventInit) {
+        const key = assertDefined(ev.key);
+        if (key === 'Enter') {
+            assertDefined(document.querySelector<HTMLButtonElement>('.answerBtn')).click();
+        }
+        if (['1', '2', '3', '4', '5'].includes(key)) {
+            const keyNum = Number(key) - 1;
+            document.querySelectorAll<HTMLButtonElement>('.option')[keyNum].click()
         }
     }
     //get shufled word array of number
     private getResponseWordId(curentWordId: number): number[] {
         const arrId = [curentWordId];
         let testId = -1;
-        while (arrId.length !== COUNT_GAME_RESPONSE_WORD) {
+        while (arrId.length !== COUNT_AUDIOGAME_RESPONSE_WORD) {
             testId = this.getRandomNum(this.words.length);
             if (!arrId.includes(testId)) {
                 arrId.push(testId);

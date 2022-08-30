@@ -9,5 +9,5 @@ export const GROUP_NAME = 'group';
 export const HARD_WORD_GROUP_NUM = 6;
 export const WORDS_ON_PAGE = 20;
 export const PAGE_ON_GROUP = 29;
-export const COUNT_GAME_RESPONSE_WORD = 4;
+export const COUNT_AUDIOGAME_RESPONSE_WORD = 5;
 export const SUCCESS_ANSWER_FOR_LEARNED = 3;
