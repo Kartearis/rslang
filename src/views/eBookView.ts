@@ -7,6 +7,7 @@ import UserController from '../controllers/userController';
 import UserWordController from '../controllers/userWordController';
 import './eBook.css';
 import AudiocallView from './audiocallView';
+import RouterController from "../controllers/routerController";
 // import AudiocallView from './audiocallView';
 
 const template = `<div class="word-card" data-word-id="">
@@ -34,9 +35,11 @@ class EbookView extends ViewInterface {
     userController: UserController;
     wordController: UserWordController;
     audiocallView: AudiocallView;
+    routerController: RouterController
     words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
         super(rootElement);
+        this.routerController = RouterController.getInstance();
         this.eBookController = EBookController.getInstance();
         this.pagination = new PaginationComponent(async () => await this.reDraw());
         this.userController = UserController.getInstance();
@@ -51,23 +54,27 @@ class EbookView extends ViewInterface {
         const pagination = await this.pagination.getPagination();
         const groupNavigation = document.createElement('div');
         groupNavigation.classList.add('group-navigation');
-        const audiocalContainer = document.createElement('div');
-        audiocalContainer.classList.add('group-navigation__game');
-        audiocalContainer.classList.add('group-navigation__game_audiocall');
+        const audiocallButton = document.createElement('button');
+        audiocallButton.classList.add('group-navigation__game');
+        audiocallButton.classList.add('group-navigation__game_audiocall');
+        audiocallButton.innerText = 'Аудиовызов';
         groupNavigation.classList.add('games');
-        const audioCall = document.createElement('btn');
-        audioCall.innerText = 'Аудиовызов';
-        audioCall.addEventListener('click', () => {
-            this.audiocallView.draw(this.words);
+        // const audioCall = document.createElement('btn');
+        // audioCall.innerText = 'Аудиовызов';
+        audiocallButton.addEventListener('click', () => {
+            this.routerController.navigate('/audiocall', this.words);
         });
-        const sprintContainer = document.createElement('div');
-        sprintContainer.classList.add('group-navigation__game');
-        sprintContainer.classList.add('group-navigation__game_sprint');
-        sprintContainer.innerText = 'Спринт';
-        audiocalContainer.append(audioCall);
-        groupNavigation.append(sprintContainer);
+        const sprintButton = document.createElement('button');
+        sprintButton.classList.add('group-navigation__game');
+        sprintButton.classList.add('group-navigation__game_sprint');
+        sprintButton.innerText = 'Спринт';
+        sprintButton.addEventListener('click', () => {
+            this.routerController.navigate('/sprint', this.words);
+        });
+        // audiocallButton.append(audioCall);
+        groupNavigation.append(sprintButton);
         groupNavigation.append(pagination);
-        groupNavigation.append(audiocalContainer);
+        groupNavigation.append(audiocallButton);
 
         this.rootElement.append(groups);
         this.rootElement.append(groupNavigation);

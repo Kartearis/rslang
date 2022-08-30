@@ -17,6 +17,7 @@
     font-size: var(--font-7);
     padding: 7px 15px;
     border-radius: 15px;
+    border: 1px solid var(--color-header);
     transition: .3s;
 }
 
