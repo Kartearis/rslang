@@ -73,8 +73,7 @@ export default class SprintGameController extends GameController{
         this.view?.destroy();
         this.view = new SprintOutroView(this.rootElement, this, this.points, this.history);
         this.view.show();
-        // Will be enabled when words are not placeholders
-        //this.saveResult(this.history);
+        this.saveResult(this.history);
     }
 
     async playSound(controllerName: SoundKeys): Promise<void> {
