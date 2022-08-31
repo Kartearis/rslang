@@ -29,10 +29,10 @@ export enum wordStatus {
     easy = 'easy',
     learning = 'learning',
 }
-export enum filterForUserWords {
-    hard = '{"userWord.difficulty":"hard"}',
-    learned = '{"userWord":{"$exists":"true"}}',
-}
+// export enum filterForUserWords {
+//     hard = '{"userWord.difficulty":"hard"}',
+//     learned = '{"userWord":{"$exists":"true"}}',
+// }
 export type wordProperty = {
     difficulty: wordStatus;
     optional: {

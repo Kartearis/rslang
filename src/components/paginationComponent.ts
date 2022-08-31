@@ -101,7 +101,7 @@ class PaginationComponent {
         sessionStorage.setItem('lastPage', `${this.page}`);
         await this.reDrawPaginationPages();
     }
-    private async toNextPage(): Promise<void> {
+    private toNextPage(): void {
         assertDefined(document.querySelector('#pagination'))
             .querySelectorAll('button')
             .forEach((btn) => (btn.disabled = true));
@@ -125,7 +125,7 @@ class PaginationComponent {
                 if (i === buttons.length - 1 && this.page < PAGE_ON_GROUP - 1) {
                     btn.innerText = `${this.page + 3}`;
                     btn.dataset.pageNum = `${this.page + 2}`;
-                    if (await this.isLearnedPage(this.page + 2)) {
+                    if ( this.eBookController.isPageLearned(this.page + 2)) {
                         btn.classList.add('pages__page-num_learned');
                     } else {
                         btn.classList.remove('pages__page-num_learned');
@@ -167,7 +167,7 @@ class PaginationComponent {
                 if (i === 0 && this.page > 1) {
                     btn.innerText = `${this.page - 1}`;
                     btn.dataset.pageNum = `${this.page - 2}`;
-                    if (await this.isLearnedPage(this.page - 2)) {
+                    if (await this.eBookController.isPageLearned(this.page - 2)) {
                         btn.classList.add('pages__page-num_learned');
                     } else {
                         btn.classList.remove('pages__page-num_learned');
@@ -186,7 +186,7 @@ class PaginationComponent {
         }
         this.reDraw();
     }
-    private async getPaginationPagesBlock(): Promise<HTMLDivElement> {
+    private getPaginationPagesBlock(): HTMLDivElement {
         const paginationNums = document.createElement('div');
         paginationNums.classList.add('pagination__pages');
         paginationNums.classList.add('pages');
@@ -206,11 +206,11 @@ class PaginationComponent {
                 break;
         }
 
-        const minPage = await this.getPageButton(this.page + coef);
-        const prevPave = await this.getPageButton(this.page + 1 + coef);
-        const curPage = await this.getPageButton(this.page + 2 + coef);
-        const nextPage = await this.getPageButton(this.page + 3 + coef);
-        const maxPage = await this.getPageButton(this.page + 4 + coef);
+        const minPage =  this.getPageButton(this.page + coef);
+        const prevPave = this.getPageButton(this.page + 1 + coef);
+        const curPage = this.getPageButton(this.page + 2 + coef);
+        const nextPage = this.getPageButton(this.page + 3 + coef);
+        const maxPage = this.getPageButton(this.page + 4 + coef);
         paginationNums.append(minPage);
         paginationNums.append(prevPave);
         paginationNums.append(curPage);
@@ -218,13 +218,13 @@ class PaginationComponent {
         paginationNums.append(maxPage);
         return paginationNums;
     }
-    private async getPageButton(num: number): Promise<HTMLButtonElement> {
+    private getPageButton(num: number): HTMLButtonElement {
         const numPageBtn = document.createElement('button');
         numPageBtn.classList.add('pages__page-num');
         if (this.page === num) numPageBtn.classList.add('current-page');
         numPageBtn.innerText = `${num + 1}`;
         numPageBtn.dataset.pageNum = num.toString();
-        if (this.userController.isSignin() && (await this.isLearnedPage(num))) {
+        if (this.userController.isSignin() && (this.eBookController.isPageLearned(num))) {
             numPageBtn.classList.add('pages__page-num_learned');
         }
         numPageBtn.addEventListener('click', async (ev) => {
@@ -240,22 +240,12 @@ class PaginationComponent {
         assertDefined(document.querySelector('#pagination'))
             .querySelectorAll('button')
             .forEach((btn) => (btn.disabled = true));
-        await this.getPaginationPagesBlock().then(async (pageBlock) => {
+            const pageBlock = this.getPaginationPagesBlock()
             const prevBtn = assertDefined(document.querySelector('.pagination__btn_prev'));
             assertDefined(document.querySelector('.pagination__pages')).remove();
             prevBtn.after(pageBlock);
             this.lockBtn();
             await this.reDraw();
-        });
-    }
-
-    private async isLearnedPage(page: number, _group: number | null = null): Promise<boolean> {
-        const group = _group === null ? Number(localStorage.getItem(GROUP_NAME)) : _group;
-        const words = await this.eBookController.getWordsUserOnPage(group, page);
-        const count = words?.filter(
-            (word) => word.userWord?.difficulty === wordStatus.easy || word.userWord?.difficulty === wordStatus.hard
-        ).length;
-        return count === WORDS_ON_PAGE;
     }
 }
 export default PaginationComponent;

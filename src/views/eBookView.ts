@@ -111,7 +111,7 @@ class EbookView extends ViewInterface {
             this.words = await this.eBookController.getHardWordsUser();
         } else {
             this.words = this.userController.isSignin()
-                ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
+                ? await this.eBookController.getGroupUserWords()
                 : await this.eBookController.getPageWordsOnGroup(this.group, this.pagination.page);
         }
     }
