@@ -1,5 +1,6 @@
 import { assertDefined, COUNT_AUDIOGAME_RESPONSE_WORD } from '../helpers/helpers';
 import { audiocallWord, wordGame, wordType } from '../helpers/types';
+import AudiocallView from '../views/audiocallView';
 import GameController from './gameController';
 
 class AudiocallController extends GameController {
@@ -67,6 +68,10 @@ class AudiocallController extends GameController {
         }
         const shufledArr = this.shuffleArray(arrId);
         return shufledArr;
+    }
+    continue(): void {
+        const audiocallView = new AudiocallView(assertDefined(document.querySelector('.content')));
+        audiocallView.show();
     }
 }
 

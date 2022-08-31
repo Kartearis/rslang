@@ -45,7 +45,7 @@ class EbookView extends ViewInterface {
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
-        this.audiocallView = new AudiocallView(assertDefined(document.querySelector<HTMLElement>('.content')));
+        this.audiocallView = new AudiocallView(this.rootElement);
     }
 
     async show(): Promise<void> {
