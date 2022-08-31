@@ -66,9 +66,11 @@
     border-radius: 15px;
     width: 160px;
     height: 30px;
+    transition: .3s;
 }
 
 .reg-form__submit:hover,
 .login-form__submit:hover {
     cursor: pointer;
+    scale: 1.1;
 }
