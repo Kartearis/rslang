@@ -8,7 +8,7 @@ import AudiocallController from '../controllers/audiocallController';
 // <img class="word-info__audio" id="playImg" src="${audioImg}" />
 // </button>
 const audiocallBlock = `
-    <button class="audiocall-game__button audiocall-game__button_exit" id="exit">
+    <button class="audiocall-game__button audiocall-game__button_exit" id="audiocall-exit">
         <span class="icon icon--size-1 icon--cross"></span>
     </button>
         <div id="response" class='response'>
@@ -42,6 +42,7 @@ class AudiocallView extends ViewInterface {
         audiocallDiv.classList.add('audiocall-game');
         audiocallDiv.innerHTML = audiocallBlock;
         this.rootElement.append(audiocallDiv);
+        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#audiocall-exit')).addEventListener('click', () => this.controller?.exit());
         assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#nextBtn')).addEventListener('click', () => this.toNextWord());
         assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#donkKnowBtn')).addEventListener('click', () => this.dontKwonAnswer());
         this.fillPage(options);

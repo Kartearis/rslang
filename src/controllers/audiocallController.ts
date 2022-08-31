@@ -52,6 +52,9 @@ class AudiocallController extends GameController {
             document.querySelectorAll<HTMLButtonElement>('.option')[keyNum].click();
         }
     }
+    exit(): void {
+        this.routerController.back();
+    }
     //get shufled word array of number
     private getResponseWordId(curentWordId: number): number[] {
         const arrId = [curentWordId];
