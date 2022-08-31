@@ -9,6 +9,7 @@ class AudiocallController extends GameController {
         super(_words);
         this.audiocallResults = [];
         this.rootElement = rootElement;
+        document.addEventListener('keydown', this.addKeyListener);
     }
 
     itterator = 0;
@@ -42,7 +43,9 @@ class AudiocallController extends GameController {
     addKeyListener(ev: KeyboardEventInit) {
         const key = assertDefined(ev.key);
         if (key === 'Enter') {
-            assertDefined(document.querySelector<HTMLButtonElement>('.answerBtn')).click();
+            const donkKnowBtn = assertDefined(document.querySelector<HTMLButtonElement>('#donkKnowBtn'));
+            const nextWordBtn = assertDefined(document.querySelector<HTMLButtonElement>('#nextBtn'));
+            donkKnowBtn.classList.contains('hidden') ? nextWordBtn.click() : donkKnowBtn.click();
         }
         if (['1', '2', '3', '4', '5'].includes(key)) {
             const keyNum = Number(key) - 1;

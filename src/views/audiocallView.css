@@ -1,47 +1,41 @@
+@import '../icons.css';
+
 .hidden {
     display: none;
 }
 
-.audiocall {
+.audiocall-game {
+    background-color: var(--color-background);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
+    height: 100%;
+    gap: 80px;
 }
 
-.audiocall__button {
+.audiocall-game__button {
     cursor: pointer;
     user-select: none;
 }
 
-.audiocall__button_asc {
-    width: 200px;
-    height: 200px;
-    border-radius: 100px;
-}
 .response{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
+    height: 180px;
 }
 .response__img{
-    border-radius: 150px;
-    width: 300px;
-    height: 300px;
-}
-.word-info__audio {
+    border-radius: 500px;
     width: 100px;
+    height: 100px;
+    border: 2px solid white;
 }
 
-.word-info__audio_play {
+.response__audio-img_play {
     animation: playAudio 0.5s linear infinite;
 }
 
-.audiocall__word-info {
-    display: flex;
-    justify-content: center;
-}
-
-.audiocall__options {
+.audiocall-game__options {
     display: flex;
     justify-content: center;
     gap: 20px
@@ -51,24 +45,43 @@
     height: 30px;
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: var(--font-2);
+}
+.option__num-key{
+    color: gray;
+    font-size: var(--font-2);
+    padding-right: 8px;
+}
+.response__audio_asc {
+    height: 100px;
+    width: 100px;
+    border-radius: 50px;
+    border: none;
 }
 .response__audio {
-    height: 50px;
-    width: 50px;
-    border-radius: 25px;
-
-
+    height: 30px;
+    width: 30px;
+    border-radius: 15px;
+    margin-right: 20px;
+    border: none;
 }
 .response__audio-img{
-    width: 80%;
+    width: 100%;
+}
+.response__row{
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    font-size: var(--font-1);
 }
 .response__word{
     display: flex;
-    justify-content: space-evenly;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-1);
 }
 .response__word_right {
-    background-color: greenyellow;
+    background-color: var(--color-accent-3);
     display: inline-block;
     margin-right: 20px;
     width: 30px;
@@ -80,7 +93,7 @@
 }
 
 .response__word_wrong {
-    background-color: red;
+    background-color: var(--color-accent-6);
     display: inline-block;
     margin-right: 20px;
     width: 30px;
@@ -91,23 +104,35 @@
     content: '✖';
 }
 
-.audiocall__buttons {
+.audiocall-game__button {
     display: flex;
     justify-content: center;
 }
-.audiocall__buttons_dont-know,
-.audiocall__buttons_next
+.audiocall-game__button_dont-know,
+.audiocall-game__button_next
 {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-4);
     width: 200px;
     border: none;
     border-radius: 8px;
     height: 35px;
 }
-.audiocall__buttons_dont-know{
-    background-color: blue;
+.audiocall-game__button_dont-know{
+    background-color: var(--color-accent-5);
 }
-.audiocall__buttons_next{
-    background-color: greenyellow;
+.audiocall-game__button_next{
+    background-color: var(--color-accent-2);
+}
+.icon--cross {
+    --path: url('../assets/icons/bi_x.svg');
+}
+.audiocall-game__button_exit{
+    width: 30px;
+    border: none;
+    height: 30px;
+    align-self: end;
 }
 @keyframes playAudio {
     0% {
