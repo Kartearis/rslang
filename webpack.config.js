@@ -26,12 +26,12 @@ const baseConfig = {
                 use: 'html-loader',
             },
             {
-                test: /\.(jpg|png|webp)$/,
+                test: /\.(jpg|png|webp|svg|mp3)$/,
                 loader: 'file-loader',
                 options: {
                     name: '[name].[ext]',
                 },
-            }
+            },
         ],
     },
     resolve: {

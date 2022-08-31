@@ -27,17 +27,30 @@ export type signInResponceType = {
 export enum wordStatus {
     hard = 'hard',
     easy = 'easy',
+    learning = 'learning',
 }
 export enum filterForUserWords {
     hard = '{"userWord.difficulty":"hard"}',
-    learned = '{"$or":[{"userWord.difficulty":"easy"},{"userWord.difficulty":"hard"}]}',
+    learned = '{"userWord":{"$exists":"true"}}',
 }
 export type wordProperty = {
     difficulty: wordStatus;
     optional: {
-        //linter error on empty object{}, after add any field remove id
-        id?: number;
+        failed: string | null;
+        success: string | null;
+        successRow: string | null;
+        learnedDate: string | null;
+        lastAttempt: string | null;
     };
+};
+// TODO: refactor wordGame field to word
+export type wordGame = {
+    wordGame: wordType;
+    result: boolean;
+};
+export type audiocallWord = wordGame & {
+    //mark right or wrong word on page
+    right: boolean;
 };
 export type responceUserWords = [
     {
