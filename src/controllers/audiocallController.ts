@@ -4,10 +4,11 @@ import GameController from './gameController';
 
 class AudiocallController extends GameController {
     audiocallResults: wordGame[];
-    constructor(_words: wordType[]) {
+    private rootElement: HTMLElement;
+    constructor(rootElement: HTMLElement, _words: wordType[]) {
         super(_words);
         this.audiocallResults = [];
-
+        this.rootElement = rootElement;
     }
 
     itterator = 0;
@@ -34,18 +35,18 @@ class AudiocallController extends GameController {
             result: _result,
         });
         if (this.itterator === this.words.length - 1) {
-            document.removeEventListener('keydown', this.addKeyListenetr);
+            document.removeEventListener('keydown', this.addKeyListener);
             this.saveResult(this.audiocallResults);
         }
     }
-    addKeyListenetr(ev: KeyboardEventInit) {
+    addKeyListener(ev: KeyboardEventInit) {
         const key = assertDefined(ev.key);
         if (key === 'Enter') {
             assertDefined(document.querySelector<HTMLButtonElement>('.answerBtn')).click();
         }
         if (['1', '2', '3', '4', '5'].includes(key)) {
             const keyNum = Number(key) - 1;
-            document.querySelectorAll<HTMLButtonElement>('.option')[keyNum].click()
+            document.querySelectorAll<HTMLButtonElement>('.option')[keyNum].click();
         }
     }
     //get shufled word array of number

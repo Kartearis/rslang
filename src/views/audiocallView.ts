@@ -27,18 +27,13 @@ const audiocallBlock = `
 `;
 const audio = new Audio();
 class AudiocallView extends ViewInterface {
-    audiocallController: AudiocallController = new AudiocallController([]);
-    constructor(rootElement: HTMLElement) {
-        super(rootElement);
-    }
-
+    controller: AudiocallController | null = null;
     show(): void {
         this.rootElement.innerText = 'Audio';
-    }
-    draw(words: wordType[]) {
-        this.audiocallController = new AudiocallController(words);
-        document.addEventListener('keydown', this.audiocallController.addKeyListenetr);
-        const options = this.audiocallController.getResponseWords();
+        const words: wordType[] = assertDefined(this.auxData) as wordType[];
+        this.controller = new AudiocallController(this.rootElement, words);
+        document.addEventListener('keydown', this.controller.addKeyListener);
+        const options = this.controller.getResponseWords();
         this.rootElement.innerText = '';
         const audiocallDiv = document.createElement('div');
         audiocallDiv.id = 'audiocall';
@@ -49,15 +44,15 @@ class AudiocallView extends ViewInterface {
         assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#nextBtn')).addEventListener('click', () => {
             const rightBtn = assertDefined(document.querySelector('.response__word_right'));
             const res = !rightBtn.classList.contains('hidden');
-            this.audiocallController.rememberResult(res);
-            const options = this.audiocallController.getNextWord();
+            assertDefined(this.controller).rememberResult(res);
+            const options = assertDefined(this.controller).getNextWord();
             this.toggleResponse();
             this.fillPage(options);
         });
         assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#donkKnowBtn')).classList.add('answerBtn');
         assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#donkKnowBtn')).addEventListener('click', () => {
-            this.audiocallController.rememberResult(false);
-            const options = this.audiocallController.getNextWord();
+            assertDefined(this.controller).rememberResult(false);
+            const options = assertDefined(this.controller).getNextWord();
             this.toggleResponse();
             this.fillPage(options);
         });
