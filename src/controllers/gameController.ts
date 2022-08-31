@@ -4,9 +4,9 @@ import RouterController from './routerController';
 import UserWordController from './userWordController';
 
 abstract class GameController {
-    words: wordType[];
-    userWordController;
-    routerController;
+    protected words: wordType[];
+    protected userWordController: UserWordController;
+    protected routerController: RouterController;
     constructor(_words: wordType[]) {
         this.words = this.shuffleArray(_words);
         this.userWordController = UserWordController.getInstance();
@@ -67,8 +67,6 @@ abstract class GameController {
                 );
             }
         });
-        //Должен быть переход на страницу результата
-        this.routerController.navigate('/ebook');
     }
     protected shuffleArray<T>(arr: T[]): T[] {
         for (let i = arr.length - 1; i > 0; i--) {
