@@ -1,0 +1,68 @@
+
+.combo-counter {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.combo-counter__progress {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
+    min-height: 20px;
+    font-size: 20px;
+    font-weight: var(--font-weight-emphasis);
+    color: var(--color-accent-0);
+}
+
+.combo-counter__combo {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    gap: 5px;
+    min-height: 20px;
+}
+
+.combo-progress-mark {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--color-accent-0);
+}
+
+.combo-mark {
+    width: 40px;
+    height: 20px;
+    border-radius: 15px;
+    border: 2px solid var(--color-shaded);
+}
+
+.combo-mark:nth-child(1) {
+    background-color: var(--color-accent-0);
+}
+
+.combo-mark:nth-child(2) {
+    background-color: var(--color-accent-1);
+}
+
+.combo-mark:nth-child(3) {
+    background-color: var(--color-accent-2);
+}
+
+.combo-mark:nth-child(4) {
+    background-color: var(--color-accent-3);
+}
+
+.combo-mark:nth-child(5) {
+    background-color: var(--color-accent-4);
+}
+
+.combo-mark:nth-child(6) {
+    background-color: var(--color-accent-5);
+}

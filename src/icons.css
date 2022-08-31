@@ -1,0 +1,55 @@
+@import 'commons.css';
+
+/* To use icons just implement .icon-<name of icon> class and override --path there with url(...) */
+/* To change icon color override --color on icon */
+
+.icon {
+    --path: linear-gradient(#fff, #fff);
+    --color: var(--color-shaded);
+    vertical-align: bottom;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-color: var(--color);
+    transition: filter 0.3s, transform 0.3s;
+    -webkit-mask: var(--path) 50% 50%/contain no-repeat;
+    mask: var(--path) 50% 50%/contain no-repeat;
+}
+
+.icon--mirrored {
+    transform: scaleX(-1);
+}
+
+.icon--inverse {
+    background-color: var(--color-background);
+}
+
+.icon--size-1 {
+    width: var(--font-1);
+    height: var(--font-1);
+}
+
+.icon--size-2 {
+    width: var(--font-2);
+    height: var(--font-2);
+}
+
+.icon--size-3 {
+    width: var(--font-3);
+    height: var(--font-3);
+}
+
+.icon--size-4 {
+    width: var(--font-4);
+    height: var(--font-4);
+}
+
+.icon--size-5 {
+    width: var(--font-5);
+    height: var(--font-5);
+}
+
+.icon--size-6 {
+    width: var(--font-6);
+    height: var(--font-6);
+}

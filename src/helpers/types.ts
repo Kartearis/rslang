@@ -43,6 +43,7 @@ export type wordProperty = {
         lastAttempt: string | null;
     };
 };
+// TODO: refactor wordGame field to word
 export type wordGame = {
     wordGame: wordType;
     result: boolean;
