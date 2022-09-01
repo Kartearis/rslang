@@ -42,7 +42,6 @@ class EbookView extends ViewInterface {
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.routerController = RouterController.getInstance();
         this.eBookController = EBookController.getInstance();
-        this.eBookController.loadAuthGroup(this.group);
         this.pagination = new PaginationComponent(async () => await this.reDraw());
         this.userController = UserController.getInstance();
         this.wordController = UserWordController.getInstance();
@@ -50,6 +49,7 @@ class EbookView extends ViewInterface {
     }
 
     async show(): Promise<void> {
+        this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
         this.rootElement.innerText = '';
         const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
@@ -81,7 +81,6 @@ class EbookView extends ViewInterface {
         this.rootElement.append(groupNavigation);
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-        await this.loadWords();
         this.words.forEach((w) => {
             const templateCard = document.createElement('template');
             templateCard.innerHTML = template;
@@ -97,7 +96,7 @@ class EbookView extends ViewInterface {
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
 
-        await this.loadWords();
+        this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
         this.words.forEach((w) => {
             const templateCard = document.createElement('template');
             templateCard.innerHTML = template;
@@ -107,18 +106,7 @@ class EbookView extends ViewInterface {
         });
         this.rootElement.append(bookContainer);
     }
-    private async loadWords() {
-        if (this.userController.isSignin() && this.group === HARD_WORD_GROUP_NUM) {
-            this.words = await this.eBookController.getHardWordsUser();
-        } else {
-            this.eBookController.getGroupWords(this.group);
-            // this.userController.isSignin()
-            //     ? await this.eBookController.loadAuthGroup()
-            //     : await this.eBookController.loadUnauthGroup(this.group, this.pagination.page);
-        }
-    }
     async getGroups(): Promise<HTMLUListElement> {
-        await this.eBookController.getGroupWords();
         const MAX_GROUP = 6;
         const ul = document.createElement('ul');
         ul.classList.add('group-list');
@@ -273,7 +261,7 @@ class EbookView extends ViewInterface {
         const counHard = document.querySelectorAll(`.word-card_${wordStatus.hard}`).length;
         const counLearned = document.querySelectorAll(`.word-card_${wordStatus.easy}`).length;
         if (counHard + counLearned === WORDS_ON_PAGE)
-            assertDefined(document.querySelector('.current-page')).classList.add('page-page-num_learned');
+            assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
     }
     async saveCardState(wordId: string, wordUpdate: wordProperty, status: string | undefined) {
         if (status === undefined) {

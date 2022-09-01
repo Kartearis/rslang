@@ -54,7 +54,6 @@ class PaginationComponent {
         const pagination = document.createElement('div');
         pagination.id = 'pagination';
         pagination.classList.add('pagination');
-        await this.eBookController.getGroupWords();
         const pagesBlock = this.getPaginationPagesBlock();
         const prev5Btn = document.createElement('button');
         prev5Btn.innerText = '<<';
@@ -242,12 +241,12 @@ class PaginationComponent {
         assertDefined(document.querySelector('#pagination'))
             .querySelectorAll('button')
             .forEach((btn) => (btn.disabled = true));
+        await this.reDraw();
         const pageBlock = this.getPaginationPagesBlock()
         const prevBtn = assertDefined(document.querySelector('.pagination__btn_prev'));
         assertDefined(document.querySelector('.pagination__pages')).remove();
         prevBtn.after(pageBlock);
         this.lockBtn();
-        await this.reDraw();
     }
 }
 export default PaginationComponent;

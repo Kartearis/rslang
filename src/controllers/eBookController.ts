@@ -1,5 +1,5 @@
-import { GROUP_NAME, HOST } from '../helpers/helpers';
-import { responceUserWords, wordStatus, wordType } from '../helpers/types';
+import { GROUP_NAME, HARD_WORD_GROUP_NUM, HOST } from '../helpers/helpers';
+import { responceUserWords, wordProperty, wordStatus, wordType } from '../helpers/types';
 import UserController from './userController';
 const COUNT_PAGES = 30;
 type groupWords = {
@@ -19,29 +19,35 @@ class EBookController {
         }
         return EBookController.instance;
     }
-    async getGroupWords(_group: number | null = null) {
-        const group = _group === null ? this.groupWords.group : _group;
-        if (group !== this.groupWords.group) {
-            console.log(this.userController.isSignin());
-            if (this.userController.isSignin()) {
-                await this.loadAuthGroup(group).then(() => console.log(this.groupWords))
+    async loadGroup(group: number){
+        this.groupWords.words = [];
+        if (this.userController.isSignin()) {
+            if (group === HARD_WORD_GROUP_NUM) {
+                this.groupWords.words[0] = await this.getHardWordsUser();
             } else {
-                await this.loadUnauthGroup(group).then(() => console.log(this.groupWords))
+                await this.loadAuthGroup(group);
             }
-            this.groupWords.group = group;
+        } else {
+            await this.loadUnauthGroup(group);
+        }
+    }
+    async getGroupWords(group: number) {
+        if (group !== this.groupWords.group) {
+            await this.loadGroup(group)
         }
         return this.groupWords.words;
     }
 
-    async getPageWords(_page: number | null = null): Promise<wordType[]> {
-        const page = _page === null ? 1 : _page;
-        if (this.groupWords.words.length === 0) await this.getGroupWords();
+    async getPageFromGroup(page: number, group: number): Promise<wordType[]> {
+        if (group !== this.groupWords.group || this.groupWords.words.length === 0) {
+            this.groupWords.group = group;
+            await this.loadGroup(group);
+        }
         return this.groupWords.words[page];
     }
 
     isPageLearned(page: number): boolean {
-        console.log(this.groupWords);
-        return this.groupWords.words[page].some(word => {
+        return !this.groupWords.words[page].some(word => {
             if (word.userWord !== undefined) {
                 return (word.userWord.difficulty !== wordStatus.easy) && (word.userWord.difficulty !== wordStatus.hard);
             }
@@ -67,8 +73,9 @@ class EBookController {
         })
     }
     async loadAuthGroup(group: number): Promise<void> {
+        const WORDS_IN_GROUP = 600;
         const { userId, jwt } = localStorage;
-        const url = `${HOST}/users/${userId}/aggregatedWords?group=${group}`;
+        const url = `${HOST}/users/${userId}/aggregatedWords?group=${group}&wordsPerPage=${WORDS_IN_GROUP}`;
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -80,7 +87,13 @@ class EBookController {
             const responceUserWords = (await response.json()) as responceUserWords;
             for (let i = 0; i < COUNT_PAGES; i += 1) {
                 const pageWords = responceUserWords[0].paginatedResults.filter(word => word.page === i);
-                if (pageWords !== undefined) this.groupWords.words.push(pageWords);
+                if (pageWords !== undefined) {
+                    //word has Id field, but userWord save id word as _id. Rewrite. 
+                    pageWords.forEach((word) => {
+                        if(word._id !== undefined) word.id = word._id 
+                    });
+                    this.groupWords.words.push(pageWords);
+                }
             }
         } else {
             throw Error('Access token is missing or invalid');
@@ -88,9 +101,10 @@ class EBookController {
     }
     async getHardWordsUser(): Promise<wordType[]> {
         const { userId, jwt } = localStorage;
-        const max_words = 999;
+        //3600 words in base
+        const MAX_WORDS = 3600;
         const response = await fetch(
-            `${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${max_words}&filter={"userWord.difficulty":"hard"}`,
+            `${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${MAX_WORDS}&filter={"userWord.difficulty":"hard"}`,
             {
                 method: 'GET',
                 headers: {
@@ -105,6 +119,21 @@ class EBookController {
             return arrWords;
         } else {
             throw Error('Access token is missing or invalid');
+        }
+    }
+    updateWord(wordId: string, property: wordProperty){
+        let flgSuccess = false;
+        for (let i = 0; i < this.groupWords.words.length; i++) {
+            const page = this.groupWords.words[i];
+            for (let j = 0; j < page.length; j++) {
+                const word = page[j];
+                if(word.id === wordId){
+                    word.userWord = property;
+                    flgSuccess = true;
+                    break;
+                }
+                if(flgSuccess) break;
+            }
         }
     }
 }

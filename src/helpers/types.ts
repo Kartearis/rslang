@@ -29,10 +29,6 @@ export enum wordStatus {
     easy = 'easy',
     learning = 'learning',
 }
-// export enum filterForUserWords {
-//     hard = '{"userWord.difficulty":"hard"}',
-//     learned = '{"userWord":{"$exists":"true"}}',
-// }
 export type wordProperty = {
     difficulty: wordStatus;
     optional: {
@@ -55,7 +51,7 @@ export type audiocallWord = wordGame & {
 export type responceUserWords = [
     {
         paginatedResults: wordType[];
-        //all words whith mark
+        //all words whith option
         totalCount: [
             {
                 count: string;
