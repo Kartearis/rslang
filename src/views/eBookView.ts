@@ -75,6 +75,10 @@ class EbookView extends ViewInterface {
         sprintButton.addEventListener('click', () => {
             this.routerController.navigate('/sprint', this.words);
         });
+        if(this.eBookController.isPageLearned(this.pagination.page)){
+            sprintButton.disabled = true;
+            audiocallButton.disabled = true;
+        }
         // audiocallButton.append(audioCall);
         groupNavigation.append(sprintButton);
         groupNavigation.append(pagination);
@@ -108,6 +112,10 @@ class EbookView extends ViewInterface {
             bookContainer.append(wordBlock);
         });
         this.rootElement.append(bookContainer);
+        if(this.eBookController.isPageLearned(this.pagination.page)){
+           document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = true);
+        }
+        assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');    
     }
     async getGroups(): Promise<HTMLUListElement> {
         const MAX_GROUP = 6;
@@ -279,8 +287,12 @@ class EbookView extends ViewInterface {
         });
         const counHard = document.querySelectorAll(`.word-card_${wordStatus.hard}`).length;
         const counLearned = document.querySelectorAll(`.word-card_${wordStatus.easy}`).length;
-        if (counHard + counLearned === WORDS_ON_PAGE)
+        if (counHard + counLearned === WORDS_ON_PAGE) {
             assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
+            document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = true);
+            
+        }
+            
     }
     async saveCardState(wordId: string, wordUpdate: wordProperty, status: string | undefined) {
         if (status === undefined) {
