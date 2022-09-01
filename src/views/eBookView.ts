@@ -39,18 +39,19 @@ class EbookView extends ViewInterface {
     words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
         super(rootElement);
+        this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.routerController = RouterController.getInstance();
         this.eBookController = EBookController.getInstance();
+        this.eBookController.loadAuthGroup(this.group);
         this.pagination = new PaginationComponent(async () => await this.reDraw());
         this.userController = UserController.getInstance();
-        this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
         this.audiocallView = new AudiocallView(assertDefined(document.querySelector<HTMLElement>('.content')));
     }
 
     async show(): Promise<void> {
         this.rootElement.innerText = '';
-        const groups = this.getGroups();
+        const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
         const groupNavigation = document.createElement('div');
         groupNavigation.classList.add('group-navigation');
@@ -110,12 +111,14 @@ class EbookView extends ViewInterface {
         if (this.userController.isSignin() && this.group === HARD_WORD_GROUP_NUM) {
             this.words = await this.eBookController.getHardWordsUser();
         } else {
-            this.words = this.userController.isSignin()
-                ? await this.eBookController.getGroupUserWords()
-                : await this.eBookController.getPageWordsOnGroup(this.group, this.pagination.page);
+            this.eBookController.getGroupWords(this.group);
+            // this.userController.isSignin()
+            //     ? await this.eBookController.loadAuthGroup()
+            //     : await this.eBookController.loadUnauthGroup(this.group, this.pagination.page);
         }
     }
-    getGroups(): HTMLUListElement {
+    async getGroups(): Promise<HTMLUListElement> {
+        await this.eBookController.getGroupWords();
         const MAX_GROUP = 6;
         const ul = document.createElement('ul');
         ul.classList.add('group-list');

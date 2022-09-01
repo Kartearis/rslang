@@ -11,6 +11,8 @@ class PaginationComponent {
     eBookController: EBookController;
     userController;
     constructor(reDraw: () => Promise<void>) {
+        this.eBookController = EBookController.getInstance();
+        this.userController = UserController.getInstance();
         this.page = sessionStorage.getItem('lastPage') !== undefined ? Number(sessionStorage.getItem('lastPage')) : 0;
         this.limitPage = PAGE_ON_GROUP;
         this.reDraw = () =>
@@ -20,8 +22,7 @@ class PaginationComponent {
                     .forEach((btn) => (btn.disabled = false));
                 this.lockBtn();
             });
-        this.eBookController = EBookController.getInstance();
-        this.userController = UserController.getInstance();
+
     }
     private lockBtn = (pagination: HTMLElement | null = null) => {
         if (pagination === null) pagination = assertDefined(document.querySelector('#pagination'));
@@ -53,6 +54,7 @@ class PaginationComponent {
         const pagination = document.createElement('div');
         pagination.id = 'pagination';
         pagination.classList.add('pagination');
+        await this.eBookController.getGroupWords();
         const pagesBlock = this.getPaginationPagesBlock();
         const prev5Btn = document.createElement('button');
         prev5Btn.innerText = '<<';
@@ -125,7 +127,7 @@ class PaginationComponent {
                 if (i === buttons.length - 1 && this.page < PAGE_ON_GROUP - 1) {
                     btn.innerText = `${this.page + 3}`;
                     btn.dataset.pageNum = `${this.page + 2}`;
-                    if ( this.eBookController.isPageLearned(this.page + 2)) {
+                    if (this.eBookController.isPageLearned(this.page + 2)) {
                         btn.classList.add('pages__page-num_learned');
                     } else {
                         btn.classList.remove('pages__page-num_learned');
@@ -206,7 +208,7 @@ class PaginationComponent {
                 break;
         }
 
-        const minPage =  this.getPageButton(this.page + coef);
+        const minPage = this.getPageButton(this.page + coef);
         const prevPave = this.getPageButton(this.page + 1 + coef);
         const curPage = this.getPageButton(this.page + 2 + coef);
         const nextPage = this.getPageButton(this.page + 3 + coef);
@@ -240,12 +242,12 @@ class PaginationComponent {
         assertDefined(document.querySelector('#pagination'))
             .querySelectorAll('button')
             .forEach((btn) => (btn.disabled = true));
-            const pageBlock = this.getPaginationPagesBlock()
-            const prevBtn = assertDefined(document.querySelector('.pagination__btn_prev'));
-            assertDefined(document.querySelector('.pagination__pages')).remove();
-            prevBtn.after(pageBlock);
-            this.lockBtn();
-            await this.reDraw();
+        const pageBlock = this.getPaginationPagesBlock()
+        const prevBtn = assertDefined(document.querySelector('.pagination__btn_prev'));
+        assertDefined(document.querySelector('.pagination__pages')).remove();
+        prevBtn.after(pageBlock);
+        this.lockBtn();
+        await this.reDraw();
     }
 }
 export default PaginationComponent;
