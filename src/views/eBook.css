@@ -25,7 +25,13 @@
     cursor: pointer;
     transform: scale(1.1);
 }
-
+.group-navigation__game_sprint{
+    grid-area: sprint;
+    justify-self: end;
+}
+.group-navigation__game_audiocall{
+    grid-area: audoicall;
+}
 .group-list {
     list-style: none;
     display: flex;
@@ -77,8 +83,13 @@
     background-color: var(--color-accent-6);
 }
 .group-navigation{
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-areas: 'sprint group audoicall';
+}
+@media screen and (max-width: 930px) {
+    .group-navigation{
+        grid-template-areas: 'group group' 'sprint audoicall';
+    }
 }
 .ebook-container {
     display: grid;
@@ -88,7 +99,27 @@
     grid-template-columns: repeat(4, 1fr);
     padding: 15px 0;
 }
-
+@media screen and (max-width: 1460px) {
+    .ebook-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media screen and (max-width: 1100px) {
+    .ebook-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media screen and (max-width: 750px) {
+    .ebook-container {
+        grid-template-columns: 1fr;
+    }
+    .group-list__group{
+        height: 30px;
+    }
+    .grop-name{
+        display: none;
+    }
+}
 .word-card {
     width: 350px;
     display: flex;
@@ -99,7 +130,14 @@
     box-shadow: 2px 13px 5px -2px rgb(34 60 80 / 25%);
     border-radius: 10px;
 }
-
+@media screen and (max-width: 420px) {
+    .word-card {
+        width: 300px;
+    }
+    .word-card__img-container {
+        width: 292px !important;
+    }
+}
 .word-card_hard {
     border-color: red;
 }
@@ -165,7 +203,6 @@
 .word-card__action {
     display: flex;
     justify-content: space-around;
-    width: 330px;
     align-items: center;
 }
 

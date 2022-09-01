@@ -1,4 +1,5 @@
 .pagination {
+    grid-area: group;
     display: flex;
     padding: 15px;
     gap: 20px;
@@ -7,7 +8,29 @@
     align-items: center;
     user-select: none;
 }
-
+@media screen and (max-width: 630px) {
+    .pagination {
+        display: grid;
+        grid-template-areas: 'pages pages pages pages' 'prev5 prev next next5';
+    }
+    .pages{
+        grid-area: pages;  
+    }
+    .pagination__btn_prev-5{
+        grid-area: prev5;
+        justify-self: end;
+    }
+    .pagination__btn_prev{
+        grid-area: prev;
+        justify-self: end;
+    }
+    .pagination__btn_next-5{
+        grid-area: next5;
+    }
+    .pagination__btn_next{
+        grid-area: next;
+    }
+}
 .pagination__pages {
     display: flex;
     padding: 15px;

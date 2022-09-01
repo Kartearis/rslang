@@ -114,18 +114,18 @@ class EbookView extends ViewInterface {
         const ul = document.createElement('ul');
         ul.classList.add('group-list');
         for (let i = 0; i < MAX_GROUP; i++) {
-            const li = this.getGroupLi(`ГРУППА ${i + 1}`, i);
+            const li = this.getGroupLi(`<span class='grop-name'>ГРУППА</span> ${i + 1}`, i);
             ul.append(li);
         }
         if (this.userController.isSignin()) {
-            const li = this.getGroupLi(`Сложные слова`, HARD_WORD_GROUP_NUM);
+            const li = this.getGroupLi(`<span class='grop-name'>Сложные слова</span>`, HARD_WORD_GROUP_NUM);
             ul.append(li);
         }
         return ul;
     }
     private getGroupLi(groupName: string, groupNum: number): HTMLLIElement {
         const li = document.createElement('li');
-        li.textContent = groupName;
+        li.innerHTML = groupName;
         li.classList.add('group-list__group');
         if (this.group === groupNum) li.classList.add('group-list__group_active');
         li.dataset.group = groupNum.toString();

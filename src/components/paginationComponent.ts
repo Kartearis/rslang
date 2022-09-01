@@ -50,6 +50,7 @@ class PaginationComponent {
         prev5Btn.innerText = '<<';
         prev5Btn.id = 'prev5Btn';
         prev5Btn.classList.add('pagination__btn');
+        prev5Btn.classList.add('pagination__btn_prev-5');
         prev5Btn.addEventListener('click', async () => this.toPrev5Page());
         pagination.append(prev5Btn);
         const prevBtn = document.createElement('button');
@@ -66,6 +67,7 @@ class PaginationComponent {
         nextBtn.addEventListener('click', async () => await this.toNextPage());
         const next5Btn = document.createElement('button');
         next5Btn.classList.add('pagination__btn');
+        next5Btn.classList.add('pagination__btn_next-5');
         next5Btn.innerText = '>>';
         next5Btn.id = 'next5Btn';
         next5Btn.addEventListener('click', async () => this.toNext5Page());
