@@ -8,6 +8,7 @@ import UserWordController from '../controllers/userWordController';
 import './eBook.css';
 import AudiocallView from './audiocallView';
 import RouterController from '../controllers/routerController';
+import audioImg from '../assets/audio.png';
 // import AudiocallView from './audiocallView';
 
 const template = `<div class="word-card" data-word-id="">
@@ -24,7 +25,7 @@ const template = `<div class="word-card" data-word-id="">
 <div class="word-card__action word-action">
     <button id="hardMark" class="word-action__to-hard">!</button>
     <button id="learningMark" class="word-action__to-learning hidden">X</button>
-    <button id="audioBtn" class="word-action__audio word-action__audio_start"></button>
+    <button id="audioBtn" class="word-action__audio word-action__audio_start"><img src='${audioImg}' class="word-action__audio-img"/> </button>
     <button id="easyMark" class="word-action__to-easy">✓</button>
 </div>
 </div>`;
@@ -40,13 +41,14 @@ class EbookView extends ViewInterface {
     words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
         super(rootElement);
-        this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.routerController = RouterController.getInstance();
         this.eBookController = EBookController.getInstance();
         this.pagination = new PaginationComponent(async () => await this.reDraw());
         this.userController = UserController.getInstance();
         this.wordController = UserWordController.getInstance();
         this.audiocallView = new AudiocallView(assertDefined(document.querySelector<HTMLElement>('.content')));
+        this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
+        this.group = this.group !== NaN ? this.group : 0;
     }
 
     async show(): Promise<void> {
@@ -97,8 +99,12 @@ class EbookView extends ViewInterface {
         });
         this.rootElement.append(bookContainer);
     }
-
+    destroy() {
+        this.stopAudio();
+        this.eBookController.abortController.abort();
+    }
     async reDraw() {
+        this.stopAudio();
         document.querySelector('.ebook-container')?.remove();
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
@@ -123,11 +129,11 @@ class EbookView extends ViewInterface {
         const ul = document.createElement('ul');
         ul.classList.add('group-list');
         for (let i = 0; i < MAX_GROUP; i++) {
-            const li = this.getGroupLi(`<span class='grop-name'>ГРУППА</span> ${i + 1}`, i);
+            const li = this.getGroupLi(`<span class='group-name'>ГРУППА</span> ${i + 1}`, i);
             ul.append(li);
         }
         if (this.userController.isSignin()) {
-            const li = this.getGroupLi(`<span class='grop-name'>Сложные слова</span>`, HARD_WORD_GROUP_NUM);
+            const li = this.getGroupLi(`<span class='group-name'>Сложные слова</span>`, HARD_WORD_GROUP_NUM);
             ul.append(li);
         }
         return ul;
@@ -139,6 +145,7 @@ class EbookView extends ViewInterface {
         if (this.group === groupNum) li.classList.add('group-list__group_active');
         li.dataset.group = groupNum.toString();
         li.addEventListener('click', async (ev: Event) => {
+            this.stopAudio();
             const target = ev.target as HTMLButtonElement;
             this.group = Number(target.dataset.group);
             localStorage.setItem('group', this.group.toString());
@@ -147,6 +154,7 @@ class EbookView extends ViewInterface {
             );
             target.classList.add('group-list__group_active');
             await this.pagination.toFirstPage(this.group);
+
         });
         return li;
     }
@@ -201,6 +209,7 @@ class EbookView extends ViewInterface {
         } else {
             markHard.remove();
             easyMark.remove();
+            learningMark.remove();
         }
         return wordCard;
     }
@@ -227,7 +236,8 @@ class EbookView extends ViewInterface {
         playBtn.addEventListener('click', (ev: Event) => {
             const target = ev.target as HTMLButtonElement;
             const currentAudio = wordAudio;
-            if (target.classList.contains('word-action__audio_start')) {
+            if (target.classList.contains('word-action__audio_start') || assertDefined(target.parentElement).classList.contains('word-action__audio_start')) {
+                this.stopAudio()
                 currentAudio.play();
                 this.togleAudioBtn(playBtn);
             } else {
@@ -235,6 +245,9 @@ class EbookView extends ViewInterface {
                 this.togleAudioBtn(playBtn);
             }
         });
+    }
+    stopAudio() {
+        document.querySelector<HTMLButtonElement>('.word-action__audio_stop')?.click();
     }
     private togleAudioBtn(target: HTMLButtonElement) {
         target.classList.toggle('word-action__audio_start');

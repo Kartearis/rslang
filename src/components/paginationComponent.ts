@@ -1,7 +1,6 @@
 import EBookController from '../controllers/eBookController';
 import UserController from '../controllers/userController';
 import { assertDefined, GROUP_NAME, HARD_WORD_GROUP_NUM, PAGE_ON_GROUP, WORDS_ON_PAGE } from '../helpers/helpers';
-import { wordStatus } from '../helpers/types';
 import './pagination.css';
 
 class PaginationComponent {
@@ -54,13 +53,13 @@ class PaginationComponent {
         prev5Btn.addEventListener('click', async () => this.toPrev5Page());
         pagination.append(prev5Btn);
         const prevBtn = document.createElement('button');
-        prevBtn.innerText = '➙';
+        prevBtn.innerText = '🡸';
         prevBtn.id = 'prevBtn';
         prevBtn.classList.add('pagination__btn');
         prevBtn.classList.add('pagination__btn_prev');
         prevBtn.addEventListener('click', async () => await this.toPrevPage());
         const nextBtn = document.createElement('button');
-        nextBtn.innerText = '➙';
+        nextBtn.innerText = '🡺';
         nextBtn.id = 'nextBtn';
         nextBtn.classList.add('pagination__btn');
         nextBtn.classList.add('pagination__btn_next');
