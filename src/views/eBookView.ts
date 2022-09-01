@@ -53,6 +53,8 @@ class EbookView extends ViewInterface {
         this.rootElement.innerText = '';
         const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
+        if(this.group === HARD_WORD_GROUP_NUM) 
+            pagination.querySelectorAll<HTMLButtonElement>('button').forEach(btn => btn.disabled = true);
         const groupNavigation = document.createElement('div');
         groupNavigation.classList.add('group-navigation');
         const audiocallButton = document.createElement('button');
@@ -92,7 +94,7 @@ class EbookView extends ViewInterface {
     }
 
     async reDraw() {
-        assertDefined(document.querySelector('.ebook-container')).remove();
+        document.querySelector('.ebook-container')?.remove();
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
 

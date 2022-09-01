@@ -47,6 +47,7 @@ class EBookController {
     }
 
     isPageLearned(page: number): boolean {
+        if(this.groupWords.group === HARD_WORD_GROUP_NUM) return false;
         return !this.groupWords.words[page].some(word => {
             if (word.userWord !== undefined) {
                 return (word.userWord.difficulty !== wordStatus.easy) && (word.userWord.difficulty !== wordStatus.hard);

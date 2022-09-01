@@ -17,10 +17,10 @@ class PaginationComponent {
         this.limitPage = PAGE_ON_GROUP;
         this.reDraw = () =>
             reDraw().then(() => {
-                assertDefined(document.querySelector('#pagination'))
+                    assertDefined(document.querySelector('#pagination'))
                     .querySelectorAll('button')
                     .forEach((btn) => (btn.disabled = false));
-                this.lockBtn();
+                    this.lockBtn();
             });
 
     }
@@ -39,22 +39,13 @@ class PaginationComponent {
     async toFirstPage(group: number) {
         sessionStorage.setItem('lastPage', '0');
         this.page = 0;
-        if (group === HARD_WORD_GROUP_NUM) {
-            const pagination = assertDefined(document.querySelector('.pagination'));
-            pagination.querySelectorAll('button').forEach((btn) => (btn.disabled = true));
-            pagination.querySelectorAll<HTMLButtonElement>('.pages__page-num').forEach((btn, i) => {
-                btn.innerText = i === 2 ? '1' : '';
-            });
-            await this.reDraw();
-        } else {
-            await this.reDrawPaginationPages();
-        }
+        await this.reDrawPaginationPages(group);
     }
     async getPagination() {
         const pagination = document.createElement('div');
         pagination.id = 'pagination';
         pagination.classList.add('pagination');
-        const pagesBlock = this.getPaginationPagesBlock();
+        const pagesBlock = await this.getPaginationPagesBlock();
         const prev5Btn = document.createElement('button');
         prev5Btn.innerText = '<<';
         prev5Btn.id = 'prev5Btn';
@@ -80,7 +71,7 @@ class PaginationComponent {
         next5Btn.addEventListener('click', async () => this.toNext5Page());
         pagination.append(prev5Btn);
         pagination.append(prevBtn);
-        pagination.append(await pagesBlock);
+        pagination.append(pagesBlock);
         pagination.append(nextBtn);
         pagination.append(next5Btn);
         this.lockBtn(pagination);
@@ -237,16 +228,18 @@ class PaginationComponent {
         return numPageBtn;
     }
 
-    private async reDrawPaginationPages(): Promise<void> {
+    private async reDrawPaginationPages(group: number | null = null): Promise<void> {
         assertDefined(document.querySelector('#pagination'))
             .querySelectorAll('button')
             .forEach((btn) => (btn.disabled = true));
         await this.reDraw();
-        const pageBlock = this.getPaginationPagesBlock()
+        const pageBlock = this.getPaginationPagesBlock();
+
         const prevBtn = assertDefined(document.querySelector('.pagination__btn_prev'));
         assertDefined(document.querySelector('.pagination__pages')).remove();
         prevBtn.after(pageBlock);
-        this.lockBtn();
-    }
+        if(group === HARD_WORD_GROUP_NUM) 
+            assertDefined(document.querySelector('#pagination')).querySelectorAll<HTMLButtonElement>('button').forEach(btn => btn.disabled = true);
+    }   
 }
 export default PaginationComponent;
