@@ -22,9 +22,10 @@ const template = `<div class="word-card" data-word-id="">
     <p class="word-info__example_translate" id="exampleTransalte"></p>
 </div>
 <div class="word-card__action word-action">
-    <button id="hardMark" class="word-action__hardMark">!</button>
+    <button id="hardMark" class="word-action__to-hard">!</button>
+    <button id="learningMark" class="word-action__to-learning hidden">X</button>
     <button id="audioBtn" class="word-action__audio word-action__audio_start"></button>
-    <button id="learnedMark" class="word-action__learnedMark">✓</button>
+    <button id="easyMark" class="word-action__to-easy">✓</button>
 </div>
 </div>`;
 
@@ -165,24 +166,32 @@ class EbookView extends ViewInterface {
         const exampleTransalte = assertDefined(wordCard.querySelector('#exampleTransalte')) as HTMLParagraphElement;
         exampleTransalte.innerText = word.textExampleTranslate;
         const markHard = assertDefined(wordCard.querySelector('#hardMark')) as HTMLButtonElement;
-        const learnedMark = assertDefined(wordCard.querySelector('#learnedMark')) as HTMLButtonElement;
+        const easyMark = assertDefined(wordCard.querySelector('#easyMark')) as HTMLButtonElement;
+        const learningMark = assertDefined(wordCard.querySelector('#learningMark')) as HTMLButtonElement;
 
+        
         if (this.userController.isSignin()) {
             if (word.userWord !== undefined) {
                 if (word.userWord.difficulty === wordStatus.easy) {
                     card.classList.add(`word-card_easy`);
-                    learnedMark.disabled = true;
+                    easyMark.disabled = true;
                     markHard.disabled = true;
                 } else if (word.userWord.difficulty === wordStatus.hard) {
                     card.classList.add(`word-card_hard`);
                     markHard.disabled = true;
                 }
             }
-            markHard.addEventListener('click', (ev) => this.markCard(ev, wordStatus.hard));
-            learnedMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
+            easyMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
+            if(this.group === HARD_WORD_GROUP_NUM){
+                markHard.classList.add('hidden');
+                learningMark.classList.remove('hidden');
+                learningMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.learning));
+            } else {
+                markHard.addEventListener('click', (ev) => this.markCard(ev, wordStatus.hard));
+            }
         } else {
             markHard.remove();
-            learnedMark.remove();
+            easyMark.remove();
         }
         return wordCard;
     }
@@ -244,19 +253,27 @@ class EbookView extends ViewInterface {
         };
         const group = this.group;
         await this.saveCardState(wordId, wordUpdate, card.dataset.wordStatus).then(() => {
-            if (status === wordStatus.hard) {
-                card.classList.add(`word-card_hard`);
-                target.disabled = true;
-                card.dataset.wordStatus = wordStatus.hard;
-            } else {
-                if (group === HARD_WORD_GROUP_NUM) {
-                    card.remove();
-                } else {
-                    card.classList.remove(`word-card_hard`);
-                    card.classList.add(`word-card_easy`);
+            switch(status){
+                case wordStatus.hard:
+                    card.classList.add(`word-card_hard`);
                     target.disabled = true;
-                    assertDefined(card.querySelector<HTMLButtonElement>('#hardMark')).disabled = true;
-                    card.dataset.wordStatus = status;
+                    card.dataset.wordStatus = wordStatus.hard;
+                    break;
+                case wordStatus.easy:
+                    if (group === HARD_WORD_GROUP_NUM) {
+                        card.remove();
+                    } else {
+                        card.classList.remove(`word-card_hard`);
+                        card.classList.add(`word-card_easy`);
+                        target.disabled = true;
+                        assertDefined(card.querySelector<HTMLButtonElement>('#hardMark')).disabled = true;
+                        card.dataset.wordStatus = status;
+                    }
+                    break;
+                case wordStatus.learning:{
+                    if (group === HARD_WORD_GROUP_NUM) {
+                        card.remove();
+                    }
                 }
             }
         });

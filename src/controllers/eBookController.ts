@@ -117,6 +117,9 @@ class EBookController {
         if (response.status === 200) {
             const arr = (await response.json()) as responceUserWords;
             const arrWords: wordType[] = arr[0].paginatedResults;
+            arrWords.forEach((word) => {
+                if(word._id !== undefined) word.id = word._id 
+            });
             return arrWords;
         } else {
             throw Error('Access token is missing or invalid');

@@ -169,8 +169,9 @@
     align-items: center;
 }
 
-.word-action__hardMark,
-.word-action__learnedMark {
+.word-action__to-hard,
+.word-action__to-easy,
+.word-action__to-learning {
     border: solid 4px var(--color-shaded);
     border-radius: 20px;
     width: 40px;
@@ -180,14 +181,16 @@
 }
 
 .word-action__audio:hover,
-.word-action__hardMark:hover:enabled,
-.word-action__learnedMark:hover:enabled {
+.word-action__to-hard:hover:enabled,
+.word-action__to-easy:hover:enabled,
+.word-action__to-learning {
     cursor: pointer;
     font-size: 110%;
 }
 
-.word-action__hardMark:disabled,
-.word-action__learnedMark:disabled {
+.word-action__to-hard:disabled,
+.word-action__to-easy:disabled,
+.word-action__to-learning:disabled {
     border-color: gray;
 }
 
