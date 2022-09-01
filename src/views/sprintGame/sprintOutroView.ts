@@ -3,7 +3,7 @@ import SprintGameController from '../../controllers/sprintGameController';
 import { wordGame } from '../../helpers/types';
 
 import './sprint-outro.css';
-import ResultWordCard from '../../components/wordCard';
+import ResultWordCard from '../../components/resultWordCard';
 import { assertDefined } from '../../helpers/helpers';
 
 const template = document.createElement('template');
