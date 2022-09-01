@@ -54,7 +54,7 @@ class EbookView extends ViewInterface {
         this.rootElement.innerText = '';
         const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
-        if(this.group === HARD_WORD_GROUP_NUM) 
+        if (this.group === HARD_WORD_GROUP_NUM)
             pagination.querySelectorAll<HTMLButtonElement>('button').forEach(btn => btn.disabled = true);
         const groupNavigation = document.createElement('div');
         groupNavigation.classList.add('group-navigation');
@@ -75,7 +75,7 @@ class EbookView extends ViewInterface {
         sprintButton.addEventListener('click', () => {
             this.routerController.navigate('/sprint', this.words);
         });
-        if(this.eBookController.isPageLearned(this.pagination.page)){
+        if (this.eBookController.isPageLearned(this.pagination.page)) {
             sprintButton.disabled = true;
             audiocallButton.disabled = true;
         }
@@ -112,10 +112,11 @@ class EbookView extends ViewInterface {
             bookContainer.append(wordBlock);
         });
         this.rootElement.append(bookContainer);
-        if(this.eBookController.isPageLearned(this.pagination.page)){
-           document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = true);
+        if (this.eBookController.isPageLearned(this.pagination.page)) {
+            document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = true);
+            assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
         }
-        assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');    
+
     }
     async getGroups(): Promise<HTMLUListElement> {
         const MAX_GROUP = 6;
@@ -177,7 +178,7 @@ class EbookView extends ViewInterface {
         const easyMark = assertDefined(wordCard.querySelector('#easyMark')) as HTMLButtonElement;
         const learningMark = assertDefined(wordCard.querySelector('#learningMark')) as HTMLButtonElement;
 
-        
+
         if (this.userController.isSignin()) {
             if (word.userWord !== undefined) {
                 if (word.userWord.difficulty === wordStatus.easy) {
@@ -190,7 +191,7 @@ class EbookView extends ViewInterface {
                 }
             }
             easyMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
-            if(this.group === HARD_WORD_GROUP_NUM){
+            if (this.group === HARD_WORD_GROUP_NUM) {
                 markHard.classList.add('hidden');
                 learningMark.classList.remove('hidden');
                 learningMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.learning));
@@ -261,7 +262,7 @@ class EbookView extends ViewInterface {
         };
         const group = this.group;
         await this.saveCardState(wordId, wordUpdate, card.dataset.wordStatus).then(() => {
-            switch(status){
+            switch (status) {
                 case wordStatus.hard:
                     card.classList.add(`word-card_hard`);
                     target.disabled = true;
@@ -278,7 +279,7 @@ class EbookView extends ViewInterface {
                         card.dataset.wordStatus = status;
                     }
                     break;
-                case wordStatus.learning:{
+                case wordStatus.learning: {
                     if (group === HARD_WORD_GROUP_NUM) {
                         card.remove();
                     }
@@ -290,9 +291,8 @@ class EbookView extends ViewInterface {
         if (counHard + counLearned === WORDS_ON_PAGE) {
             assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
             document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = true);
-            
         }
-            
+
     }
     async saveCardState(wordId: string, wordUpdate: wordProperty, status: string | undefined) {
         if (status === undefined) {

@@ -17,10 +17,10 @@ class PaginationComponent {
         this.limitPage = PAGE_ON_GROUP;
         this.reDraw = () =>
             reDraw().then(() => {
-                    assertDefined(document.querySelector('#pagination'))
+                assertDefined(document.querySelector('#pagination'))
                     .querySelectorAll('button')
                     .forEach((btn) => (btn.disabled = false));
-                    this.lockBtn();
+                this.lockBtn();
             });
 
     }
@@ -240,8 +240,8 @@ class PaginationComponent {
         const prevBtn = assertDefined(document.querySelector('.pagination__btn_prev'));
         assertDefined(document.querySelector('.pagination__pages')).remove();
         prevBtn.after(pageBlock);
-        if(group === HARD_WORD_GROUP_NUM) 
+        if (group === HARD_WORD_GROUP_NUM)
             assertDefined(document.querySelector('#pagination')).querySelectorAll<HTMLButtonElement>('button').forEach(btn => btn.disabled = true);
-    }   
+    }
 }
 export default PaginationComponent;
