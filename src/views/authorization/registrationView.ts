@@ -1,9 +1,9 @@
-import UserController from '../controllers/userController';
-import { assertDefined } from '../helpers/helpers';
-import FormService from '../helpers/formService';
-import ViewInterface from './viewInterface';
+import UserController from '../../controllers/userController';
+import { assertDefined } from '../../helpers/helpers';
+import Authorization from './authorization';
+import ViewInterface from '../viewInterface';
 import './authView.css';
-class RegistrationView extends ViewInterface {
+class RegistrationView extends Authorization {
     controller: UserController;
     constructor(rootElement: HTMLElement) {
         super(rootElement);
@@ -11,7 +11,7 @@ class RegistrationView extends ViewInterface {
     }
 
     show(): void {
-        const form = FormService.getAuthForm();
+        const form = this.getAuthForm();
         form.classList.add('registration-form');
         this.fillRegistrationForm(form);
         form.addEventListener('input', () =>
@@ -25,16 +25,16 @@ class RegistrationView extends ViewInterface {
     }
 
     private fillRegistrationForm(form: HTMLElement) {
-        const name = FormService.getInput(['reg-form__name'], 'text', 'Имя...', 'name');
+        const name = this.getInput(['reg-form__name'], 'text', 'Имя...', 'name');
         form.append(name);
-        const email = FormService.getInput(['reg-form__login'], 'email', 'Email...', 'email');
+        const email = this.getInput(['reg-form__login'], 'email', 'Email...', 'email');
         email.required = true;
         form.append(email);
-        const pass = FormService.getInput(['reg-form__pass'], 'password', 'Пароль...', 'password');
+        const pass = this.getInput(['reg-form__pass'], 'password', 'Пароль...', 'password');
         pass.minLength = 8;
         pass.required = true;
         form.append(pass);
-        const submit = FormService.getSubmitBtn(['reg-form__submit'], 'Отправить', this.controller.registration);
+        const submit = this.getSubmitBtn(['reg-form__submit'], 'Регистрация', this.controller.registration);
         form.append(submit);
     }
 }

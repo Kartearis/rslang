@@ -1,4 +1,4 @@
-@import "../global.css";
+@import "../../global.css";
 
 .auth-container {
     width: 100%;
@@ -10,33 +10,28 @@
 }
 
 .errMesage {
-    color: red;
+    color: var(--color-accent-6);
 }
 
 .hidden {
     display: none;
 }
-
-.signin-form {
-    background-color: var(--color-header);
-    padding: 20px 40px;
+.signin-form,
+.registration-form{
+    background-color: var(--color-block);
     border-radius: 15px;
     gap: 20px;
     align-items: center;
     display: flex;
     flex-direction: column;
-    width: 316px;
+    box-shadow: -5px 14px 8px 1px rgba(34, 60, 80, 0.11);
+}
+.signin-form {
+    padding: 20px 40px;
 }
 
 .registration-form {
-    background-color: var(--color-header);
-    padding: 20px 40px;
-    border-radius: 15px;
-    gap: 20px;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    width: 396px;
+    padding: 20px 60px;
 }
 
 .reg-form__name,
@@ -46,26 +41,21 @@
 .login-form__login {
     font-size: 20px;
     border-radius: 15px;
-    border: none;
+    border:2px solid var(--color-header);
     outline-offset: 3px;
-    padding-left: 10px;
+    padding: 5px 0 5px 10px;
     outline: 0;
 }
-
-/* .reg-form__name::placeholder,
-.reg-form__login::placeholder,
-.reg-form__pass::placeholder,
-.login-form__pass::placeholder,
-.login-form__login::placeholder {
-    padding-left: 15px;
-} */
 
 .reg-form__submit,
 .login-form__submit {
     border: none;
+    font-size: var(--font-4);
     border-radius: 15px;
     width: 160px;
     height: 30px;
+    color: var(--color-block);
+    background-color: var(--color-header);
 }
 
 .reg-form__submit:hover,
