@@ -2,9 +2,9 @@ import EbookView from '../views/eBookView';
 
 import MainView from '../views/mainView';
 import ViewInterface, { ViewConstructor } from '../views/viewInterface';
-import RegistrationView from '../views/registrationView';
-import LogoutView from '../views/logoutView';
-import SigninView from '../views/signinView';
+import RegistrationView from '../views/authorization/registrationView';
+import LogoutView from '../views/authorization/logoutView';
+import SigninView from '../views/authorization/signinView';
 import StatView from '../views/statView';
 import SprintGameView from '../views/sprintGameView';
 import AudiocallView from '../views/audiocallView';
