@@ -64,23 +64,22 @@ class EbookView extends ViewInterface {
         audiocallButton.classList.add('group-navigation__game_audiocall');
         audiocallButton.innerText = 'Аудиовызов';
         groupNavigation.classList.add('games');
-        // const audioCall = document.createElement('btn');
-        // audioCall.innerText = 'Аудиовызов';
         audiocallButton.addEventListener('click', () => {
-            this.routerController.navigate('/audiocall', this.words);
+            const wordsForGame = this.eBookController.getWordsForGame(this.pagination.page);
+            this.routerController.navigate('/audiocall', wordsForGame);
         });
         const sprintButton = document.createElement('button');
         sprintButton.classList.add('group-navigation__game');
         sprintButton.classList.add('group-navigation__game_sprint');
         sprintButton.innerText = 'Спринт';
         sprintButton.addEventListener('click', () => {
-            this.routerController.navigate('/sprint', this.words);
+            const wordsForGame = this.eBookController.getWordsForGame(this.pagination.page);
+            this.routerController.navigate('/sprint', wordsForGame);
         });
         if (this.eBookController.isPageLearned(this.pagination.page)) {
             sprintButton.disabled = true;
             audiocallButton.disabled = true;
         }
-        // audiocallButton.append(audioCall);
         groupNavigation.append(sprintButton);
         groupNavigation.append(pagination);
         groupNavigation.append(audiocallButton);

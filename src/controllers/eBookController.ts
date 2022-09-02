@@ -21,6 +21,19 @@ class EBookController {
         }
         return EBookController.instance;
     }
+
+    getWordsForGame(page: number): wordType[][] {
+        debugger
+        const gameWords = [];
+        for (let i = page; i >= 0; i -= 1) {
+            const unlearnedWords = this.groupWords.words[i].filter(word => {
+                console.log(word);
+                return word.userWord === undefined || word.userWord.difficulty !== wordStatus.easy
+            });
+            gameWords.push(unlearnedWords);
+        }
+        return gameWords;
+    }
     async loadGroup(group: number) {
         this.groupWords.words = [];
         if (this.userController.isSignin()) {

@@ -7,7 +7,7 @@ abstract class GameController {
     protected words: wordType[];
     protected userWordController: UserWordController;
     protected routerController: RouterController;
-    constructor(_words: wordType[]) {
+    constructor(_words: wordType[][] | wordType[]) {
         this.words = this.shuffleArray(_words);
         this.userWordController = UserWordController.getInstance();
         this.routerController = RouterController.getInstance();
@@ -68,13 +68,29 @@ abstract class GameController {
             }
         });
     }
-    protected shuffleArray<T>(arr: T[]): T[] {
-        const falatArr = arr.flat();
-        for (let i = falatArr.length - 1; i > 0; i--) {
+    protected shuffleArray<T>(_arr: T[][] | T[], countWordsForGame: number | null = null): T[] {
+        let arr: T[][] = _arr as T[][];
+        let wordForGame: T[] = [];
+        if (countWordsForGame === null) {
+            wordForGame = arr.flat();
+        } else {
+            wordForGame = [...wordForGame, ...arr[0]];
+            for (let i = 0; i < arr.length; i++) {
+                if (wordForGame.length < countWordsForGame) {
+                    if (arr[i].length + wordForGame.length <= countWordsForGame) {
+                        wordForGame = [...wordForGame, ...arr[i]];
+                    } else {
+                        const diff = countWordsForGame - wordForGame.length;
+                        wordForGame = [...wordForGame, ...arr[i].slice(0, diff)];
+                    }
+                }
+            }
+        }
+        for (let i = wordForGame.length - 1; i > 0; i--) {
             const j = this.getRandomNum(i + 1);
             [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-        return arr;
+        return wordForGame;
     }
     protected getRandomNum(max: number): number {
         return Math.floor(Math.random() * max);
