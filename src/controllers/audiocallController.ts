@@ -7,12 +7,13 @@ import SprintOutroView from '../views/sprintGame/sprintOutroView';
 class AudiocallController extends GameController {
     audiocallResults: wordGame[];
     rootElement: HTMLElement;
-    itterator:number = 0;
+    itterator: number = 0;
+    view: AudiocallView | null = null;
     constructor(rootElement: HTMLElement, _words: wordType[]) {
         super(_words);
         this.audiocallResults = [];
         this.rootElement = rootElement;
-        document.addEventListener('keydown', this.addKeyListener);
+
     }
 
     getNextWord(): audiocallWord[] {
@@ -37,26 +38,14 @@ class AudiocallController extends GameController {
             result: _result,
         });
     }
-    endGame(){
-        document.removeEventListener('keydown', this.addKeyListener);
+    endGame(view: AudiocallView) {
         this.saveResult(this.audiocallResults);
         const countRightAnswer = this.audiocallResults.filter(answer => answer.result).length;
-        debugger
         const resultView = new SprintOutroView(this.rootElement, this, countRightAnswer, this.audiocallResults);
+        this.view = view;
         resultView.show();
     }
-    addKeyListener(ev: KeyboardEventInit) {
-        const key = assertDefined(ev.key);
-        if (key === 'Enter') {
-            const donkKnowBtn = assertDefined(document.querySelector<HTMLButtonElement>('#donkKnowBtn'));
-            const nextWordBtn = assertDefined(document.querySelector<HTMLButtonElement>('#nextBtn'));
-            donkKnowBtn.classList.contains('hidden') ? nextWordBtn.click() : donkKnowBtn.click();
-        }
-        if (['1', '2', '3', '4', '5'].includes(key)) {
-            const keyNum = Number(key) - 1;
-            document.querySelectorAll<HTMLButtonElement>('.option')[keyNum].click();
-        }
-    }
+
     exit(): void {
         this.routerController.back();
     }
@@ -74,8 +63,7 @@ class AudiocallController extends GameController {
         return shufledArr;
     }
     continue(): void {
-
-        const audiocallView = new AudiocallView(this.rootElement);
+        const audiocallView = assertDefined(this.view);
         audiocallView.show();
     }
 }

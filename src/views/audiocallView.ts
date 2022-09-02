@@ -32,6 +32,7 @@ class AudiocallView extends ViewInterface {
     controller: AudiocallController | null = null;
     show(): void {
         this.controller = new AudiocallController(this.rootElement, this.auxData as wordType[]);
+        document.addEventListener('keydown', this.addKeyListener);
         const options = this.controller.getResponseWords();
         this.rootElement.innerText = '';
         const audiocallDiv = document.createElement('div');
@@ -59,7 +60,7 @@ class AudiocallView extends ViewInterface {
             const btn = document.createElement('button');
             btn.dataset.wirdId = word.id;
             btn.append(responseMark);
-            btn.innerHTML += `<span class="option__num-key">${i+1}</span> ${word.wordTranslate}`;
+            btn.innerHTML += `<span class="option__num-key">${i + 1}</span> ${word.wordTranslate}`;
             btn.classList.add('audiocall-game__button');
             btn.classList.add('option');
             btn.addEventListener('click', (ev: Event) => this.answer(ev));
@@ -73,25 +74,41 @@ class AudiocallView extends ViewInterface {
             }
         });
     }
-    private answer(ev:Event){
-        const target = ev.target as HTMLButtonElement;
+    addKeyListener(ev: KeyboardEventInit) {
+        const key = assertDefined(ev.key);
+        if (key === 'Enter') {
+            const donkKnowBtn = assertDefined(document.querySelector<HTMLButtonElement>('#donkKnowBtn'));
+            const nextWordBtn = assertDefined(document.querySelector<HTMLButtonElement>('#nextBtn'));
+            donkKnowBtn.classList.contains('hidden') ? nextWordBtn.click() : donkKnowBtn.click();
+        }
+        if (['1', '2', '3', '4', '5'].includes(key)) {
+            const keyNum = Number(key) - 1;
+            document.querySelectorAll<HTMLButtonElement>('.option')[keyNum].click();
+        }
+    }
+    private answer(ev: Event) {
+        ev.stopPropagation();
+        let target = ev.target as HTMLElement;
         let result = false;
-        if(target.classList.contains('response__word_right')) result = true;
+        if (!target.classList.contains('option')) {
+            target = assertDefined(target.parentElement);
+        }
+        if (target.querySelector<HTMLElement>('.response__word_right') !== null) result = true;
         assertDefined(this.controller).rememberResult(result);
         assertDefined(target.querySelector('.response-mark')).classList.toggle('hidden');
         this.togleAnswer();
         document.querySelectorAll<HTMLButtonElement>('.option').forEach((btn) => (btn.disabled = true));
     }
-    private toNextWord(){
-        if( this.controller?.itterator === COUNT_AUDIOCALL_WORDS-1 ){
-            this.controller.endGame();
+    private toNextWord() {
+        if (this.controller?.itterator === COUNT_AUDIOCALL_WORDS - 1) {
+            this.controller.endGame(this);
         } else {
             const options = assertDefined(this.controller).getNextWord();
             this.togleAnswer();
             this.fillPage(options);
         }
     }
-    private dontKwonAnswer(){
+    private dontKwonAnswer() {
         document.querySelectorAll<HTMLButtonElement>('.option').forEach((btn) => (btn.disabled = true));
         assertDefined(this.controller).rememberResult(false);
         const options = assertDefined(this.controller).getNextWord();
@@ -117,6 +134,9 @@ class AudiocallView extends ViewInterface {
         audio.addEventListener('pause', () => {
             playImg.classList.toggle('response__audio-img_play');
         });
+    }
+    destroy(): void {
+        document.removeEventListener('keydown', this.addKeyListener);
     }
 }
 

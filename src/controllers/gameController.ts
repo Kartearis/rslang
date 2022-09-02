@@ -84,10 +84,10 @@ abstract class GameController {
         return arrNewProperty;
     }
     protected saveResult(gameWords: wordGame[]): void {
-        if(!this.userController.isSignin()) return;
-        this.updateOptions(gameWords).forEach( async (newProperty) => {
-            newProperty.isNewWord ? 
-                await this.userWordController.addUserWord(newProperty.wordId, newProperty.property) : 
+        if (!this.userController.isSignin()) return;
+        this.updateOptions(gameWords).forEach(async (newProperty) => {
+            newProperty.isNewWord ?
+                await this.userWordController.addUserWord(newProperty.wordId, newProperty.property) :
                 await this.userWordController.updateUserWord(newProperty.wordId, newProperty.property);
         });
 
@@ -116,7 +116,7 @@ abstract class GameController {
         // Override this method to add 'restart game' functionality and possibly some cleanup
     }
 
-    exit () {
+    exit() {
         // Override this method to add 'exit game' functionality and possibly some cleanup
     }
 }
