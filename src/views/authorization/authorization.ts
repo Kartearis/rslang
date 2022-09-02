@@ -1,7 +1,7 @@
-import ViewInterface from "../viewInterface";
+import ViewInterface from '../viewInterface';
 
-abstract class Authorization extends ViewInterface{
-    protected errorMessage: string = 'Некоректный логин или пароль';
+abstract class Authorization extends ViewInterface {
+    protected errorMessage = 'Некоректный логин или пароль';
     protected getInput(classes: string[], type: string, placeholder: string, name: string) {
         const input = document.createElement('input');
         classes.forEach((cls) => input.classList.add(cls));

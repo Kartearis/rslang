@@ -56,9 +56,11 @@
     height: 30px;
     color: var(--color-block);
     background-color: var(--color-header);
+    transition: .3s;
 }
 
 .reg-form__submit:hover,
 .login-form__submit:hover {
     cursor: pointer;
+    scale: 1.1;
 }

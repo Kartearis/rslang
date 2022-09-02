@@ -7,9 +7,9 @@ export default class AppController {
         const router: RouterController = RouterController.getInstance();
         const userController: UserController = UserController.getInstance();
         const viewContainer: HTMLElement = assertDefined(document.querySelector('.content'));
-        userController.getNewToken().then((isAuth) => {
-            isAuth ? console.log('Auth') : console.log('Not auth');
-        })
+        if (userController.isSignin()) {
+            userController.getNewToken().then(() => userController.statrtUpdateToken());
+        }
         router.setRootElement(viewContainer);
         router.reOpenCurrent();
         // tmp

@@ -1,7 +1,6 @@
 import UserController from '../../controllers/userController';
 import { assertDefined } from '../../helpers/helpers';
 import Authorization from './authorization';
-import ViewInterface from '../viewInterface';
 import './authView.css';
 class RegistrationView extends Authorization {
     controller: UserController;
@@ -19,7 +18,7 @@ class RegistrationView extends Authorization {
         );
         this.rootElement.innerText = '';
         const formContainer = document.createElement('div');
-        formContainer.classList.add('auth-container')
+        formContainer.classList.add('auth-container');
         formContainer.append(form);
         this.rootElement.append(formContainer);
     }
