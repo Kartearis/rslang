@@ -69,12 +69,15 @@ abstract class GameController {
         });
     }
     protected shuffleArray<T>(_arr: T[][] | T[], countWordsForGame: number | null = null): T[] {
+        countWordsForGame = 5;
         let arr: T[][] = _arr as T[][];
         let wordForGame: T[] = [];
+        debugger
         if (countWordsForGame === null) {
             wordForGame = arr.flat();
         } else {
-            wordForGame = [...wordForGame, ...arr[0]];
+            debugger
+            wordForGame = [...arr[0]];
             for (let i = 0; i < arr.length; i++) {
                 if (wordForGame.length < countWordsForGame) {
                     if (arr[i].length + wordForGame.length <= countWordsForGame) {
@@ -83,12 +86,18 @@ abstract class GameController {
                         const diff = countWordsForGame - wordForGame.length;
                         wordForGame = [...wordForGame, ...arr[i].slice(0, diff)];
                     }
+                } else {
+                    break;
                 }
             }
         }
         for (let i = wordForGame.length - 1; i > 0; i--) {
             const j = this.getRandomNum(i + 1);
             [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+
+        if (countWordsForGame !== null) {
+            wordForGame = wordForGame.length > countWordsForGame ? wordForGame.slice(0, countWordsForGame) : wordForGame;
         }
         return wordForGame;
     }

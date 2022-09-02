@@ -36,7 +36,6 @@ class EbookView extends ViewInterface {
     eBookController: EBookController;
     userController: UserController;
     wordController: UserWordController;
-    audiocallView: AudiocallView;
     routerController: RouterController;
     words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
@@ -46,7 +45,6 @@ class EbookView extends ViewInterface {
         this.pagination = new PaginationComponent(async () => await this.reDraw());
         this.userController = UserController.getInstance();
         this.wordController = UserWordController.getInstance();
-        this.audiocallView = new AudiocallView(assertDefined(document.querySelector<HTMLElement>('.content')));
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
     }
 

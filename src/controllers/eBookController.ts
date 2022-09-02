@@ -23,11 +23,9 @@ class EBookController {
     }
 
     getWordsForGame(page: number): wordType[][] {
-        debugger
         const gameWords = [];
         for (let i = page; i >= 0; i -= 1) {
             const unlearnedWords = this.groupWords.words[i].filter(word => {
-                console.log(word);
                 return word.userWord === undefined || word.userWord.difficulty !== wordStatus.easy
             });
             gameWords.push(unlearnedWords);
