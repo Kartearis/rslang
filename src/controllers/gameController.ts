@@ -69,7 +69,6 @@ abstract class GameController {
         });
     }
     protected shuffleArray<T>(_arr: T[][] | T[], countWordsForGame: number | null = null): T[] {
-        countWordsForGame = 5;
         const arr: T[][] = _arr as T[][];
         arr.forEach((a) => {
             for (let i = a.length - 1; i > 0; i--) {
@@ -78,6 +77,9 @@ abstract class GameController {
             }
         });
         const flatArr = arr.flat();
+        if (countWordsForGame === null) {
+            return flatArr;
+        }
         return flatArr.length > countWordsForGame ? flatArr : flatArr.slice(0, countWordsForGame);
         // if (countWordsForGame === null) {
         //     wordForGame = arr.flat();
