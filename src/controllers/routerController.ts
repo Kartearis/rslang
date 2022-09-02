@@ -9,7 +9,7 @@ import StatView from '../views/statView';
 import SprintGameView from '../views/sprintGameView';
 import AudiocallView from '../views/audiocallView';
 import StorageController from './storageController';
-import GroupSelectionView from "../views/groupSelectionView";
+import GroupSelectionView from '../views/groupSelectionView';
 
 export type RouteConfig = Record<string, ViewConstructor>;
 
@@ -40,7 +40,7 @@ export default class RouterController {
             '/registration': RegistrationView,
             '/logout': LogoutView,
             '/sprint': SprintGameView,
-            '/level': GroupSelectionView
+            '/level': GroupSelectionView,
         };
         this.history = window.history;
         this.storage = new StorageController('router-data');

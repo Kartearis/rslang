@@ -1,10 +1,10 @@
-import ViewInterface from "./viewInterface";
+import ViewInterface from './viewInterface';
 
 import './group-selection-view.css';
-import EBookController from "../controllers/eBookController";
-import {assertDefined} from "../helpers/helpers";
-import RouterController from "../controllers/routerController";
-import LoadingOverlay from "../components/loadingOverlay";
+import EBookController from '../controllers/eBookController';
+import { assertDefined } from '../helpers/helpers';
+import RouterController from '../controllers/routerController';
+import LoadingOverlay from '../components/loadingOverlay';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -21,26 +21,24 @@ template.innerHTML = `
     </div>
 `;
 
-
 export default class GroupSelectionView extends ViewInterface {
     show(): void {
-        this.rootElement.innerHTML = "";
+        this.rootElement.innerHTML = '';
         const bookController = EBookController.getInstance();
         const router = RouterController.getInstance();
         // This view requires auxData to know where to go next
         assertDefined(this.auxData);
         const next: string = this.auxData as string;
         this.rootElement.append(template.content.cloneNode(true));
-        assertDefined(this.rootElement.querySelector('.selection__card'))
-            .addEventListener('click', async (event) => {
-                const target = event.target as HTMLElement;
-                if (target.dataset.group) {
-                    const loadingOverlay = (new LoadingOverlay(false)).show();
-                    this.rootElement.append(loadingOverlay);
-                    const words = await bookController.getGroupWords(parseInt(target.dataset.group));
-                    loadingOverlay.hide();
-                    router.navigate(next, words);
-                }
-            });
+        assertDefined(this.rootElement.querySelector('.selection__card')).addEventListener('click', async (event) => {
+            const target = event.target as HTMLElement;
+            if (target.dataset.group) {
+                const loadingOverlay = new LoadingOverlay(false).show();
+                this.rootElement.append(loadingOverlay);
+                const words = await bookController.getGroupWords(parseInt(target.dataset.group));
+                loadingOverlay.hide();
+                router.navigate(next, words);
+            }
+        });
     }
 }

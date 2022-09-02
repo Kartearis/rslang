@@ -1,4 +1,3 @@
-
 import './loading-overlay.css';
 
 const template = document.createElement('template');
@@ -15,12 +14,10 @@ template.innerHTML = `
 // Overlay is hidden by default
 // Some elements may render on top overlay (due to stacking context). In this case append it to body.
 export default class LoadingOverlay extends HTMLElement {
-
-    constructor(fullscreen: boolean = false) {
+    constructor(fullscreen = false) {
         super();
         this.classList.add('loading-overlay', 'loading-overlay--hidden');
-        if (fullscreen)
-            this.classList.add('loading-overlay--fullscreen');
+        if (fullscreen) this.classList.add('loading-overlay--fullscreen');
         this.append(template.content.cloneNode(true));
     }
 
