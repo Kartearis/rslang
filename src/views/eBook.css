@@ -1,4 +1,5 @@
 @import "../global.css";
+@import '../icons.css';
 
 .group-navigation {
     display: flex;
@@ -24,6 +25,11 @@
 .group-navigation__game:enabled:hover {
     cursor: pointer;
     transform: scale(1.1);
+}
+
+.group-navigation__game:disabled {
+    background-color: var(--color-shaded);
+    border: none;
 }
 
 .group-navigation__game_sprint {
