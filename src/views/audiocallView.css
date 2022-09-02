@@ -1,8 +1,9 @@
 @import '../icons.css';
 
 .hidden {
-    visibility: hidden;
+    display: none !important;
 }
+
 .audiocall-game {
     background-color: var(--color-background);
     display: flex;
@@ -17,13 +18,14 @@
     user-select: none;
 }
 
-.response{
+.response {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 180px;
 }
-.response__img{
+
+.response__img {
     border-radius: 500px;
     width: 100px;
     height: 100px;
@@ -39,23 +41,27 @@
     justify-content: space-evenly;
     gap: 20px
 }
-.option{
+
+.option {
     height: 30px;
     background: none;
     border: none;
     font-size: var(--font-2);
 }
-.option__num-key{
+
+.option__num-key {
     color: gray;
     font-size: var(--font-2);
     padding-right: 8px;
 }
+
 .response__audio_asc {
     height: 100px;
     width: 100px;
     border-radius: 50px;
     border: none;
 }
+
 .response__audio {
     height: 30px;
     width: 30px;
@@ -63,16 +69,19 @@
     margin-right: 20px;
     border: none;
 }
-.response__audio-img{
+
+.response__audio-img {
     width: 100%;
 }
-.response__row{
+
+.response__row {
     display: flex;
     align-items: center;
     margin-top: 25px;
     font-size: var(--font-1);
 }
-.response__word{
+
+.response__word {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -80,8 +89,7 @@
 }
 
 .response__word_right,
-.response__word_wrong
- {
+.response__word_wrong {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,9 +97,11 @@
     height: 30px;
     border-radius: 15px;
 }
-.response__word_right{
+
+.response__word_right {
     background-color: var(--color-accent-3);
-}   
+}
+
 .response__word_right::after {
     content: '✓';
 }
@@ -108,9 +118,9 @@
     display: flex;
     justify-content: center;
 }
+
 .audiocall-game__button_dont-know,
-.audiocall-game__button_next
-{
+.audiocall-game__button_next {
     display: flex;
     align-items: center;
     font-size: var(--font-4);
@@ -119,22 +129,27 @@
     border-radius: 8px;
     height: 35px;
 }
-.audiocall-game__button_dont-know{
+
+.audiocall-game__button_dont-know {
     background-color: var(--color-accent-5);
 }
-.audiocall-game__button_next{
+
+.audiocall-game__button_next {
     background-color: var(--color-accent-2);
 }
+
 .icon--cross {
     --path: url('../assets/icons/bi_x.svg');
 }
-.audiocall-game__button_exit{
+
+.audiocall-game__button_exit {
     background-color: inherit;
     width: 30px;
     border: none;
     height: 30px;
     align-self: end;
 }
+
 @keyframes playAudio {
     0% {
         opacity: 1;
