@@ -8,13 +8,16 @@ export default class AppController {
         const userController: UserController = UserController.getInstance();
         const viewContainer: HTMLElement = assertDefined(document.querySelector('.content'));
         if (userController.isSignin()) {
-            userController.getNewToken().then(() => userController.statrtUpdateToken());
+            userController.getNewToken().then(() => userController.startUpdateToken());
         }
         router.setRootElement(viewContainer);
         router.reOpenCurrent();
         assertDefined(document.querySelector('#ebook')).addEventListener('click', () => router.navigate('/ebook'));
         assertDefined(document.querySelector('#audiocall')).addEventListener('click', () =>
-            router.navigate('/audocall')
+            router.navigate('/level', '/audiocall')
+        );
+        assertDefined(document.querySelector('#sprint')).addEventListener('click', () =>
+            router.navigate('/level', '/sprint')
         );
         assertDefined(document.querySelector('#signin')).addEventListener('click', () => router.navigate('/signin'));
         assertDefined(document.querySelector('#registration')).addEventListener('click', () =>
