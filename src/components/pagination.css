@@ -19,7 +19,6 @@
     .pages {
         grid-area: pages;
     }
-
     .pagination__btn_prev-5 {
         grid-area: prev5;
         justify-self: end;
@@ -71,7 +70,10 @@
     color: gray;
     border: solid 2px gray;
 }
-
+.pagination__btn_prev,
+.pagination__btn_next{
+    font-size: var(--font-2);
+}
 .pages__page-num {
     display: flex;
     justify-content: center;

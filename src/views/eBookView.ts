@@ -121,6 +121,8 @@ class EbookView extends ViewInterface {
         if (this.eBookController.isPageLearned(this.pagination.page)) {
             document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = true);
             assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
+        } else {
+            document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = false); 
         }
 
     }

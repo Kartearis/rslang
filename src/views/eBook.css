@@ -21,7 +21,7 @@
     transition: .3s;
 }
 
-.group-navigation__game:hover {
+.group-navigation__game:enabled:hover {
     cursor: pointer;
     transform: scale(1.1);
 }
