@@ -1,4 +1,5 @@
 .pagination {
+    grid-area: group;
     display: flex;
     padding: 15px;
     gap: 20px;
@@ -6,6 +7,37 @@
     justify-content: center;
     align-items: center;
     user-select: none;
+}
+
+@media screen and (max-width: 630px) {
+    .pagination {
+        display: grid;
+        grid-template-areas: 'pages pages pages pages''prev5 prev next next5';
+        row-gap: 0;
+    }
+
+    .pagination__pages {
+        grid-area: pages;
+        gap: 5px !important;
+    }
+
+    .pagination__btn_prev-5 {
+        grid-area: prev5;
+        justify-self: end;
+    }
+
+    .pagination__btn_prev {
+        grid-area: prev;
+        justify-self: end;
+    }
+
+    .pagination__btn_next-5 {
+        grid-area: next5;
+    }
+
+    .pagination__btn_next {
+        grid-area: next;
+    }
 }
 
 .pagination__pages {
@@ -16,10 +48,6 @@
     color: #2F4550;
     justify-content: center;
     align-items: center;
-}
-
-.pagination__btn_prev {
-    transform: rotate(180deg);
 }
 
 .pagination__btn:disabled,
@@ -43,6 +71,11 @@
     cursor: pointer;
     color: gray;
     border: solid 2px gray;
+}
+
+.pagination__btn_prev,
+.pagination__btn_next {
+    font-size: var(--font-2);
 }
 
 .pages__page-num {

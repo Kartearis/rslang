@@ -1,10 +1,10 @@
 import ViewInterface from '../viewInterface';
-import SprintGameController from '../../controllers/sprintGameController';
 import { wordGame } from '../../helpers/types';
 
 import './sprint-outro.css';
 import ResultWordCard from '../../components/resultWordCard';
 import { assertDefined } from '../../helpers/helpers';
+import GameController from "../../controllers/gameController";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -26,7 +26,7 @@ template.innerHTML = `
 `;
 
 export default class SprintOutroView extends ViewInterface {
-    private controller: SprintGameController;
+    private controller: GameController;
     private results: wordGame[];
     private errorContainer: HTMLElement | null = null;
     private correctContainer: HTMLElement | null = null;
@@ -34,7 +34,7 @@ export default class SprintOutroView extends ViewInterface {
     private errorCount = 0;
     private points: number;
 
-    constructor(rootElement: HTMLElement, controller: SprintGameController, points: number, results: wordGame[]) {
+    constructor(rootElement: HTMLElement, controller: GameController, points: number, results: wordGame[]) {
         super(rootElement);
         this.controller = controller;
         this.results = results;

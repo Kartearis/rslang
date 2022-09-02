@@ -12,7 +12,6 @@ class AudiocallController extends GameController {
     itterator = 0;
     getNextWord(): audiocallWord[] {
         this.itterator += 1;
-        this.words;
         return this.getResponseWords();
     }
     getResponseWords(): audiocallWord[] {
