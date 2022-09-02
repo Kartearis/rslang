@@ -12,12 +12,10 @@ export default class AppController {
         }
         router.setRootElement(viewContainer);
         router.reOpenCurrent();
-        // tmp
         assertDefined(document.querySelector('#ebook')).addEventListener('click', () => router.navigate('/ebook'));
         assertDefined(document.querySelector('#audiocall')).addEventListener('click', () =>
-            router.navigate('/audiocall')
+            router.navigate('/audocall')
         );
-        assertDefined(document.querySelector('#sprint')).addEventListener('click', () => router.navigate('/sprint'));
         assertDefined(document.querySelector('#signin')).addEventListener('click', () => router.navigate('/signin'));
         assertDefined(document.querySelector('#registration')).addEventListener('click', () =>
             router.navigate('/registration')

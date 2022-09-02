@@ -1,4 +1,4 @@
-import EBookController from '../controllers/eBookController';
+﻿import EBookController from '../controllers/eBookController';
 import { assertDefined, HARD_WORD_GROUP_NUM, HOST, WORDS_ON_PAGE } from '../helpers/helpers';
 import { wordProperty, wordStatus, wordType } from '../helpers/types';
 import PaginationComponent from '../components/paginationComponent';
@@ -6,8 +6,8 @@ import ViewInterface from './viewInterface';
 import UserController from '../controllers/userController';
 import UserWordController from '../controllers/userWordController';
 import './eBook.css';
-import AudiocallView from './audiocallView';
 import RouterController from '../controllers/routerController';
+import audioImg from '../assets/audio.png';
 // import AudiocallView from './audiocallView';
 
 const template = `<div class="word-card" data-word-id="">
@@ -22,9 +22,10 @@ const template = `<div class="word-card" data-word-id="">
     <p class="word-info__example_translate" id="exampleTransalte"></p>
 </div>
 <div class="word-card__action word-action">
-    <button id="hardMark" class="word-action__hardMark">!</button>
-    <button id="audioBtn" class="word-action__audio word-action__audio_start"></button>
-    <button id="learnedMark" class="word-action__learnedMark">✓</button>
+    <button id="hardMark" class="word-action__to-hard">!</button>
+    <button id="learningMark" class="word-action__to-learning hidden">X</button>
+    <button id="audioBtn" class="word-action__audio word-action__audio_start"><img src='${audioImg}' class="word-action__audio-img"/> </button>
+    <button id="easyMark" class="word-action__to-easy">✓</button>
 </div>
 </div>`;
 
@@ -34,7 +35,6 @@ class EbookView extends ViewInterface {
     eBookController: EBookController;
     userController: UserController;
     wordController: UserWordController;
-    audiocallView: AudiocallView;
     routerController: RouterController;
     words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
@@ -43,15 +43,17 @@ class EbookView extends ViewInterface {
         this.eBookController = EBookController.getInstance();
         this.pagination = new PaginationComponent(async () => await this.reDraw());
         this.userController = UserController.getInstance();
-        this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
-        this.audiocallView = new AudiocallView(assertDefined(document.querySelector<HTMLElement>('.content')));
+        this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
     }
 
     async show(): Promise<void> {
+        this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
         this.rootElement.innerText = '';
-        const groups = this.getGroups();
+        const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
+        if (this.group === HARD_WORD_GROUP_NUM)
+            pagination.querySelectorAll<HTMLButtonElement>('button').forEach((btn) => (btn.disabled = true));
         const groupNavigation = document.createElement('div');
         groupNavigation.classList.add('group-navigation');
         const audiocallButton = document.createElement('button');
@@ -59,19 +61,22 @@ class EbookView extends ViewInterface {
         audiocallButton.classList.add('group-navigation__game_audiocall');
         audiocallButton.innerText = 'Аудиовызов';
         groupNavigation.classList.add('games');
-        // const audioCall = document.createElement('btn');
-        // audioCall.innerText = 'Аудиовызов';
         audiocallButton.addEventListener('click', () => {
-            this.routerController.navigate('/audiocall', this.words);
+            const wordsForGame = this.eBookController.getWordsForGame(this.pagination.page);
+            this.routerController.navigate('/audiocall', wordsForGame);
         });
         const sprintButton = document.createElement('button');
         sprintButton.classList.add('group-navigation__game');
         sprintButton.classList.add('group-navigation__game_sprint');
         sprintButton.innerText = 'Спринт';
         sprintButton.addEventListener('click', () => {
-            this.routerController.navigate('/sprint', this.words);
+            const wordsForGame = this.eBookController.getWordsForGame(this.pagination.page);
+            this.routerController.navigate('/sprint', wordsForGame);
         });
-        // audiocallButton.append(audioCall);
+        if (this.eBookController.isPageLearned(this.pagination.page)) {
+            sprintButton.disabled = true;
+            audiocallButton.disabled = true;
+        }
         groupNavigation.append(sprintButton);
         groupNavigation.append(pagination);
         groupNavigation.append(audiocallButton);
@@ -80,7 +85,6 @@ class EbookView extends ViewInterface {
         this.rootElement.append(groupNavigation);
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-        await this.loadWords();
         this.words.forEach((w) => {
             const templateCard = document.createElement('template');
             templateCard.innerHTML = template;
@@ -90,12 +94,17 @@ class EbookView extends ViewInterface {
         });
         this.rootElement.append(bookContainer);
     }
-
+    destroy() {
+        this.stopAudio();
+        this.eBookController.abortController.abort();
+    }
     async reDraw() {
-        assertDefined(document.querySelector('.ebook-container')).remove();
+        this.stopAudio();
+        document.querySelector('.ebook-container')?.remove();
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
-        await this.loadWords();
+
+        this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
         this.words.forEach((w) => {
             const templateCard = document.createElement('template');
             templateCard.innerHTML = template;
@@ -104,44 +113,53 @@ class EbookView extends ViewInterface {
             bookContainer.append(wordBlock);
         });
         this.rootElement.append(bookContainer);
-    }
-    private async loadWords() {
-        if (this.userController.isSignin() && this.group === HARD_WORD_GROUP_NUM) {
-            this.words = await this.eBookController.getHardWordsUser();
+        if (this.eBookController.isPageLearned(this.pagination.page)) {
+            document
+                .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                .forEach((btn) => (btn.disabled = true));
+            assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
         } else {
-            this.words = this.userController.isSignin()
-                ? await this.eBookController.getWordsUserOnPage(this.group, this.pagination.page)
-                : await this.eBookController.getPageWordsOnGroup(this.group, this.pagination.page);
+            document
+                .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                .forEach((btn) => (btn.disabled = false));
         }
     }
-    getGroups(): HTMLUListElement {
+    async getGroups(): Promise<HTMLUListElement> {
         const MAX_GROUP = 6;
         const ul = document.createElement('ul');
         ul.classList.add('group-list');
         for (let i = 0; i < MAX_GROUP; i++) {
-            const li = this.getGroupLi(`ГРУППА ${i + 1}`, i);
+            const li = this.getGroupLi(`<span class='group-name'>ГРУППА</span> ${i + 1}`, i);
             ul.append(li);
         }
         if (this.userController.isSignin()) {
-            const li = this.getGroupLi(`Сложные слова`, HARD_WORD_GROUP_NUM);
+            const li = this.getGroupLi(`<span class='group-name'>Сложные слова</span>`, HARD_WORD_GROUP_NUM);
             ul.append(li);
         }
         return ul;
     }
     private getGroupLi(groupName: string, groupNum: number): HTMLLIElement {
         const li = document.createElement('li');
-        li.textContent = groupName;
+        li.innerHTML = groupName;
         li.classList.add('group-list__group');
         if (this.group === groupNum) li.classList.add('group-list__group_active');
         li.dataset.group = groupNum.toString();
         li.addEventListener('click', async (ev: Event) => {
-            const target = ev.target as HTMLButtonElement;
-            this.group = Number(target.dataset.group);
-            localStorage.setItem('group', this.group.toString());
+            this.stopAudio();
             assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
                 'group-list__group_active'
             );
-            target.classList.add('group-list__group_active');
+            const target = ev.target as HTMLButtonElement;
+            if (target.dataset.group === undefined) {
+                const parentElement = assertDefined(target.parentElement);
+                this.group = Number(parentElement.dataset.group);
+                parentElement.classList.add('group-list__group_active');
+            } else {
+                target.classList.add('group-list__group_active');
+                this.group = Number(target.dataset.group);
+            }
+
+            localStorage.setItem('group', `${this.group}`);
             await this.pagination.toFirstPage(this.group);
         });
         return li;
@@ -171,24 +189,32 @@ class EbookView extends ViewInterface {
         const exampleTransalte = assertDefined(wordCard.querySelector('#exampleTransalte')) as HTMLParagraphElement;
         exampleTransalte.innerText = word.textExampleTranslate;
         const markHard = assertDefined(wordCard.querySelector('#hardMark')) as HTMLButtonElement;
-        const learnedMark = assertDefined(wordCard.querySelector('#learnedMark')) as HTMLButtonElement;
+        const easyMark = assertDefined(wordCard.querySelector('#easyMark')) as HTMLButtonElement;
+        const learningMark = assertDefined(wordCard.querySelector('#learningMark')) as HTMLButtonElement;
 
         if (this.userController.isSignin()) {
             if (word.userWord !== undefined) {
                 if (word.userWord.difficulty === wordStatus.easy) {
                     card.classList.add(`word-card_easy`);
-                    learnedMark.disabled = true;
+                    easyMark.disabled = true;
                     markHard.disabled = true;
                 } else if (word.userWord.difficulty === wordStatus.hard) {
                     card.classList.add(`word-card_hard`);
                     markHard.disabled = true;
                 }
             }
-            markHard.addEventListener('click', (ev) => this.markCard(ev, wordStatus.hard));
-            learnedMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
+            easyMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
+            if (this.group === HARD_WORD_GROUP_NUM) {
+                markHard.classList.add('hidden');
+                learningMark.classList.remove('hidden');
+                learningMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.learning));
+            } else {
+                markHard.addEventListener('click', (ev) => this.markCard(ev, wordStatus.hard));
+            }
         } else {
             markHard.remove();
-            learnedMark.remove();
+            easyMark.remove();
+            learningMark.remove();
         }
         return wordCard;
     }
@@ -215,7 +241,11 @@ class EbookView extends ViewInterface {
         playBtn.addEventListener('click', (ev: Event) => {
             const target = ev.target as HTMLButtonElement;
             const currentAudio = wordAudio;
-            if (target.classList.contains('word-action__audio_start')) {
+            if (
+                target.classList.contains('word-action__audio_start') ||
+                assertDefined(target.parentElement).classList.contains('word-action__audio_start')
+            ) {
+                this.stopAudio();
                 currentAudio.play();
                 this.togleAudioBtn(playBtn);
             } else {
@@ -223,6 +253,9 @@ class EbookView extends ViewInterface {
                 this.togleAudioBtn(playBtn);
             }
         });
+    }
+    stopAudio() {
+        document.querySelector<HTMLButtonElement>('.word-action__audio_stop')?.click();
     }
     private togleAudioBtn(target: HTMLButtonElement) {
         target.classList.toggle('word-action__audio_start');
@@ -250,26 +283,38 @@ class EbookView extends ViewInterface {
         };
         const group = this.group;
         await this.saveCardState(wordId, wordUpdate, card.dataset.wordStatus).then(() => {
-            if (status === wordStatus.hard) {
-                card.classList.add(`word-card_hard`);
-                target.disabled = true;
-                card.dataset.wordStatus = wordStatus.hard;
-            } else {
-                if (group === HARD_WORD_GROUP_NUM) {
-                    card.remove();
-                } else {
-                    card.classList.remove(`word-card_hard`);
-                    card.classList.add(`word-card_easy`);
+            switch (status) {
+                case wordStatus.hard:
+                    card.classList.add(`word-card_hard`);
                     target.disabled = true;
-                    assertDefined(card.querySelector<HTMLButtonElement>('#hardMark')).disabled = true;
-                    card.dataset.wordStatus = status;
+                    card.dataset.wordStatus = wordStatus.hard;
+                    break;
+                case wordStatus.easy:
+                    if (group === HARD_WORD_GROUP_NUM) {
+                        card.remove();
+                    } else {
+                        card.classList.remove(`word-card_hard`);
+                        card.classList.add(`word-card_easy`);
+                        target.disabled = true;
+                        assertDefined(card.querySelector<HTMLButtonElement>('#hardMark')).disabled = true;
+                        card.dataset.wordStatus = status;
+                    }
+                    break;
+                case wordStatus.learning: {
+                    if (group === HARD_WORD_GROUP_NUM) {
+                        card.remove();
+                    }
                 }
             }
         });
         const counHard = document.querySelectorAll(`.word-card_${wordStatus.hard}`).length;
         const counLearned = document.querySelectorAll(`.word-card_${wordStatus.easy}`).length;
-        if (counHard + counLearned === WORDS_ON_PAGE)
-            assertDefined(document.querySelector('.current-page')).classList.add('page-page-num_learned');
+        if (counHard + counLearned === WORDS_ON_PAGE) {
+            assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
+            document
+                .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                .forEach((btn) => (btn.disabled = true));
+        }
     }
     async saveCardState(wordId: string, wordUpdate: wordProperty, status: string | undefined) {
         if (status === undefined) {
