@@ -4,6 +4,7 @@ import './group-selection-view.css';
 import EBookController from "../controllers/eBookController";
 import {assertDefined} from "../helpers/helpers";
 import RouterController from "../controllers/routerController";
+import LoadingOverlay from "../components/loadingOverlay";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -34,7 +35,10 @@ export default class GroupSelectionView extends ViewInterface {
             .addEventListener('click', async (event) => {
                 const target = event.target as HTMLElement;
                 if (target.dataset.group) {
+                    const loadingOverlay = (new LoadingOverlay(false)).show();
+                    this.rootElement.append(loadingOverlay);
                     const words = await bookController.getGroupWords(parseInt(target.dataset.group));
+                    loadingOverlay.hide();
                     router.navigate(next, words);
                 }
             });
