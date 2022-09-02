@@ -48,7 +48,6 @@ class EbookView extends ViewInterface {
         this.wordController = UserWordController.getInstance();
         this.audiocallView = new AudiocallView(assertDefined(document.querySelector<HTMLElement>('.content')));
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
-        this.group = this.group !== NaN ? this.group : 0;
     }
 
     async show(): Promise<void> {
@@ -148,15 +147,22 @@ class EbookView extends ViewInterface {
         li.dataset.group = groupNum.toString();
         li.addEventListener('click', async (ev: Event) => {
             this.stopAudio();
-            const target = ev.target as HTMLButtonElement;
-            this.group = Number(target.dataset.group);
-            localStorage.setItem('group', this.group.toString());
             assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
                 'group-list__group_active'
             );
-            target.classList.add('group-list__group_active');
-            await this.pagination.toFirstPage(this.group);
+            let target = ev.target as HTMLButtonElement;
+            if(target.dataset.group === undefined) {
+                const parentElement = assertDefined(target.parentElement);
+                this.group = Number(parentElement.dataset.group);
+                parentElement.classList.add('group-list__group_active');
+            } else {
+                target.classList.add('group-list__group_active');
+                this.group = Number(target.dataset.group);
+            }
 
+            
+            localStorage.setItem('group', `${this.group}`);
+            await this.pagination.toFirstPage(this.group);
         });
         return li;
     }
