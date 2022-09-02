@@ -129,6 +129,7 @@
     --path: url('../assets/icons/bi_x.svg');
 }
 .audiocall-game__button_exit{
+    background-color: inherit;
     width: 30px;
     border: none;
     height: 30px;

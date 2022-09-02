@@ -1,22 +1,30 @@
 import { assertDefined, SUCCESS_ANSWER_FOR_LEARNED } from '../helpers/helpers';
-import { wordGame, wordStatus, wordType } from '../helpers/types';
+import { wordGame, wordProperty, wordStatus, wordType } from '../helpers/types';
 import RouterController from './routerController';
+import UserController from './userController';
 import UserWordController from './userWordController';
+type newProperty = {
+    wordId: string,
+    property: wordProperty,
+    isNewWord: boolean,
+}
 
 abstract class GameController {
     protected words: wordType[];
     protected userWordController: UserWordController;
+    protected userController: UserController;
     protected routerController: RouterController;
     constructor(_words: wordType[]) {
         this.words = this.shuffleArray(_words);
         this.userWordController = UserWordController.getInstance();
         this.routerController = RouterController.getInstance();
+        this.userController = UserController.getInstance();
     }
-    protected saveResult(gameWords: wordGame[]): void {
+    private updateOptions(gameWords: wordGame[]): newProperty[] {
+        const arrNewProperty: newProperty[] = [];
         gameWords.forEach(async (gameWord) => {
             const date = new Date();
             const curDateString = this.formatDate(date);
-
             //first appearance
             if (gameWord.wordGame.userWord === undefined) {
                 gameWord.wordGame.userWord = {
@@ -29,7 +37,11 @@ abstract class GameController {
                         lastAttempt: curDateString,
                     },
                 };
-                await this.userWordController.addUserWord(gameWord.wordGame.id, gameWord.wordGame.userWord);
+                arrNewProperty.push({
+                    wordId: gameWord.wordGame.id,
+                    property: gameWord.wordGame.userWord,
+                    isNewWord: true,
+                });
             } else {
                 const options = gameWord.wordGame.userWord.optional;
                 if (gameWord.result) {
@@ -61,12 +73,24 @@ abstract class GameController {
                         },
                     };
                 }
-                await this.userWordController.updateUserWord(
-                    assertDefined(gameWord.wordGame.id),
-                    gameWord.wordGame.userWord
-                );
+                arrNewProperty.push({
+                    wordId: gameWord.wordGame.id,
+                    property: gameWord.wordGame.userWord,
+                    isNewWord: false,
+                });
+
             }
         });
+        return arrNewProperty;
+    }
+    protected saveResult(gameWords: wordGame[]): void {
+        if(!this.userController.isSignin()) return;
+        this.updateOptions(gameWords).forEach( async (newProperty) => {
+            newProperty.isNewWord ? 
+                await this.userWordController.addUserWord(newProperty.wordId, newProperty.property) : 
+                await this.userWordController.updateUserWord(newProperty.wordId, newProperty.property);
+        });
+
     }
     protected shuffleArray<T>(arr: T[]): T[] {
         for (let i = arr.length - 1; i > 0; i--) {

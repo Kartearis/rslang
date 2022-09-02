@@ -1,11 +1,13 @@
-import { assertDefined, COUNT_AUDIOGAME_RESPONSE_WORD } from '../helpers/helpers';
+import { assertDefined, COUNT_AUDIOCALL_RESPONSE_WORD, COUNT_AUDIOCALL_WORDS } from '../helpers/helpers';
 import { audiocallWord, wordGame, wordType } from '../helpers/types';
 import AudiocallView from '../views/audiocallView';
 import GameController from './gameController';
+import SprintOutroView from '../views/sprintGame/sprintOutroView';
 
 class AudiocallController extends GameController {
     audiocallResults: wordGame[];
-    private rootElement: HTMLElement;
+    rootElement: HTMLElement;
+    itterator:number = 0;
     constructor(rootElement: HTMLElement, _words: wordType[]) {
         super(_words);
         this.audiocallResults = [];
@@ -13,10 +15,8 @@ class AudiocallController extends GameController {
         document.addEventListener('keydown', this.addKeyListener);
     }
 
-    itterator = 0;
     getNextWord(): audiocallWord[] {
         this.itterator += 1;
-        this.words;
         return this.getResponseWords();
     }
     getResponseWords(): audiocallWord[] {
@@ -36,10 +36,14 @@ class AudiocallController extends GameController {
             wordGame: this.words[this.itterator],
             result: _result,
         });
-        if (this.itterator === this.words.length - 1) {
-            document.removeEventListener('keydown', this.addKeyListener);
-            this.saveResult(this.audiocallResults);
-        }
+    }
+    endGame(){
+        document.removeEventListener('keydown', this.addKeyListener);
+        this.saveResult(this.audiocallResults);
+        const countRightAnswer = this.audiocallResults.filter(answer => answer.result).length;
+        debugger
+        const resultView = new SprintOutroView(this.rootElement, this, countRightAnswer, this.audiocallResults);
+        resultView.show();
     }
     addKeyListener(ev: KeyboardEventInit) {
         const key = assertDefined(ev.key);
@@ -60,7 +64,7 @@ class AudiocallController extends GameController {
     private getResponseWordId(curentWordId: number): number[] {
         const arrId = [curentWordId];
         let testId = -1;
-        while (arrId.length !== COUNT_AUDIOGAME_RESPONSE_WORD) {
+        while (arrId.length !== COUNT_AUDIOCALL_RESPONSE_WORD) {
             testId = this.getRandomNum(this.words.length);
             if (!arrId.includes(testId)) {
                 arrId.push(testId);
@@ -70,7 +74,8 @@ class AudiocallController extends GameController {
         return shufledArr;
     }
     continue(): void {
-        const audiocallView = new AudiocallView(assertDefined(document.querySelector('.content')));
+
+        const audiocallView = new AudiocallView(this.rootElement);
         audiocallView.show();
     }
 }

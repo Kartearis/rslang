@@ -1,7 +1,7 @@
 import { audiocallWord, wordType } from '../helpers/types';
 import ViewInterface from './viewInterface';
 import './audiocallView.css';
-import { assertDefined, HOST } from '../helpers/helpers';
+import { assertDefined, COUNT_AUDIOCALL_WORDS, HOST } from '../helpers/helpers';
 import audioImg from '../assets/audio.png';
 import AudiocallController from '../controllers/audiocallController';
 // <button id="ascPlayBtn" class="audiocall-game__button audiocall-game__button_asc">
@@ -31,10 +31,7 @@ audio.autoplay = true;
 class AudiocallView extends ViewInterface {
     controller: AudiocallController | null = null;
     show(): void {
-        this.rootElement.innerText = 'Audio';
-        const words: wordType[] = assertDefined(this.auxData) as wordType[];
-        this.controller = new AudiocallController(this.rootElement, words);
-        
+        this.controller = new AudiocallController(this.rootElement, this.auxData as wordType[]);
         const options = this.controller.getResponseWords();
         this.rootElement.innerText = '';
         const audiocallDiv = document.createElement('div');
@@ -78,19 +75,21 @@ class AudiocallView extends ViewInterface {
     }
     private answer(ev:Event){
         const target = ev.target as HTMLButtonElement;
-        const response = assertDefined(document.querySelector<HTMLDivElement>('#response'));
-        if(target.classList.contains('response__word_right')) response.dataset.result = 'right';
+        let result = false;
+        if(target.classList.contains('response__word_right')) result = true;
+        assertDefined(this.controller).rememberResult(result);
         assertDefined(target.querySelector('.response-mark')).classList.toggle('hidden');
         this.togleAnswer();
         document.querySelectorAll<HTMLButtonElement>('.option').forEach((btn) => (btn.disabled = true));
     }
     private toNextWord(){
-        const response  = assertDefined(document.querySelector<HTMLDivElement>('#response'));
-        const res = response.dataset.result === undefined ? false : true;
-        assertDefined(this.controller).rememberResult(res);
-        const options = assertDefined(this.controller).getNextWord();
-        this.togleAnswer();
-        this.fillPage(options);
+        if( this.controller?.itterator === COUNT_AUDIOCALL_WORDS-1 ){
+            this.controller.endGame();
+        } else {
+            const options = assertDefined(this.controller).getNextWord();
+            this.togleAnswer();
+            this.fillPage(options);
+        }
     }
     private dontKwonAnswer(){
         document.querySelectorAll<HTMLButtonElement>('.option').forEach((btn) => (btn.disabled = true));

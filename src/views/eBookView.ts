@@ -6,7 +6,6 @@ import ViewInterface from './viewInterface';
 import UserController from '../controllers/userController';
 import UserWordController from '../controllers/userWordController';
 import './eBook.css';
-import AudiocallView from './audiocallView';
 import RouterController from '../controllers/routerController';
 // import AudiocallView from './audiocallView';
 
@@ -34,7 +33,6 @@ class EbookView extends ViewInterface {
     eBookController: EBookController;
     userController: UserController;
     wordController: UserWordController;
-    audiocallView: AudiocallView;
     routerController: RouterController;
     words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
@@ -45,7 +43,6 @@ class EbookView extends ViewInterface {
         this.userController = UserController.getInstance();
         this.group = localStorage.getItem('group') !== undefined ? Number(localStorage.getItem('group')) : 0;
         this.wordController = UserWordController.getInstance();
-        this.audiocallView = new AudiocallView(this.rootElement);
     }
 
     async show(): Promise<void> {
