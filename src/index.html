@@ -14,19 +14,26 @@
         <div class="header-wrapper">
             <nav>
                 <ul class="menu-list">
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" href="#">Саванна</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" href="#">Аудиовызов</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" href="#">Спринт</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" href="#">О команде</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="ebook" href="#">Учебник</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="registration" href="#">Вход</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="signin" href="#">Регистрация</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="logout" href="#">Выход</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link">Главная</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link">О команде</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="audiocall">Аудиовызов</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="sprint">Спринт</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="ebook">Учебник</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="signin">Вход</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="registration">Регистрация</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="logout">Выход</a></li>
                 </ul>
             </nav>
+            <button type="button" class="burger" id="burger">
+                <div class="burger-line"></div>
+                <div class="burger-line"></div>
+                <div class="burger-line"></div>
+            </button>
             <div class="header-auth">
                 <img src="./assets/logo/auth.svg" alt="" class="auth-logo">
             </div>
+            <div class="cover-layer"></div>
+
         </div>
     </header>
     <main class="content"></main>
@@ -51,5 +58,5 @@
         </div>
     </footer>
 </body>
-
+<script src="./header.js"></script>
 </html>

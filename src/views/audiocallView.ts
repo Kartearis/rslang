@@ -72,7 +72,6 @@ class AudiocallView extends ViewInterface {
             wordForGame.right
                 ? responseMark.classList.add('response__word_right')
                 : responseMark.classList.add('response__word_wrong');
-            assertDefined(document.querySelector<HTMLImageElement>('#responseImg')).src = `${HOST}/${word.image}`;
             const btn = document.createElement('button');
             btn.dataset.wirdId = word.id;
             btn.append(responseMark);
@@ -87,6 +86,7 @@ class AudiocallView extends ViewInterface {
             });
             wordsDiv.append(btn);
             if (wordForGame.right) {
+                assertDefined(document.querySelector<HTMLImageElement>('#responseImg')).src = `${HOST}/${word.image}`;
                 assertDefined(document.querySelector('#responseWord')).innerHTML = word.word;
                 const playImg = assertDefined(document.querySelector<HTMLImageElement>('#playImg'));
 

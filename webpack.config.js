@@ -26,11 +26,8 @@ const baseConfig = {
                 use: 'html-loader',
             },
             {
-                test: /\.(jpg|png|webp)$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]',
-                },
+                test: /\.(jpg|png|webp|svg|mp3)$/,
+                type: 'asset/resource',
             },
         ],
     },
@@ -39,8 +36,9 @@ const baseConfig = {
     },
     output: {
         filename: 'index.js',
-        path: path.resolve(__dirname, '../news-api-dist'),
+        path: path.resolve(__dirname, './dist'),
         hashFunction: 'xxhash64',
+        assetModuleFilename: 'assets/[hash][ext][query]',
     },
     plugins: [
         new HtmlWebpackPlugin({

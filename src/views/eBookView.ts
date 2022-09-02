@@ -7,6 +7,7 @@ import UserController from '../controllers/userController';
 import UserWordController from '../controllers/userWordController';
 import './eBook.css';
 import AudiocallView from './audiocallView';
+import RouterController from '../controllers/routerController';
 // import AudiocallView from './audiocallView';
 
 const template = `<div class="word-card" data-word-id="">
@@ -34,9 +35,11 @@ class EbookView extends ViewInterface {
     userController: UserController;
     wordController: UserWordController;
     audiocallView: AudiocallView;
+    routerController: RouterController;
     words: wordType[] = [];
     constructor(rootElement: HTMLElement) {
         super(rootElement);
+        this.routerController = RouterController.getInstance();
         this.eBookController = EBookController.getInstance();
         this.pagination = new PaginationComponent(async () => await this.reDraw());
         this.userController = UserController.getInstance();
@@ -49,22 +52,32 @@ class EbookView extends ViewInterface {
         this.rootElement.innerText = '';
         const groups = this.getGroups();
         const pagination = await this.pagination.getPagination();
-        const grouNavigation = document.createElement('div');
-        grouNavigation.classList.add('group-navigation');
-        const games = document.createElement('div');
-        grouNavigation.classList.add('games');
-        const audioCall = document.createElement('btn');
-        audioCall.innerText = 'Аудиовызов';
-        audioCall.addEventListener('click', () => {
-            this.audiocallView.draw(this.words);
+        const groupNavigation = document.createElement('div');
+        groupNavigation.classList.add('group-navigation');
+        const audiocallButton = document.createElement('button');
+        audiocallButton.classList.add('group-navigation__game');
+        audiocallButton.classList.add('group-navigation__game_audiocall');
+        audiocallButton.innerText = 'Аудиовызов';
+        groupNavigation.classList.add('games');
+        // const audioCall = document.createElement('btn');
+        // audioCall.innerText = 'Аудиовызов';
+        audiocallButton.addEventListener('click', () => {
+            this.routerController.navigate('/audiocall', this.words);
         });
-        games.append(audioCall);
-
-        grouNavigation.append(pagination);
-        grouNavigation.append(games);
+        const sprintButton = document.createElement('button');
+        sprintButton.classList.add('group-navigation__game');
+        sprintButton.classList.add('group-navigation__game_sprint');
+        sprintButton.innerText = 'Спринт';
+        sprintButton.addEventListener('click', () => {
+            this.routerController.navigate('/sprint', this.words);
+        });
+        // audiocallButton.append(audioCall);
+        groupNavigation.append(sprintButton);
+        groupNavigation.append(pagination);
+        groupNavigation.append(audiocallButton);
 
         this.rootElement.append(groups);
-        this.rootElement.append(grouNavigation);
+        this.rootElement.append(groupNavigation);
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
         await this.loadWords();
@@ -121,16 +134,15 @@ class EbookView extends ViewInterface {
         li.classList.add('group-list__group');
         if (this.group === groupNum) li.classList.add('group-list__group_active');
         li.dataset.group = groupNum.toString();
-        li.addEventListener('click', (ev: Event) => {
+        li.addEventListener('click', async (ev: Event) => {
             const target = ev.target as HTMLButtonElement;
             this.group = Number(target.dataset.group);
             localStorage.setItem('group', this.group.toString());
-            this.pagination.toFirstPage(this.group);
             assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
                 'group-list__group_active'
             );
             target.classList.add('group-list__group_active');
-            this.reDraw();
+            await this.pagination.toFirstPage(this.group);
         });
         return li;
     }

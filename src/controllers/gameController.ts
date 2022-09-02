@@ -4,9 +4,9 @@ import RouterController from './routerController';
 import UserWordController from './userWordController';
 
 abstract class GameController {
-    words: wordType[];
-    userWordController;
-    routerController;
+    protected words: wordType[];
+    protected userWordController: UserWordController;
+    protected routerController: RouterController;
     constructor(_words: wordType[]) {
         this.words = this.shuffleArray(_words);
         this.userWordController = UserWordController.getInstance();
@@ -67,8 +67,6 @@ abstract class GameController {
                 );
             }
         });
-        //Должен быть переход на страницу результата
-        this.routerController.navigate('/ebook');
     }
     protected shuffleArray<T>(arr: T[]): T[] {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -81,11 +79,11 @@ abstract class GameController {
         return Math.floor(Math.random() * max);
     }
     private formatDate(date: Date) {
-        let dd = date.getDate();
-        let strDay = dd < 10 ? `0${dd.toString()}` : dd.toString();
+        const dd = date.getDate();
+        const strDay = dd < 10 ? `0${dd.toString()}` : dd.toString();
 
-        let mm = date.getMonth() + 1;
-        let monthStr = mm < 10 ? `0${mm.toString()}` : mm.toString();
+        const mm = date.getMonth() + 1;
+        const monthStr = mm < 10 ? `0${mm.toString()}` : mm.toString();
 
         return `${date.getFullYear()}-${monthStr}-${strDay}`;
     }
