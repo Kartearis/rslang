@@ -87,6 +87,14 @@ abstract class GameController {
 
         return `${date.getFullYear()}-${monthStr}-${strDay}`;
     }
+
+    continue() {
+        // Override this method to add 'restart game' functionality and possibly some cleanup
+    }
+
+    exit () {
+        // Override this method to add 'exit game' functionality and possibly some cleanup
+    }
 }
 
 export default GameController;

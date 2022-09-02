@@ -1,0 +1,85 @@
+@media (max-width: 900px) {
+
+    .menu-list {
+      position: fixed;
+      flex-direction: column;
+      left: -300px;
+      top: 0px;
+      transition: .5s;
+      padding: 55px 37px 0 7px;
+      width: 300px;
+      background-color:var(--color-background);
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .menu-list .menu-list__menu-link {
+      background-color:var(--color-background);
+      color: var(--color-header);
+      font-size: var(--font-5);
+    } 
+
+    .burger {
+      display: flex;
+      position: absolute;
+      z-index: 101;
+    }
+
+    .menu-list.active {
+      left: 0px;
+      align-items: start;
+    }
+  }
+
+@media (max-width: 768px) {
+  .main-wrapper .advantage-block {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+  }
+}
+
+@media (max-width: 500px) {
+    .rs-group {
+      width:100px;
+      text-align: left;
+    }
+
+    .rs-group__img{
+        display: block;
+        transform: scale(0.6);
+        transition: .3s;
+    }
+    .rs-group__link:hover .rs-group__img {
+      transform: scale(0.7);
+    } 
+
+    .git-group {
+      width:100px;
+    }
+
+    .git-group__img {
+        display: block;
+        transition: .3s;
+        transform: scale(0.6);
+      }
+
+    .git-group__link:hover .git-group__img {
+      transform: scale(0.7);
+    }
+    
+    .git-group__link{
+      margin-left: 7px;
+      display: block;
+    }
+
+    .year-group {
+      font-size: var(--font-5);
+    }
+}
+
+@media (max-width: 400px) { 
+    .main-wrapper .advantage-block {
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 20px;
+  }
+}
