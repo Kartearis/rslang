@@ -1,14 +1,14 @@
-import { GROUP_NAME, HARD_WORD_GROUP_NUM, HOST } from '../helpers/helpers';
+import { HARD_WORD_GROUP_NUM, HOST } from '../helpers/helpers';
 import { responceUserWords, wordProperty, wordStatus, wordType } from '../helpers/types';
 import UserController from './userController';
 const COUNT_PAGES = 30;
 type groupWords = {
-    group: number,
-    words: wordType[][]
-}
+    group: number;
+    words: wordType[][];
+};
 class EBookController {
     private static instance: EBookController;
-    private groupWords: groupWords = { group: 0, words: [] }
+    private groupWords: groupWords = { group: 0, words: [] };
     userController: UserController;
     abortController: AbortController;
     private constructor() {
@@ -35,7 +35,7 @@ class EBookController {
     }
     async getGroupWords(group: number) {
         if (group !== this.groupWords.group) {
-            await this.loadGroup(group)
+            await this.loadGroup(group);
         }
         return this.groupWords.words;
     }
@@ -51,12 +51,12 @@ class EBookController {
 
     isPageLearned(page: number): boolean {
         if (this.groupWords.group === HARD_WORD_GROUP_NUM) return false;
-        return !this.groupWords.words[page].some(word => {
+        return !this.groupWords.words[page].some((word) => {
             if (word.userWord !== undefined) {
-                return (word.userWord.difficulty !== wordStatus.easy) && (word.userWord.difficulty !== wordStatus.hard);
+                return word.userWord.difficulty !== wordStatus.easy && word.userWord.difficulty !== wordStatus.hard;
             }
             return true;
-        })
+        });
     }
     async loadUnauthGroup(group: number): Promise<void> {
         for (let i = 0; i < COUNT_PAGES; i += 1) {
@@ -71,8 +71,6 @@ class EBookController {
                 throw Error('Error get unauthorized user words');
             }
         }
-
-
     }
     async loadAuthGroup(group: number): Promise<void> {
         const WORDS_IN_GROUP = 600;
@@ -89,11 +87,11 @@ class EBookController {
         if (response.ok) {
             const responceUserWords = (await response.json()) as responceUserWords;
             for (let i = 0; i < COUNT_PAGES; i += 1) {
-                const pageWords = responceUserWords[0].paginatedResults.filter(word => word.page === i);
+                const pageWords = responceUserWords[0].paginatedResults.filter((word) => word.page === i);
                 if (pageWords !== undefined) {
-                    //word has Id field, but userWord save id word as _id. Rewrite. 
+                    //word has Id field, but userWord save id word as _id. Rewrite.
                     pageWords.forEach((word) => {
-                        if (word._id !== undefined) word.id = word._id
+                        if (word._id !== undefined) word.id = word._id;
                     });
                     this.groupWords.words.push(pageWords);
                 }
@@ -121,7 +119,7 @@ class EBookController {
             const arr = (await response.json()) as responceUserWords;
             const arrWords: wordType[] = arr[0].paginatedResults;
             arrWords.forEach((word) => {
-                if (word._id !== undefined) word.id = word._id
+                if (word._id !== undefined) word.id = word._id;
             });
             return arrWords;
         } else {

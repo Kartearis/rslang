@@ -56,7 +56,7 @@ class EbookView extends ViewInterface {
         const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
         if (this.group === HARD_WORD_GROUP_NUM)
-            pagination.querySelectorAll<HTMLButtonElement>('button').forEach(btn => btn.disabled = true);
+            pagination.querySelectorAll<HTMLButtonElement>('button').forEach((btn) => (btn.disabled = true));
         const groupNavigation = document.createElement('div');
         groupNavigation.classList.add('group-navigation');
         const audiocallButton = document.createElement('button');
@@ -118,12 +118,15 @@ class EbookView extends ViewInterface {
         });
         this.rootElement.append(bookContainer);
         if (this.eBookController.isPageLearned(this.pagination.page)) {
-            document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = true);
+            document
+                .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                .forEach((btn) => (btn.disabled = true));
             assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
         } else {
-            document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = false); 
+            document
+                .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                .forEach((btn) => (btn.disabled = false));
         }
-
     }
     async getGroups(): Promise<HTMLUListElement> {
         const MAX_GROUP = 6;
@@ -150,8 +153,8 @@ class EbookView extends ViewInterface {
             assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
                 'group-list__group_active'
             );
-            let target = ev.target as HTMLButtonElement;
-            if(target.dataset.group === undefined) {
+            const target = ev.target as HTMLButtonElement;
+            if (target.dataset.group === undefined) {
                 const parentElement = assertDefined(target.parentElement);
                 this.group = Number(parentElement.dataset.group);
                 parentElement.classList.add('group-list__group_active');
@@ -160,7 +163,6 @@ class EbookView extends ViewInterface {
                 this.group = Number(target.dataset.group);
             }
 
-            
             localStorage.setItem('group', `${this.group}`);
             await this.pagination.toFirstPage(this.group);
         });
@@ -193,7 +195,6 @@ class EbookView extends ViewInterface {
         const markHard = assertDefined(wordCard.querySelector('#hardMark')) as HTMLButtonElement;
         const easyMark = assertDefined(wordCard.querySelector('#easyMark')) as HTMLButtonElement;
         const learningMark = assertDefined(wordCard.querySelector('#learningMark')) as HTMLButtonElement;
-
 
         if (this.userController.isSignin()) {
             if (word.userWord !== undefined) {
@@ -244,8 +245,11 @@ class EbookView extends ViewInterface {
         playBtn.addEventListener('click', (ev: Event) => {
             const target = ev.target as HTMLButtonElement;
             const currentAudio = wordAudio;
-            if (target.classList.contains('word-action__audio_start') || assertDefined(target.parentElement).classList.contains('word-action__audio_start')) {
-                this.stopAudio()
+            if (
+                target.classList.contains('word-action__audio_start') ||
+                assertDefined(target.parentElement).classList.contains('word-action__audio_start')
+            ) {
+                this.stopAudio();
                 currentAudio.play();
                 this.togleAudioBtn(playBtn);
             } else {
@@ -311,9 +315,10 @@ class EbookView extends ViewInterface {
         const counLearned = document.querySelectorAll(`.word-card_${wordStatus.easy}`).length;
         if (counHard + counLearned === WORDS_ON_PAGE) {
             assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
-            document.querySelectorAll<HTMLButtonElement>('.group-navigation__game').forEach(btn => btn.disabled = true);
+            document
+                .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                .forEach((btn) => (btn.disabled = true));
         }
-
     }
     async saveCardState(wordId: string, wordUpdate: wordProperty, status: string | undefined) {
         if (status === undefined) {

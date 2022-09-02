@@ -1,6 +1,6 @@
 import EBookController from '../controllers/eBookController';
 import UserController from '../controllers/userController';
-import { assertDefined, GROUP_NAME, HARD_WORD_GROUP_NUM, PAGE_ON_GROUP, WORDS_ON_PAGE } from '../helpers/helpers';
+import { assertDefined, HARD_WORD_GROUP_NUM, PAGE_ON_GROUP } from '../helpers/helpers';
 import './pagination.css';
 
 class PaginationComponent {
@@ -21,7 +21,6 @@ class PaginationComponent {
                     .forEach((btn) => (btn.disabled = false));
                 this.lockBtn();
             });
-
     }
     private lockBtn = (pagination: HTMLElement | null = null) => {
         if (pagination === null) pagination = assertDefined(document.querySelector('#pagination'));
@@ -217,7 +216,7 @@ class PaginationComponent {
         if (this.page === num) numPageBtn.classList.add('current-page');
         numPageBtn.innerText = `${num + 1}`;
         numPageBtn.dataset.pageNum = num.toString();
-        if (this.userController.isSignin() && (this.eBookController.isPageLearned(num))) {
+        if (this.userController.isSignin() && this.eBookController.isPageLearned(num)) {
             numPageBtn.classList.add('pages__page-num_learned');
         }
         numPageBtn.addEventListener('click', async (ev) => {
@@ -240,7 +239,9 @@ class PaginationComponent {
         assertDefined(document.querySelector('.pagination__pages')).remove();
         prevBtn.after(pageBlock);
         if (group === HARD_WORD_GROUP_NUM)
-            assertDefined(document.querySelector('#pagination')).querySelectorAll<HTMLButtonElement>('button').forEach(btn => btn.disabled = true);
+            assertDefined(document.querySelector('#pagination'))
+                .querySelectorAll<HTMLButtonElement>('button')
+                .forEach((btn) => (btn.disabled = true));
     }
 }
 export default PaginationComponent;

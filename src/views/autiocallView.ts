@@ -9,9 +9,8 @@ export default class AudiocallView extends ViewInterface {
     show(): void {
         this.rootElement.innerText = 'Audio';
     }
-    gameFromPage(words: wordType[]){
+    gameFromPage(words: wordType[]) {
         this.rootElement.innerText = '';
         console.log(words);
     }
-
 }

@@ -48,7 +48,6 @@ class UserWordController {
         } else {
             throw Error(`Can't update property fot word. Access token is missing or invalid`);
         }
-        
     }
     async deleteUserWord(userWordId: string) {
         const { jwt, userId } = localStorage;
