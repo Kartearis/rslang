@@ -72,11 +72,9 @@ abstract class GameController {
         countWordsForGame = 5;
         let arr: T[][] = _arr as T[][];
         let wordForGame: T[] = [];
-        debugger
         if (countWordsForGame === null) {
             wordForGame = arr.flat();
         } else {
-            debugger
             wordForGame = [...arr[0]];
             for (let i = 0; i < arr.length; i++) {
                 if (wordForGame.length < countWordsForGame) {
