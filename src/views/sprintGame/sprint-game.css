@@ -57,11 +57,13 @@
 .sprint-game__original-word {
     font-size: var(--font-1);
     font-weight: var(--font-weight-emphasis);
+    text-align: center;
 }
 
 .sprint-game__translation {
     font-size: var(--font-2);
     font-weight: var(--font-weight-thin);
+    text-align: center;
 }
 
 .sprint-game__game-controls {

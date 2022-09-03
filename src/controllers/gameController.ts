@@ -121,7 +121,7 @@ abstract class GameController {
         // Override this method to add 'restart game' functionality and possibly some cleanup
     }
 
-    exit () {
+    exit() {
         // Override this method to add 'exit game' functionality and possibly some cleanup
     }
 }

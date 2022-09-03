@@ -133,13 +133,17 @@ export default class SprintGameController extends GameController {
 
     showWord(): void {
         const newWord = this.getNextWord();
-        this.audioControllers['word'].loadPath(getHostPath(newWord.audio));
-        if (this.view instanceof SprintMainView) this.view.showNewWord(newWord);
+        // If no words available - finish the game
+        if (newWord) {
+            this.audioControllers['word'].loadPath(getHostPath(newWord.audio));
+            if (this.view instanceof SprintMainView) this.view.showNewWord(newWord);
+        } else this.showResults();
     }
 
-    getNextWord(): SprintWord {
+    getNextWord(): SprintWord | null {
+        if (this.index >= this.words.length) return null;
         const word: wordType = this.words[this.index];
-        this.index = (this.index + 1) % this.words.length;
+        this.index += 1;
         // 60% of correct translations and 40% of incorrect (may skip filtering correct translation on else, this will
         // skew chances a bit)
         const chance = Math.random();
