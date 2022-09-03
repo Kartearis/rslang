@@ -42,6 +42,13 @@
     color: var(--color-accent-0);
 }
 
+@media (min-width: 1400px) {
+    .sprint-intro {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
 .icon--volume {
     --path: url('../../assets/icons/bi_volume-up.svg');
 }

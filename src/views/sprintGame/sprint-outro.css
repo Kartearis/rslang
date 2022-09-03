@@ -82,3 +82,10 @@
     cursor: pointer;
     transform: scale(1.1);
 }
+
+@media (min-width: 1400px) {
+    .sprint-outro {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
