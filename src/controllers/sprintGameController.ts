@@ -167,5 +167,6 @@ export default class SprintGameController extends GameController {
 
     destroy(): void {
         this.view?.destroy();
+        Object.values(this.audioControllers).forEach((audio) => audio.pause());
     }
 }
