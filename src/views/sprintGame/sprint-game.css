@@ -37,8 +37,8 @@
 .sprint-game__game {
     grid-column: 2;
     grid-row: 2;
-    min-width: 300px;
-    min-height: 300px;
+    min-width: 350px;
+    min-height: 350px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -123,11 +123,6 @@
 }
 
 @media (max-width: 768px) {
-    .sprint-game {
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 70px 1fr;
-    }
-
     .sprint-game__game {
         grid-column: 1/ span 3;
         min-width: 250px;
