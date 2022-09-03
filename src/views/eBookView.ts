@@ -96,7 +96,7 @@ class EbookView extends ViewInterface {
     }
     destroy() {
         this.stopAudio();
-        this.eBookController.abortController.abort();
+        // this.eBookController.abortController.abort();
     }
     async reDraw() {
         this.stopAudio();

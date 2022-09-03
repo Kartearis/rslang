@@ -18,5 +18,3 @@ export const PAGE_ON_GROUP = 29;
 export const COUNT_AUDIOCALL_RESPONSE_WORD = 5;
 export const COUNT_AUDIOCALL_WORDS = 10;
 export const SUCCESS_ANSWER_FOR_LEARNED = 3;
-
-

@@ -7,7 +7,10 @@ import AudiocallController from '../controllers/audiocallController';
 // <button id="ascPlayBtn" class="audiocall-game__button audiocall-game__button_asc">
 // <img class="word-info__audio" id="playImg" src="${audioImg}" />
 // </button>
+
 const audiocallBlock = `
+<div class="progress"></div>
+
     <button class="audiocall-game__button audiocall-game__button_exit" id="audiocall-exit">
         <span class="icon icon--size-1 icon--cross"></span>
     </button>
@@ -15,7 +18,7 @@ const audiocallBlock = `
             <img class="response__img hidden" id="responseImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />    
            <div class="response__row">
             <button id="responsePlayBtn" class="audiocall-game__button response__audio_asc" >
-                <img class="response__audio-img" id="responsePlayImg" src="${audioImg}" />
+                <span id="responsePlayImg" class="response__audio-img icon icon--size-2 icon--sound"></span>
             </button>
             <p id="responseWord" class="response__word hidden" ></p>
            </div>
@@ -31,8 +34,7 @@ audio.autoplay = true;
 class AudiocallView extends ViewInterface {
     controller: AudiocallController | null = null;
     show(): void {
-        this.controller = new AudiocallController(this.rootElement, this.auxData as wordType[]);
-        document.addEventListener('keydown', this.addKeyListener);
+        this.controller = new AudiocallController(this.rootElement, this.auxData as wordType[], this);
         const options = this.controller.getResponseWords();
         this.rootElement.innerText = '';
         const audiocallDiv = document.createElement('div');
@@ -40,9 +42,15 @@ class AudiocallView extends ViewInterface {
         audiocallDiv.classList.add('audiocall-game');
         audiocallDiv.innerHTML = audiocallBlock;
         this.rootElement.append(audiocallDiv);
-        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#audiocall-exit')).addEventListener('click', () => this.controller?.exit());
-        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#nextBtn')).addEventListener('click', () => this.toNextWord());
-        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#donkKnowBtn')).addEventListener('click', () => this.dontKwonAnswer());
+        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#audiocall-exit')).addEventListener('click', () =>
+            this.controller?.exit()
+        );
+        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#nextBtn')).addEventListener('click', () =>
+            this.toNextWord()
+        );
+        assertDefined(audiocallDiv.querySelector<HTMLButtonElement>('#donkKnowBtn')).addEventListener('click', () =>
+            this.dontKwonAnswer()
+        );
         this.fillPage(options);
     }
 
@@ -74,20 +82,13 @@ class AudiocallView extends ViewInterface {
             }
         });
     }
-    addKeyListener(ev: KeyboardEventInit) {
-        const key = assertDefined(ev.key);
-        if (key === 'Enter') {
-            const donkKnowBtn = assertDefined(document.querySelector<HTMLButtonElement>('#donkKnowBtn'));
-            const nextWordBtn = assertDefined(document.querySelector<HTMLButtonElement>('#nextBtn'));
-            donkKnowBtn.classList.contains('hidden') ? nextWordBtn.click() : donkKnowBtn.click();
-        }
-        if (['1', '2', '3', '4', '5'].includes(key)) {
-            const keyNum = Number(key) - 1;
-            document.querySelectorAll<HTMLButtonElement>('.option')[keyNum].click();
-        }
-    }
+
     private answer(ev: Event) {
         ev.stopPropagation();
+        assertDefined(document.querySelector<HTMLElement>('.progress')).style.width = `${(assertDefined(this.controller).itterator + 1) * 10
+            }%`;
+        const progress = assertDefined(document.querySelector<HTMLElement>('.progress'));
+        progress.style.width = `${progress.offsetWidth}*`;
         let target = ev.target as HTMLElement;
         let result = false;
         if (!target.classList.contains('option')) {
@@ -101,7 +102,7 @@ class AudiocallView extends ViewInterface {
     }
     private toNextWord() {
         if (this.controller?.itterator === COUNT_AUDIOCALL_WORDS - 1) {
-            this.controller.endGame(this);
+            this.controller.endGame();
         } else {
             const options = assertDefined(this.controller).getNextWord();
             this.togleAnswer();
@@ -111,7 +112,7 @@ class AudiocallView extends ViewInterface {
     private dontKwonAnswer() {
         document.querySelectorAll<HTMLButtonElement>('.option').forEach((btn) => (btn.disabled = true));
         assertDefined(this.controller).rememberResult(false);
-        const options = assertDefined(this.controller).getNextWord();
+        assertDefined(this.controller).getNextWord();
         this.togleAnswer();
     }
 
@@ -127,16 +128,13 @@ class AudiocallView extends ViewInterface {
     private geAudio(src: string) {
         audio.src = src;
         audio.load();
-        const playImg = assertDefined(document.querySelector('#responsePlayImg'))
+        const playImg = assertDefined(document.querySelector('#responsePlayImg'));
         audio.addEventListener('play', () => {
             playImg.classList.toggle('response__audio-img_play');
         });
         audio.addEventListener('pause', () => {
             playImg.classList.toggle('response__audio-img_play');
         });
-    }
-    destroy(): void {
-        document.removeEventListener('keydown', this.addKeyListener);
     }
 }
 

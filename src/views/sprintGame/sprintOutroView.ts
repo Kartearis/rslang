@@ -4,7 +4,7 @@ import { wordGame } from '../../helpers/types';
 import './sprint-outro.css';
 import ResultWordCard from '../../components/wordCard';
 import { assertDefined } from '../../helpers/helpers';
-import GameController from "../../controllers/gameController";
+import GameController from '../../controllers/gameController';
 
 const template = document.createElement('template');
 template.innerHTML = `

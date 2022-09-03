@@ -4,6 +4,12 @@
     display: none !important;
 }
 
+.progress {
+    background-color: var(--color-accent-2);
+    width: 0;
+    height: 3px;
+}
+
 .audiocall-game {
     background-color: var(--color-background);
     display: flex;
@@ -39,7 +45,22 @@
 .audiocall-game__options {
     display: flex;
     justify-content: space-evenly;
+    flex-wrap: wrap;
     gap: 20px
+}
+
+@media screen and (max-width: 750px) {
+    .audiocall-game {
+        gap: 20px;
+    }
+
+    .audiocall-game__options {
+        flex-direction: column;
+    }
+
+    .response {
+        height: auto;
+    }
 }
 
 .option {
@@ -63,15 +84,15 @@
 }
 
 .response__audio {
-    height: 30px;
-    width: 30px;
-    border-radius: 15px;
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
     margin-right: 20px;
     border: none;
 }
 
 .response__audio-img {
-    width: 100%;
+    scale: 200%;
 }
 
 .response__row {
@@ -117,6 +138,7 @@
 .audiocall-game__button {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .audiocall-game__button_dont-know,
