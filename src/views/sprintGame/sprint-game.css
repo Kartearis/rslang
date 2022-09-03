@@ -136,6 +136,12 @@
     }
 }
 
+@media (min-height: 800px) {
+    .sprint-game {
+        grid-template-rows: 30vh 1fr 30vh;
+    }
+}
+
 .icon--volume {
     --path: url('../../assets/icons/bi_volume-up.svg');
 }

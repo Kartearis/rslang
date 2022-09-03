@@ -49,6 +49,14 @@
     }
 }
 
+@media (min-height: 800px) {
+    .sprint-intro {
+        grid-template-rows: 30vh 1fr 20vh;
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
 .icon--volume {
     --path: url('../../assets/icons/bi_volume-up.svg');
 }
