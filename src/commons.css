@@ -20,6 +20,7 @@
     --color-header: #528FE9;
     --color-default: #000000;
     --color-shaded: #2F4550;
+    --color-overlay: #2F4550C0;
     --color-background: #F5F5F5;
     --color-block: #EDEDED;
     --color-accent-0: var(--color-header);

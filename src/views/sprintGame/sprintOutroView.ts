@@ -2,7 +2,7 @@ import ViewInterface from '../viewInterface';
 import { wordGame } from '../../helpers/types';
 
 import './sprint-outro.css';
-import ResultWordCard from '../../components/wordCard';
+import ResultWordCard from '../../components/resultWordCard';
 import { assertDefined } from '../../helpers/helpers';
 import GameController from '../../controllers/gameController';
 

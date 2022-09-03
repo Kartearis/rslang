@@ -1,0 +1,63 @@
+.selection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-background);
+    color: var(--color-shaded);
+    font-family: var(--font-family-default);
+    height: 50vh;
+}
+
+.selection__card {
+    border: 1px solid var(--color-shaded);
+    border-radius: 15px;
+    box-shadow: 2px 13px 5px -2px rgb(34 60 80 / 25%);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.selection__header {
+    font-size: var(--font-3);
+    color: var(--color-header);
+    font-weight: var(--font-weight-emphasis);
+}
+
+.selection__button {
+    border-radius: 15px;
+    transition: transform 0.3s;
+    width: 60%;
+    padding: 5px 10px;
+    text-align: center;
+}
+
+.selection__button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.selection__button--0 {
+    background-color: var(--color-accent-0);
+}
+
+.selection__button--1 {
+    background-color: var(--color-accent-1);
+}
+
+.selection__button--2 {
+    background-color: var(--color-accent-2);
+}
+
+.selection__button--3 {
+    background-color: var(--color-accent-3);
+}
+
+.selection__button--4 {
+    background-color: var(--color-accent-4);
+}
+
+.selection__button--5 {
+    background-color: var(--color-accent-5);
+}
