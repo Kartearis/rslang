@@ -1,5 +1,8 @@
-class FormService {
-    static getInput(classes: string[], type: string, placeholder: string, name: string) {
+import ViewInterface from '../viewInterface';
+
+abstract class Authorization extends ViewInterface {
+    protected errorMessage = 'Некоректный логин или пароль';
+    protected getInput(classes: string[], type: string, placeholder: string, name: string) {
         const input = document.createElement('input');
         classes.forEach((cls) => input.classList.add(cls));
         input.type = type;
@@ -9,20 +12,18 @@ class FormService {
         return input;
     }
 
-    static getSubmitBtn(classes: string[], value: string, action: () => void) {
+    protected getSubmitBtn(classes: string[], value: string, action: () => void) {
         const submitBtn = document.createElement('input');
         submitBtn.type = 'submit';
         classes.forEach((c) => submitBtn.classList.add(c));
-        submitBtn.innerText = value;
+        submitBtn.value = value;
         submitBtn.addEventListener('click', () => action());
         return submitBtn;
     }
-    static getAuthForm(): HTMLDivElement {
+    protected getAuthForm(): HTMLDivElement {
         const form = document.createElement('div');
-        form.classList.add('signin-form');
-
         const errMesage = document.createElement('p');
-        errMesage.innerText = 'Некоректный логин или пароль';
+        errMesage.innerText = this.errorMessage;
         errMesage.classList.add('errMesage');
         errMesage.classList.add('hidden');
         errMesage.id = 'errMesage';
@@ -31,4 +32,4 @@ class FormService {
     }
 }
 
-export default FormService;
+export default Authorization;

@@ -14,7 +14,7 @@ abstract class GameController {
     protected userWordController: UserWordController;
     protected userController: UserController;
     protected routerController: RouterController;
-    constructor(_words: wordType[]) {
+    constructor(_words: wordType[][] | wordType[]) {
         this.words = this.shuffleArray(_words);
         this.userWordController = UserWordController.getInstance();
         this.routerController = RouterController.getInstance();
@@ -92,12 +92,41 @@ abstract class GameController {
         });
 
     }
-    protected shuffleArray<T>(arr: T[]): T[] {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = this.getRandomNum(i + 1);
-            [arr[i], arr[j]] = [arr[j], arr[i]];
+    protected shuffleArray<T>(_arr: T[][] | T[], countWordsForGame: number | null = null): T[] {
+        const arr: T[][] = _arr as T[][];
+        arr.forEach((a) => {
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = this.getRandomNum(i + 1);
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+        });
+        const flatArr = arr.flat();
+        if (countWordsForGame === null) {
+            return flatArr;
         }
-        return arr;
+        return flatArr.length > countWordsForGame ? flatArr : flatArr.slice(0, countWordsForGame);
+        // if (countWordsForGame === null) {
+        //     wordForGame = arr.flat();
+        // } else {
+        //     wordForGame = [...arr[0]];
+        //     for (let i = 0; i < arr.length; i++) {
+        //         if (wordForGame.length < countWordsForGame) {
+        //             if (arr[i].length + wordForGame.length <= countWordsForGame) {
+        //                 wordForGame = [...wordForGame, ...arr[i]];
+        //             } else {
+        //                 const diff = countWordsForGame - wordForGame.length;
+        //                 wordForGame = [...wordForGame, ...arr[i].slice(0, diff)];
+        //             }
+        //         } else {
+        //             break;
+        //         }
+        //     }
+        // }
+
+        // if (countWordsForGame !== null) {
+        //     wordForGame = wordForGame.length > countWordsForGame ? wordForGame.slice(0, countWordsForGame) : wordForGame;
+        // }
+        // return wordForGame;
     }
     protected getRandomNum(max: number): number {
         return Math.floor(Math.random() * max);
