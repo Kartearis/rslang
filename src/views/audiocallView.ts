@@ -95,10 +95,11 @@ class AudiocallView extends ViewInterface {
             target = assertDefined(target.parentElement);
         }
         if (target.querySelector<HTMLElement>('.response__word_right') !== null) result = true;
-        assertDefined(this.controller).rememberResult(result);
+
         assertDefined(target.querySelector('.response-mark')).classList.toggle('hidden');
         this.togleAnswer();
         document.querySelectorAll<HTMLButtonElement>('.option').forEach((btn) => (btn.disabled = true));
+        assertDefined(this.controller).rememberResult(result);
     }
     private toNextWord() {
         if (this.controller?.itterator === COUNT_AUDIOCALL_WORDS - 1) {

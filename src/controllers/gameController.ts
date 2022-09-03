@@ -22,7 +22,7 @@ abstract class GameController {
     }
     private updateOptions(gameWords: wordGame[]): newProperty[] {
         const arrNewProperty: newProperty[] = [];
-        gameWords.forEach(async (gameWord) => {
+        gameWords.forEach(gameWord => {
             const date = new Date();
             const curDateString = this.formatDate(date);
             //first appearance
