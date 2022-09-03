@@ -69,6 +69,7 @@
 .sprint-game__game-controls {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: stretch;
     gap: 10px;
@@ -119,6 +120,22 @@
 .game-button--right::after {
     content: '→';
     padding-left: 10px;
+}
+
+@media (max-width: 768px) {
+    .sprint-game {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 70px 1fr;
+    }
+
+    .sprint-game__game {
+        grid-column: 1/ span 3;
+        min-width: 250px;
+    }
+}
+
+@media (min-width: 1600px) {
+
 }
 
 .icon--volume {
