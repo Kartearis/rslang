@@ -1,5 +1,5 @@
 ﻿import EBookController from '../controllers/eBookController';
-import { assertDefined, HARD_WORD_GROUP_NUM, HOST, WORDS_ON_PAGE } from '../helpers/helpers';
+import { assertDefined, formatDate, HARD_WORD_GROUP_NUM, HOST, WORDS_ON_PAGE } from '../helpers/helpers';
 import { wordProperty, wordStatus, wordType } from '../helpers/types';
 import PaginationComponent from '../components/paginationComponent';
 import ViewInterface from './viewInterface';
@@ -7,7 +7,6 @@ import UserController from '../controllers/userController';
 import UserWordController from '../controllers/userWordController';
 import './eBook.css';
 import RouterController from '../controllers/routerController';
-import audioImg from '../assets/audio.png';
 import LoadingOverlay from '../components/loadingOverlay';
 // import AudiocallView from './audiocallView';
 
@@ -126,7 +125,7 @@ class EbookView extends ViewInterface {
                     .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
                     .forEach((btn) => (btn.disabled = false));
             }
-        })
+        }).catch(() => { });
     }
     async getGroups(): Promise<HTMLUListElement> {
         const MAX_GROUP = 6;
@@ -291,8 +290,9 @@ class EbookView extends ViewInterface {
                 failed: currentWordProperty === undefined ? null : currentWordProperty.optional.failed,
                 success: currentWordProperty === undefined ? null : currentWordProperty.optional.success,
                 successRow: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
+                firstAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
                 learnedDate:
-                    status === wordStatus.easy ? `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}` : null,
+                    status === wordStatus.easy ? formatDate(new Date()) : null,
                 lastAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttempt,
             },
         };

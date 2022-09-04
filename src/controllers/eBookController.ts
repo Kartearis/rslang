@@ -87,7 +87,6 @@ class EBookController {
         } finally {
             this.abortController = null;
         }
-
     }
     private async loadAuthGroup(group: number): Promise<void> {
         this.abortController = new AbortController();
@@ -118,13 +117,11 @@ class EBookController {
             } else {
                 throw Error('Access token is missing or invalid.');
             }
-        }
-        catch {
-            throw Error("Request was stopped.");
+        } catch {
+            throw Error('Request was stopped.');
         } finally {
             this.abortController = null;
         }
-
     }
     private async getHardWordsUser(): Promise<wordType[]> {
         this.abortController = new AbortController();
@@ -163,17 +160,14 @@ class EBookController {
             const { userId, jwt } = localStorage;
             //3600 words in base
             const MAX_WORDS = 3600;
-            const response = await fetch(
-                `${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${MAX_WORDS}`,
-                {
-                    signal: assertDefined(this.abortController).signal,
-                    method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                        Authorization: `Bearer ${jwt}`,
-                    },
-                }
-            );
+            const response = await fetch(`${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${MAX_WORDS}`, {
+                signal: assertDefined(this.abortController).signal,
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             if (response.status === 200) {
                 const arr = (await response.json()) as responceUserWords;
                 const arrWords: wordType[] = arr[0].paginatedResults;

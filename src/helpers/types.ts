@@ -36,6 +36,7 @@ export type wordProperty = {
         success: string | null;
         successRow: string | null;
         learnedDate: string | null;
+        firstAttempt: string | null;
         lastAttempt: string | null;
     };
 };
@@ -49,13 +50,15 @@ export type audiocallWord = wordGame & {
     right: boolean;
 };
 export type responceUserWords = [
-    {
-        paginatedResults: wordType[];
-        //all words whith option
-        totalCount: [
-            {
-                count: string;
-            }
-        ];
-    }
+    filtredWords
 ];
+
+export type filtredWords = {
+    paginatedResults: wordType[];
+    //all words whith option
+    totalCount: [
+        {
+            count: string;
+        }
+    ];
+}

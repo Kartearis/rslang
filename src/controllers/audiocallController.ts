@@ -1,7 +1,7 @@
 import { COUNT_GAME_RESPONSE_WORD } from '../helpers/helpers';
 import { audiocallWord, wordGame, wordType } from '../helpers/types';
 import GameController from './gameController';
-import DailyStatsController from "./dailyStatsController";
+import DailyStatsController from './dailyStatsController';
 
 class AudiocallController extends GameController {
     audiocallResults: wordGame[];
