@@ -200,7 +200,6 @@ class EbookView extends ViewInterface {
         const learningMark = assertDefined(wordCard.querySelector('#learningMark')) as HTMLButtonElement;
         const stats = assertDefined(wordCard.querySelector('#cartStat')) as HTMLDivElement;
         if (this.userController.isSignin()) {
-
             const rightAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#rightAnswer'));
             const wrongAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#wrongAnswer'));
             if (word.userWord !== undefined) {

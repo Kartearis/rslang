@@ -32,7 +32,7 @@ class EBookController {
         }
         return gameWords;
     }
-    async loadGroup(group: number) {
+    private async loadGroup(group: number) {
         this.groupWords.words = [];
         if (this.userController.isSignin()) {
             if (group === HARD_WORD_GROUP_NUM) {
@@ -69,7 +69,7 @@ class EBookController {
             return true;
         });
     }
-    async loadUnauthGroup(group: number): Promise<void> {
+    private async loadUnauthGroup(group: number): Promise<void> {
         this.abortController = new AbortController();
         try {
             for (let i = 0; i < COUNT_PAGES; i += 1) {
@@ -89,7 +89,7 @@ class EBookController {
         }
 
     }
-    async loadAuthGroup(group: number): Promise<void> {
+    private async loadAuthGroup(group: number): Promise<void> {
         this.abortController = new AbortController();
         try {
             const WORDS_IN_GROUP = 600;
@@ -126,7 +126,7 @@ class EBookController {
         }
 
     }
-    async getHardWordsUser(): Promise<wordType[]> {
+    private async getHardWordsUser(): Promise<wordType[]> {
         this.abortController = new AbortController();
         try {
             const { userId, jwt } = localStorage;
