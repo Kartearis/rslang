@@ -28,7 +28,7 @@ class UserController {
             localStorage.setItem(REFRESH_TOKEN_NAME, refreshToken);
             localStorage.setItem(USER_NAME, userId);
             RouterController.getInstance().navigate('/');
-            this.statrtUpdateToken();
+            this.startUpdateToken();
         } else {
             const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
             errMesage.classList.toggle('hidden');
@@ -77,7 +77,7 @@ class UserController {
             throw Error(`Error update token. Status  ${response.status}`);
         }
     }
-    async statrtUpdateToken() {
+    async startUpdateToken() {
         const milisecondsIn2Hours = 7200000;
         setInterval(async () => {
             await this.getNewToken();
