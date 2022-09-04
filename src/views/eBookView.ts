@@ -99,7 +99,7 @@ class EbookView extends ViewInterface {
     }
     destroy() {
         this.stopAudio();
-        this.eBookController.abortController.abort();
+        // this.eBookController.abortController.abort();
     }
     async reDraw() {
         this.stopAudio();
@@ -166,7 +166,6 @@ class EbookView extends ViewInterface {
         return li;
     }
     private getWordCard(word: wordType, template: HTMLDivElement): HTMLElement {
-        console.log(word);
         const wordCard = template;
         const card = assertDefined(wordCard.querySelector('.word-card')) as HTMLDivElement;
         card.classList.add(`group${this.group}`);
