@@ -8,6 +8,7 @@ import UserWordController from '../controllers/userWordController';
 import './eBook.css';
 import RouterController from '../controllers/routerController';
 import audioImg from '../assets/audio.png';
+import LoadingOverlay from '../components/loadingOverlay';
 // import AudiocallView from './audiocallView';
 
 const templateCard = document.createElement('template');
@@ -145,6 +146,8 @@ class EbookView extends ViewInterface {
         if (this.group === groupNum) li.classList.add('group-list__group_active');
         li.dataset.group = groupNum.toString();
         li.addEventListener('click', async (ev: Event) => {
+            const loadingOverlay = new LoadingOverlay(false).show();
+            this.rootElement.append(loadingOverlay);
             this.stopAudio();
             assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
                 'group-list__group_active'
@@ -161,6 +164,7 @@ class EbookView extends ViewInterface {
 
             localStorage.setItem('group', `${this.group}`);
             await this.pagination.toFirstPage(this.group);
+            loadingOverlay.hide();
         });
         return li;
     }
