@@ -1,18 +1,21 @@
 import { assertDefined, SUCCESS_ANSWER_FOR_LEARNED, formatDate } from '../helpers/helpers';
 import { wordGame, wordStatus, wordType } from '../helpers/types';
 import RouterController from './routerController';
+import UserController from './userController';
 import UserWordController from './userWordController';
 import DailyStatsController, { DailyStats } from './dailyStatsController';
 
 abstract class GameController {
     protected words: wordType[];
     protected userWordController: UserWordController;
+    protected userController: UserController;
     protected routerController: RouterController;
     protected dailyStatsController: DailyStatsController | null = null;
     constructor(_words: wordType[][] | wordType[]) {
         this.words = this.shuffleArray(_words);
         this.userWordController = UserWordController.getInstance();
         this.routerController = RouterController.getInstance();
+        this.userController = UserController.getInstance();
     }
     protected async saveResult(gameWords: wordGame[]): Promise<void> {
         const stats: DailyStats = DailyStatsController.getEmpty();
