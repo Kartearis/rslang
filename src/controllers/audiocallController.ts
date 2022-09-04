@@ -72,7 +72,7 @@ class AudiocallController extends GameController {
     private getResponseWordId(curentWordId: number): number[] {
         const arrId = [curentWordId];
         let testId = -1;
-        while (arrId.length !== COUNT_GAME_RESPONSE_WORD) {
+        while (arrId.length !== COUNT_AUDIOCALL_RESPONSE_WORD) {
             testId = this.getRandomNum(this.words.length);
             if (!arrId.includes(testId)) {
                 arrId.push(testId);

@@ -2,7 +2,6 @@ import { audiocallWord, wordType } from '../helpers/types';
 import ViewInterface from './viewInterface';
 import './audiocallView.css';
 import { assertDefined, COUNT_AUDIOCALL_WORDS, HOST } from '../helpers/helpers';
-import audioImg from '../assets/audio.png';
 import AudiocallController from '../controllers/audiocallController';
 // <button id="ascPlayBtn" class="audiocall-game__button audiocall-game__button_asc">
 // <img class="word-info__audio" id="playImg" src="${audioImg}" />
