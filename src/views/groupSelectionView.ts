@@ -11,12 +11,12 @@ template.innerHTML = `
     <div class="selection">
         <div class="selection__card">
             <h3 class="selection__header">Выберите уровень сложности</h3>
-            <div class="selection__button selection__button--0" data-group="0"> Группа 1</div>
-            <div class="selection__button selection__button--1" data-group="1"> Группа 2</div>
-            <div class="selection__button selection__button--2" data-group="2"> Группа 3</div>
-            <div class="selection__button selection__button--3" data-group="3"> Группа 4</div>
-            <div class="selection__button selection__button--4" data-group="4"> Группа 5</div>
-            <div class="selection__button selection__button--5" data-group="5"> Группа 6</div>
+            <div class="selection__button selection__button--0" data-group="1"> Группа 1</div>
+            <div class="selection__button selection__button--1" data-group="2"> Группа 2</div>
+            <div class="selection__button selection__button--2" data-group="3"> Группа 3</div>
+            <div class="selection__button selection__button--3" data-group="4"> Группа 4</div>
+            <div class="selection__button selection__button--4" data-group="5"> Группа 5</div>
+            <div class="selection__button selection__button--5" data-group="6"> Группа 6</div>
         </div>
     </div>
 `;

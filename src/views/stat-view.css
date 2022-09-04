@@ -96,7 +96,7 @@
 .stat-card__pie-canvas {
     width: 250px;
     height: 250px;
-    background-color: var(--color-accent-2);
+    background-color: var(--color-block);
     border-radius: 50%;
 }
 
