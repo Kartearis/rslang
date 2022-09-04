@@ -54,6 +54,10 @@
         gap: 20px;
     }
 
+    .option {
+        margin: 0 30px;
+    }
+
     .audiocall-game__options {
         flex-direction: column;
     }
@@ -64,10 +68,28 @@
 }
 
 .option {
-    height: 30px;
-    background: none;
+    background-color: var(--color-header);
+    /* width: 120px; */
+    text-align: center;
+    color: white;
+    font-style: normal;
+    font-weight: var(--font-weight-default);
+    font-size: var(--font-7);
+    padding: 7px 30px;
+    border-radius: 30px;
+    border: 1px solid var(--color-header);
+    transition: .3s;
+}
+
+.option:enabled:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.option:disabled {
+    background-color: #b5b5b5;
+    color: var(--color-shaded);
     border: none;
-    font-size: var(--font-2);
 }
 
 .option__num-key {
