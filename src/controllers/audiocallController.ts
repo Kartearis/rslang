@@ -1,12 +1,14 @@
 import { COUNT_GAME_RESPONSE_WORD } from '../helpers/helpers';
 import { audiocallWord, wordGame, wordType } from '../helpers/types';
 import GameController from './gameController';
+import DailyStatsController from "./dailyStatsController";
 
 class AudiocallController extends GameController {
     audiocallResults: wordGame[];
     constructor(_words: wordType[]) {
         super(_words);
         this.audiocallResults = [];
+        this.dailyStatsController = new DailyStatsController('audio-game');
     }
 
     itterator = 0;
