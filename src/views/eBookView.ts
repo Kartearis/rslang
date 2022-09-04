@@ -10,23 +10,28 @@ import RouterController from '../controllers/routerController';
 import audioImg from '../assets/audio.png';
 // import AudiocallView from './audiocallView';
 
-const template = `<div class="word-card" data-word-id="">
-<div class="word-card__img-container">
-    <img class="word-card__img" id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
-</div>
-<div class="word-card__info word-info">
-    <p id="word"></p>
-    <p class="word-info__meaning" id="meaning"></p>
-    <p class="word-info__meaning_translate" id="meaningTransalte"></p>
-    <p class="word-info__example" id="example"></p>
-    <p class="word-info__example_translate" id="exampleTransalte"></p>
-</div>
-<div class="word-card__action word-action">
-    <button id="hardMark" class="word-action__to-hard">!</button>
-    <button id="learningMark" class="word-action__to-learning hidden">X</button>
-    <button id="audioBtn" class="word-action__audio word-action__audio_start"><img src='${audioImg}' class="word-action__audio-img"/> </button>
-    <button id="easyMark" class="word-action__to-easy">✓</button>
-</div>
+const templateCard = document.createElement('template');
+templateCard.innerHTML = `
+<div class="word-card" data-word-id="">
+    <div id="cartStat" class="word-card__stats">
+        <span id="rightAnswer" class="word-card__stats_success"></span> / <span id="wrongAnswer" class="word-card__stats_wrong"></span>
+    </div>
+    <div class="word-card__img-container">
+        <img class="word-card__img" id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
+    </div>
+    <div class="word-card__info word-info">
+        <p id="word"></p>
+        <p class="word-info__meaning" id="meaning"></p>
+        <p class="word-info__meaning_translate" id="meaningTransalte"></p>
+        <p class="word-info__example" id="example"></p>
+        <p class="word-info__example_translate" id="exampleTransalte"></p>
+    </div>
+    <div class="word-card__action word-action">
+        <button id="hardMark" class="word-action__to-hard">!</button>
+        <button id="learningMark" class="word-action__to-learning hidden">X</button>
+        <button id="audioBtn" class="word-action__audio word-action__audio_start"><img src='${audioImg}' class="word-action__audio-img"/> </button>
+        <button id="easyMark" class="word-action__to-easy">✓</button>
+    </div>
 </div>`;
 
 class EbookView extends ViewInterface {
@@ -86,8 +91,6 @@ class EbookView extends ViewInterface {
         const bookContainer = document.createElement('div');
         bookContainer.classList.add('ebook-container');
         this.words.forEach((w) => {
-            const templateCard = document.createElement('template');
-            templateCard.innerHTML = template;
             const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
             const wordCard = this.getWordCard(w, clone);
             bookContainer.append(wordCard);
@@ -106,8 +109,6 @@ class EbookView extends ViewInterface {
 
         this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
         this.words.forEach((w) => {
-            const templateCard = document.createElement('template');
-            templateCard.innerHTML = template;
             const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
             const wordBlock = this.getWordCard(w, clone);
             bookContainer.append(wordBlock);
@@ -165,6 +166,7 @@ class EbookView extends ViewInterface {
         return li;
     }
     private getWordCard(word: wordType, template: HTMLDivElement): HTMLElement {
+        console.log(word);
         const wordCard = template;
         const card = assertDefined(wordCard.querySelector('.word-card')) as HTMLDivElement;
         card.classList.add(`group${this.group}`);
@@ -193,7 +195,12 @@ class EbookView extends ViewInterface {
         const learningMark = assertDefined(wordCard.querySelector('#learningMark')) as HTMLButtonElement;
 
         if (this.userController.isSignin()) {
+            const stats = assertDefined(wordCard.querySelector('#cartStat')) as HTMLDivElement;
+            const rightAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#rightAnswer'));
+            const wrongAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#wrongAnswer'));
             if (word.userWord !== undefined) {
+                rightAnswer.innerText = word.userWord.optional.success === null || word.userWord.optional.success === "null" ? '0' : word.userWord.optional.success?.toString();
+                wrongAnswer.innerText = word.userWord.optional.failed === null || word.userWord.optional.success === "null" ? '0' : word.userWord.optional.failed?.toString();
                 if (word.userWord.difficulty === wordStatus.easy) {
                     card.classList.add(`word-card_easy`);
                     easyMark.disabled = true;
@@ -202,6 +209,9 @@ class EbookView extends ViewInterface {
                     card.classList.add(`word-card_hard`);
                     markHard.disabled = true;
                 }
+            } else {
+                rightAnswer.innerHTML = '0';
+                wrongAnswer.innerHTML = '0';
             }
             easyMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
             if (this.group === HARD_WORD_GROUP_NUM) {
