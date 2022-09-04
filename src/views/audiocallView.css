@@ -49,6 +49,13 @@
     gap: 20px
 }
 
+@media (min-width: 1400px) {
+    .audiocall-game {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
 @media screen and (max-width: 750px) {
     .audiocall-game {
         gap: 20px;
@@ -69,7 +76,7 @@
 
 .option {
     background-color: var(--color-header);
-    /* width: 120px; */
+    gap: 5px;
     text-align: center;
     color: white;
     font-style: normal;
@@ -93,7 +100,7 @@
 }
 
 .option__num-key {
-    color: gray;
+    color: var(--color-accent-2);
     font-size: var(--font-2);
     padding-right: 8px;
 }
