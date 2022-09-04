@@ -99,31 +99,34 @@ class EbookView extends ViewInterface {
     }
     destroy() {
         this.stopAudio();
-        // this.eBookController.abortController.abort();
+        if (this.eBookController.abortController !== null) this.eBookController.abortController.abort();
     }
     async reDraw() {
         this.stopAudio();
-        document.querySelector('.ebook-container')?.remove();
-        const bookContainer = document.createElement('div');
-        bookContainer.classList.add('ebook-container');
+        await this.eBookController.getPageFromGroup(this.pagination.page, this.group).then((arrWords: wordType[]) => {
+            this.words = arrWords;
+            document.querySelector('.ebook-container')?.remove();
+            const bookContainer = document.createElement('div');
+            bookContainer.classList.add('ebook-container');
 
-        this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
-        this.words.forEach((w) => {
-            const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
-            const wordBlock = this.getWordCard(w, clone);
-            bookContainer.append(wordBlock);
-        });
-        this.rootElement.append(bookContainer);
-        if (this.eBookController.isPageLearned(this.pagination.page)) {
-            document
-                .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
-                .forEach((btn) => (btn.disabled = true));
-            assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
-        } else {
-            document
-                .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
-                .forEach((btn) => (btn.disabled = false));
-        }
+
+            this.words.forEach((w) => {
+                const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
+                const wordBlock = this.getWordCard(w, clone);
+                bookContainer.append(wordBlock);
+            });
+            this.rootElement.append(bookContainer);
+            if (this.eBookController.isPageLearned(this.pagination.page)) {
+                document
+                    .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                    .forEach((btn) => (btn.disabled = true));
+                assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
+            } else {
+                document
+                    .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                    .forEach((btn) => (btn.disabled = false));
+            }
+        })
     }
     async getGroups(): Promise<HTMLUListElement> {
         const MAX_GROUP = 6;
@@ -195,9 +198,9 @@ class EbookView extends ViewInterface {
         const markHard = assertDefined(wordCard.querySelector('#hardMark')) as HTMLButtonElement;
         const easyMark = assertDefined(wordCard.querySelector('#easyMark')) as HTMLButtonElement;
         const learningMark = assertDefined(wordCard.querySelector('#learningMark')) as HTMLButtonElement;
-
+        const stats = assertDefined(wordCard.querySelector('#cartStat')) as HTMLDivElement;
         if (this.userController.isSignin()) {
-            const stats = assertDefined(wordCard.querySelector('#cartStat')) as HTMLDivElement;
+
             const rightAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#rightAnswer'));
             const wrongAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#wrongAnswer'));
             if (word.userWord !== undefined) {
@@ -227,6 +230,7 @@ class EbookView extends ViewInterface {
             markHard.remove();
             easyMark.remove();
             learningMark.remove();
+            stats.remove();
         }
         return wordCard;
     }
