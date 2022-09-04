@@ -1,16 +1,16 @@
-import StorageController from "./storageController";
-import {formatDate, typedEntries} from "../helpers/helpers";
+import StorageController from './storageController';
+import { formatDate, typedEntries } from '../helpers/helpers';
 
 export type DailyStats = {
-    correctCnt: number,
-    incorrectCnt: number,
-    learnedCnt: number,
-    newCnt: number,
-    longestCombo: number
-}
+    correctCnt: number;
+    incorrectCnt: number;
+    learnedCnt: number;
+    newCnt: number;
+    longestCombo: number;
+};
 
 export default class DailyStatsController {
-    storage: StorageController
+    storage: StorageController;
 
     constructor(prefix: string) {
         this.storage = new StorageController(prefix);
@@ -18,8 +18,7 @@ export default class DailyStatsController {
 
     private handleDate(): DailyStats {
         const lastUpdate: null | string = this.storage.read('lastUpdate') as null | string;
-        if (lastUpdate === null || lastUpdate !== formatDate(new Date()))
-        {
+        if (lastUpdate === null || lastUpdate !== formatDate(new Date())) {
             this.storage.write('lastUpdate', formatDate(new Date()));
             this.writeEmpty();
         }
@@ -36,7 +35,7 @@ export default class DailyStatsController {
             incorrectCnt: 0,
             learnedCnt: 0,
             newCnt: 0,
-            longestCombo: 0
+            longestCombo: 0,
         };
     }
 
@@ -53,8 +52,7 @@ export default class DailyStatsController {
 
     static addStats(base: DailyStats, change: DailyStats): DailyStats {
         typedEntries(change).forEach(([key, value]) => {
-            if (key !== 'longestCombo')
-                base[key] += value;
+            if (key !== 'longestCombo') base[key] += value;
             else base[key] = value > base[key] ? value : base[key];
         });
         return base;

@@ -4,7 +4,7 @@ import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 import { assertDefined } from '../helpers/helpers';
-import DailyStatsController, {DailyStats} from "../controllers/dailyStatsController";
+import DailyStatsController, { DailyStats } from '../controllers/dailyStatsController';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -84,8 +84,7 @@ export default class StatView extends ViewInterface {
     private lwCanvas?: HTMLCanvasElement;
 
     processCorrectIncorrect(stats: DailyStats): number[] {
-        if (stats.correctCnt === 0 && stats.incorrectCnt === 0)
-            return [0, 0, 0];
+        if (stats.correctCnt === 0 && stats.incorrectCnt === 0) return [0, 0, 0];
         return [stats.correctCnt, stats.incorrectCnt];
     }
 
@@ -96,7 +95,7 @@ export default class StatView extends ViewInterface {
     }
 
     show(): void {
-        this.rootElement.innerHTML = "";
+        this.rootElement.innerHTML = '';
         const sprintDailyStatsController = new DailyStatsController('sprint-game');
         const audioDailyStatsController = new DailyStatsController('audio-game');
         const sprintStats = sprintDailyStatsController.readStats();
@@ -105,20 +104,26 @@ export default class StatView extends ViewInterface {
         this.rootElement.append(template.content.cloneNode(true));
         this.gsSprintPie = assertDefined(this.rootElement.querySelector('#gs-sprint .stat-card__pie-canvas'));
         this.drawPieChart(this.gsSprintPie, this.processCorrectIncorrect(sprintStats));
-        (assertDefined(this.rootElement.querySelector('#gs-s-combo .stat-card__value')) as HTMLElement)
-            .innerText = sprintStats.longestCombo.toString();
-        (assertDefined(this.rootElement.querySelector('#gs-s-new .stat-card__value')) as HTMLElement)
-            .innerText = sprintStats.newCnt.toString();
-        (assertDefined(this.rootElement.querySelector('#gs-a-combo .stat-card__value')) as HTMLElement)
-            .innerText = audioStats.longestCombo.toString();
-        (assertDefined(this.rootElement.querySelector('#gs-a-new .stat-card__value')) as HTMLElement)
-            .innerText = audioStats.newCnt.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#gs-s-combo .stat-card__value')
+        ) as HTMLElement).innerText = sprintStats.longestCombo.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#gs-s-new .stat-card__value')
+        ) as HTMLElement).innerText = sprintStats.newCnt.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#gs-a-combo .stat-card__value')
+        ) as HTMLElement).innerText = audioStats.longestCombo.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#gs-a-new .stat-card__value')
+        ) as HTMLElement).innerText = audioStats.newCnt.toString();
         this.gsAudioPie = assertDefined(this.rootElement.querySelector('#gs-audio .stat-card__pie-canvas'));
         this.drawPieChart(this.gsAudioPie, this.processCorrectIncorrect(audioStats));
-        (assertDefined(this.rootElement.querySelector('#ws-new .stat-card__value')) as HTMLElement)
-            .innerText = wordStats.newCnt.toString();
-        (assertDefined(this.rootElement.querySelector('#ws-learnt .stat-card__value')) as HTMLElement)
-            .innerText = wordStats.learnedCnt.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#ws-new .stat-card__value')
+        ) as HTMLElement).innerText = wordStats.newCnt.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#ws-learnt .stat-card__value')
+        ) as HTMLElement).innerText = wordStats.learnedCnt.toString();
         this.wsPie = assertDefined(this.rootElement.querySelector('#ws .stat-card__pie-canvas'));
         this.drawPieChart(this.wsPie, this.processCorrectIncorrect(wordStats));
         this.wpdCanvas = assertDefined(this.rootElement.querySelector('#wpd .stat-graph__canvas'));
@@ -183,7 +188,9 @@ export default class StatView extends ViewInterface {
                     datalabels: {
                         formatter: function (value, context) {
                             // Handle cases with 0 values
-                            return value > 0 || context.dataIndex === 2 ? assertDefined(context?.chart?.data?.labels)[context.dataIndex]: '';
+                            return value > 0 || context.dataIndex === 2
+                                ? assertDefined(context?.chart?.data?.labels)[context.dataIndex]
+                                : '';
                         },
                     },
                 },

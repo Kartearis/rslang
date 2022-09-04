@@ -11,7 +11,7 @@ import AudioController from './audioController';
 
 import pingSound from '../assets/audio/ping.mp3';
 import suspenseSound from '../assets/audio/suspense.mp3';
-import DailyStatsController from "./dailyStatsController";
+import DailyStatsController from './dailyStatsController';
 
 const ChanceOfCorrect = 0.6;
 
