@@ -43,11 +43,11 @@ template.innerHTML = `
             </div>
             <div class="stat-card" id="ws">
                 <h4 class="stat-card__header">Word stats</h4>
-                <div class="stat-card__number">
+                <div class="stat-card__number" id="ws-new">
                     <h5 class="stat-card__value-title">New</h5>
                     <div class="stat-card__value">0</div>
                 </div>
-                <div class="stat-card__number">
+                <div class="stat-card__number" id="ws-learnt">
                     <h5 class="stat-card__value-title">Learnt</h5>
                     <div class="stat-card__value">0</div>
                 </div>
@@ -89,12 +89,19 @@ export default class StatView extends ViewInterface {
         return [stats.correctCnt, stats.incorrectCnt];
     }
 
+    aggregateWordDailyStats(gameStats: DailyStats[]): DailyStats {
+        return gameStats.reduce((res: DailyStats, cur: DailyStats) => {
+            return DailyStatsController.addStats(res, cur);
+        }, DailyStatsController.getEmpty());
+    }
+
     show(): void {
         this.rootElement.innerHTML = "";
         const sprintDailyStatsController = new DailyStatsController('sprint-game');
         const audioDailyStatsController = new DailyStatsController('audio-game');
         const sprintStats = sprintDailyStatsController.readStats();
         const audioStats = audioDailyStatsController.readStats();
+        const wordStats = this.aggregateWordDailyStats([sprintStats, audioStats]);
         this.rootElement.append(template.content.cloneNode(true));
         this.gsSprintPie = assertDefined(this.rootElement.querySelector('#gs-sprint .stat-card__pie-canvas'));
         this.drawPieChart(this.gsSprintPie, this.processCorrectIncorrect(sprintStats));
@@ -108,8 +115,12 @@ export default class StatView extends ViewInterface {
             .innerText = audioStats.newCnt.toString();
         this.gsAudioPie = assertDefined(this.rootElement.querySelector('#gs-audio .stat-card__pie-canvas'));
         this.drawPieChart(this.gsAudioPie, this.processCorrectIncorrect(audioStats));
+        (assertDefined(this.rootElement.querySelector('#ws-new .stat-card__value')) as HTMLElement)
+            .innerText = wordStats.newCnt.toString();
+        (assertDefined(this.rootElement.querySelector('#ws-learnt .stat-card__value')) as HTMLElement)
+            .innerText = wordStats.learnedCnt.toString();
         this.wsPie = assertDefined(this.rootElement.querySelector('#ws .stat-card__pie-canvas'));
-        this.drawPieChart(this.wsPie, [10, 90]);
+        this.drawPieChart(this.wsPie, this.processCorrectIncorrect(wordStats));
         this.wpdCanvas = assertDefined(this.rootElement.querySelector('#wpd .stat-graph__canvas'));
         this.drawLongChart(this.wpdCanvas, {
             label: 'Words per day',

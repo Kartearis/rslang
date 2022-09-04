@@ -46,12 +46,17 @@ export default class DailyStatsController {
 
     updateStats(change: DailyStats): DailyStats {
         const stats: DailyStats = this.handleDate();
-        typedEntries(change).forEach(([key, value]) => {
-            if (key !== 'longestCombo')
-                stats[key] += value;
-            else stats[key] = value > stats[key] ? value : stats[key];
-        });
+        DailyStatsController.addStats(stats, change);
         this.storage.write('stats', stats);
         return stats;
+    }
+
+    static addStats(base: DailyStats, change: DailyStats): DailyStats {
+        typedEntries(change).forEach(([key, value]) => {
+            if (key !== 'longestCombo')
+                base[key] += value;
+            else base[key] = value > base[key] ? value : base[key];
+        });
+        return base;
     }
 }
