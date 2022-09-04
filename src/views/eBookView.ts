@@ -29,11 +29,10 @@ templateCard.innerHTML = `
     <div class="word-card__action word-action">
         <button id="hardMark" class="word-action__to-hard">!</button>
         <button id="learningMark" class="word-action__to-learning hidden">X</button>
-        <button id="audioBtn" class="word-action__audio word-action__audio_start"><img src='${audioImg}' class="word-action__audio-img"/> </button>
+        <button id="audioBtn" class="word-action__audio word-action__audio_start"><span class="icon icon--size-2 icon--sound word-action__audio-img"></span> </button>
         <button id="easyMark" class="word-action__to-easy">✓</button>
     </div>
 </div>`;
-
 class EbookView extends ViewInterface {
     group = 0;
     pagination: PaginationComponent;
@@ -263,7 +262,7 @@ class EbookView extends ViewInterface {
             }
         });
     }
-    stopAudio() {
+    private stopAudio() {
         document.querySelector<HTMLButtonElement>('.word-action__audio_stop')?.click();
     }
     private togleAudioBtn(target: HTMLButtonElement) {
@@ -325,7 +324,7 @@ class EbookView extends ViewInterface {
                 .forEach((btn) => (btn.disabled = true));
         }
     }
-    async saveCardState(wordId: string, wordUpdate: wordProperty, status: string | undefined) {
+    private async saveCardState(wordId: string, wordUpdate: wordProperty, status: string | undefined) {
         if (status === undefined) {
             await this.wordController.addUserWord(wordId, wordUpdate);
         } else {

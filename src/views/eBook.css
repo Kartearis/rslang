@@ -231,15 +231,12 @@
 }
 
 .word-action__audio-img {
-    background-color: var(--color-background);
     width: 50%;
     border-radius: 50%;
-    ;
 }
 
-.word-action__audio-img:hover {
+.word-action__audio:hover {
     animation: audioWave 2s infinite;
-
 }
 
 @keyframes audioWave {
@@ -259,14 +256,7 @@
     }
 }
 
-.word-action__audio_start::after {
-    /* content: '▶';
-    font-weight: bold;
-    font-size: 40px;
-    margin-right: -5px; */
-}
-
-.word-action__audio_stop .word-action__audio-img {
+.word-action__audio_stop {
     animation: audioWave 2s infinite;
 }
 
