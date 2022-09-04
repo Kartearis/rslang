@@ -27,13 +27,17 @@ export default class DailyStatsController {
     }
 
     private writeEmpty(): void {
-        this.storage.write('stats', {
+        this.storage.write('stats', DailyStatsController.getEmpty());
+    }
+
+    static getEmpty(): DailyStats {
+        return {
             correctCnt: 0,
             incorrectCnt: 0,
             learnedCnt: 0,
             newCnt: 0,
             longestCombo: 0
-        });
+        };
     }
 
     readStats(): DailyStats {
@@ -42,8 +46,10 @@ export default class DailyStatsController {
 
     updateStats(change: DailyStats): DailyStats {
         const stats: DailyStats = this.handleDate();
-        typedEntries(stats).forEach(([key, value]) => {
-            stats[key] += value;
+        typedEntries(change).forEach(([key, value]) => {
+            if (key !== 'longestCombo')
+                stats[key] += value;
+            else stats[key] = value > stats[key] ? value : stats[key];
         });
         this.storage.write('stats', stats);
         return stats;
