@@ -2,8 +2,8 @@ import { assertDefined, COUNT_AUDIOCALL_RESPONSE_WORD } from '../helpers/helpers
 import { audiocallWord, wordGame, wordType } from '../helpers/types';
 import AudiocallView from '../views/audiocallView';
 import GameController from './gameController';
-import DailyStatsController from "./dailyStatsController";
-
+import DailyStatsController from './dailyStatsController';
+import SprintOutroView from '../views/sprintGame/sprintOutroView';
 
 class AudiocallController extends GameController {
     audiocallResults: wordGame[];
@@ -14,6 +14,9 @@ class AudiocallController extends GameController {
         super(_words);
         this.audiocallResults = [];
         this.dailyStatsController = new DailyStatsController('audio-game');
+        this.rootElement = rootElement;
+        this.view = view;
+        document.addEventListener('keydown', this.addKeyListener);
     }
 
     getNextWord(): audiocallWord[] {

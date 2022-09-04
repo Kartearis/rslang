@@ -85,8 +85,9 @@ class AudiocallView extends ViewInterface {
 
     private answer(ev: Event) {
         ev.stopPropagation();
-        assertDefined(document.querySelector<HTMLElement>('.progress')).style.width = `${(assertDefined(this.controller).itterator + 1) * 10
-            }%`;
+        assertDefined(document.querySelector<HTMLElement>('.progress')).style.width = `${
+            (assertDefined(this.controller).itterator + 1) * 10
+        }%`;
         const progress = assertDefined(document.querySelector<HTMLElement>('.progress'));
         progress.style.width = `${progress.offsetWidth}*`;
         let target = ev.target as HTMLElement;

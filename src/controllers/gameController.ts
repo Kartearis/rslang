@@ -5,7 +5,6 @@ import UserController from './userController';
 import UserWordController from './userWordController';
 import DailyStatsController, { DailyStats } from './dailyStatsController';
 
-
 abstract class GameController {
     protected words: wordType[];
     protected userWordController: UserWordController;
