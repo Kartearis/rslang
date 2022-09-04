@@ -16,7 +16,7 @@ export default class StorageController {
     }
 
     read(label: string): unknown {
-        return JSON.parse(this.storage.getItem(this.buildLabel(label)) || '');
+        return JSON.parse(this.storage.getItem(this.buildLabel(label)) || '""');
     }
 
     check(label: string): boolean {

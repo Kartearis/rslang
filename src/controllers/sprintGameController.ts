@@ -11,6 +11,7 @@ import AudioController from './audioController';
 
 import pingSound from '../assets/audio/ping.mp3';
 import suspenseSound from '../assets/audio/suspense.mp3';
+import DailyStatsController from './dailyStatsController';
 
 const ChanceOfCorrect = 0.6;
 
@@ -37,6 +38,7 @@ export default class SprintGameController extends GameController {
 
     constructor(rootElement: HTMLElement, words: wordType[]) {
         super(words);
+        this.dailyStatsController = new DailyStatsController('sprint-game');
         this.rootElement = rootElement;
         this.translations = this.words.map((word) => word.wordTranslate);
         this.timer = new Timer(60);
@@ -63,12 +65,14 @@ export default class SprintGameController extends GameController {
         this.view = new SprintMainView(this.rootElement, this.timer, this.comboCounter, this);
         this.index = 0;
         this.points = 0;
+        this.history = [];
+        this.comboCounter.reset();
+        this.timer.stopTimer();
         this.view.show();
         this.showWord();
     }
 
     showResults(): void {
-        // Should actually defined on all views (via base view) and called without typeguard
         this.view?.destroy();
         this.view = new SprintOutroView(this.rootElement, this, this.points, this.history);
         this.view.show();
@@ -167,5 +171,6 @@ export default class SprintGameController extends GameController {
 
     destroy(): void {
         this.view?.destroy();
+        Object.values(this.audioControllers).forEach((audio) => audio.pause());
     }
 }

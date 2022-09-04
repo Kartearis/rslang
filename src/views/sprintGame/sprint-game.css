@@ -37,8 +37,8 @@
 .sprint-game__game {
     grid-column: 2;
     grid-row: 2;
-    min-width: 300px;
-    min-height: 300px;
+    min-width: 350px;
+    min-height: 350px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -69,6 +69,7 @@
 .sprint-game__game-controls {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: stretch;
     gap: 10px;
@@ -119,6 +120,26 @@
 .game-button--right::after {
     content: '→';
     padding-left: 10px;
+}
+
+@media (max-width: 768px) {
+    .sprint-game__game {
+        grid-column: 1/ span 3;
+        min-width: 250px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .sprint-game {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+@media (min-height: 800px) {
+    .sprint-game {
+        grid-template-rows: 30vh 1fr 30vh;
+    }
 }
 
 .icon--volume {
