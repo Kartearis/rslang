@@ -4,6 +4,7 @@ import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 import { assertDefined } from '../helpers/helpers';
+import DailyStatsController, {DailyStats} from "../controllers/dailyStatsController";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -12,11 +13,11 @@ template.innerHTML = `
         <div class="stats__short-container">
             <div class="stat-card" id="gs-sprint">
                 <h4 class="stat-card__header">Sprint</h4>
-                <div class="stat-card__number">
+                <div class="stat-card__number" id="gs-s-new">
                     <h5 class="stat-card__value-title">New</h5>
                     <div class="stat-card__value">0</div>
                 </div>
-                <div class="stat-card__number">
+                <div class="stat-card__number" id="gs-s-combo">
                     <h5 class="stat-card__value-title">Combo</h5>
                     <div class="stat-card__value">0</div>
                 </div>
@@ -27,11 +28,11 @@ template.innerHTML = `
             </div>
             <div class="stat-card" id="gs-audio">
                 <h4 class="stat-card__header">Audio</h4>
-                <div class="stat-card__number">
+                <div class="stat-card__number" id="gs-a-new">
                     <h5 class="stat-card__value-title">New</h5>
                     <div class="stat-card__value">0</div>
                 </div>
-                <div class="stat-card__number">
+                <div class="stat-card__number" id="gs-a-combo">
                     <h5 class="stat-card__value-title">Combo</h5>
                     <div class="stat-card__value">0</div>
                 </div>
@@ -82,12 +83,31 @@ export default class StatView extends ViewInterface {
     private wpdCanvas?: HTMLCanvasElement;
     private lwCanvas?: HTMLCanvasElement;
 
+    processCorrectIncorrect(stats: DailyStats): number[] {
+        if (stats.correctCnt === 0 && stats.incorrectCnt === 0)
+            return [0, 0, 0];
+        return [stats.correctCnt, stats.incorrectCnt];
+    }
+
     show(): void {
+        this.rootElement.innerHTML = "";
+        const sprintDailyStatsController = new DailyStatsController('sprint-game');
+        const audioDailyStatsController = new DailyStatsController('audio-game');
+        const sprintStats = sprintDailyStatsController.readStats();
+        const audioStats = audioDailyStatsController.readStats();
         this.rootElement.append(template.content.cloneNode(true));
         this.gsSprintPie = assertDefined(this.rootElement.querySelector('#gs-sprint .stat-card__pie-canvas'));
-        this.drawPieChart(this.gsSprintPie, [60, 40]);
+        this.drawPieChart(this.gsSprintPie, this.processCorrectIncorrect(sprintStats));
+        (assertDefined(this.rootElement.querySelector('#gs-s-combo .stat-card__value')) as HTMLElement)
+            .innerText = sprintStats.longestCombo.toString();
+        (assertDefined(this.rootElement.querySelector('#gs-s-new .stat-card__value')) as HTMLElement)
+            .innerText = sprintStats.newCnt.toString();
+        (assertDefined(this.rootElement.querySelector('#gs-a-combo .stat-card__value')) as HTMLElement)
+            .innerText = audioStats.longestCombo.toString();
+        (assertDefined(this.rootElement.querySelector('#gs-a-new .stat-card__value')) as HTMLElement)
+            .innerText = audioStats.newCnt.toString();
         this.gsAudioPie = assertDefined(this.rootElement.querySelector('#gs-audio .stat-card__pie-canvas'));
-        this.drawPieChart(this.gsAudioPie, [50, 50]);
+        this.drawPieChart(this.gsAudioPie, this.processCorrectIncorrect(audioStats));
         this.wsPie = assertDefined(this.rootElement.querySelector('#ws .stat-card__pie-canvas'));
         this.drawPieChart(this.wsPie, [10, 90]);
         this.wpdCanvas = assertDefined(this.rootElement.querySelector('#wpd .stat-graph__canvas'));
@@ -123,7 +143,7 @@ export default class StatView extends ViewInterface {
     drawPieChart(element: HTMLCanvasElement, data: number[]): void {
         const ctx = assertDefined(element.getContext('2d'));
         const chartData = {
-            labels: ['Correct', 'Incorrect'],
+            labels: ['Correct', 'Incorrect', 'No data provided'],
             datasets: [
                 {
                     label: 'Correct Answers',
@@ -131,6 +151,7 @@ export default class StatView extends ViewInterface {
                     backgroundColor: [
                         getComputedStyle(this.rootElement).getPropertyValue('--color-accent-2'),
                         getComputedStyle(this.rootElement).getPropertyValue('--color-accent-6'),
+                        getComputedStyle(this.rootElement).getPropertyValue('--color-shaded'),
                     ],
                     hoverOffset: 4,
                 },
@@ -150,7 +171,8 @@ export default class StatView extends ViewInterface {
                     },
                     datalabels: {
                         formatter: function (value, context) {
-                            return assertDefined(context?.chart?.data?.labels)[context.dataIndex];
+                            // Handle cases with 0 values
+                            return value > 0 || context.dataIndex === 2 ? assertDefined(context?.chart?.data?.labels)[context.dataIndex]: '';
                         },
                     },
                 },
