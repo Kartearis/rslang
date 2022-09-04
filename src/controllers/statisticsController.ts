@@ -1,10 +1,11 @@
 import { assertDefined, HOST } from '../helpers/helpers';
-import { filtredWords, responceUserWords } from '../helpers/types';
+import { responceUserWords } from '../helpers/types';
 
 //query example
 // by lastAttempt: {"userWord.optional.lastAttempt":"2022-09-04"}
 // by difficulty and lastAttempt {"$and":[{"userWord.difficulty":"learning", "userWord.optional.lastAttempt":"2022-09-03"}]}
 // by dificulty {"$or":[{"userWord.difficulty":"learning", "userWord.difficulty":"hard"}]}
+// for test Promise.resolve(StatisticsController.getInstance().getStats('{"$and":[{"userWord.difficulty":"learning", "userWord.optional.lastAttempt":"2022-09-03"}]}')).then(res => console.log(res));
 class StatisticsController {
     private static instance: StatisticsController;
     abortController: AbortController | null = null;
@@ -15,13 +16,13 @@ class StatisticsController {
         return StatisticsController.instance;
     }
 
-    private async getStats(queryString: string): Promise<filtredWords> {
+    async getStats(queryString: string): Promise<number> {
         this.abortController = new AbortController();
         try {
             //3600 words in base
             const MAX_WORDS = 3600;
             const { userId, jwt } = localStorage;
-            const url = `${HOST}/users/${userId}/aggregatedWords?${queryString}`;
+            const url = `${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${MAX_WORDS}&&filter=${queryString}`;
             const response = await fetch(url, {
                 signal: assertDefined(this.abortController).signal,
                 method: 'GET',
@@ -32,7 +33,8 @@ class StatisticsController {
             });
             if (response.ok) {
                 const responceUserWords = (await response.json()) as responceUserWords;
-                return responceUserWords[0];
+                const count = responceUserWords[0].totalCount[0].count;
+                return Number(count);
             } else {
                 throw Error('Access token is missing or invalid.');
             }

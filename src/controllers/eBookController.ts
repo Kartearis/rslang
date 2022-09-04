@@ -154,34 +154,6 @@ class EBookController {
             this.abortController = null;
         }
     }
-    async getAllWordsUser(): Promise<wordType[]> {
-        this.abortController = new AbortController();
-        try {
-            const { userId, jwt } = localStorage;
-            //3600 words in base
-            const MAX_WORDS = 3600;
-            const response = await fetch(`${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${MAX_WORDS}`, {
-                signal: assertDefined(this.abortController).signal,
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${jwt}`,
-                },
-            });
-            if (response.status === 200) {
-                const arr = (await response.json()) as responceUserWords;
-                const arrWords: wordType[] = arr[0].paginatedResults;
-                arrWords.forEach((word) => {
-                    if (word._id !== undefined) word.id = word._id;
-                });
-                return arrWords;
-            } else {
-                throw Error('Access token is missing or invalid');
-            }
-        } finally {
-            this.abortController = null;
-        }
-    }
     updateWord(wordId: string, property: wordProperty) {
         let flgSuccess = false;
         for (let i = 0; i < this.groupWords.words.length; i++) {

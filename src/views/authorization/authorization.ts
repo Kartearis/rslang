@@ -33,7 +33,7 @@ abstract class Authorization extends ViewInterface {
         errMesage.classList.add('hidden');
         errMesage.id = 'errMesage';
         form.append(errMesage);
-        form.addEventListener('input', (ev) => {
+        form.addEventListener('input', () => {
             const email = assertDefined(document.querySelector<HTMLInputElement>('input[type=email]'));
             const password = assertDefined(document.querySelector<HTMLInputElement>('input[type=password]'));
             const submit = assertDefined(document.querySelector<HTMLInputElement>('input[type=submit]'));

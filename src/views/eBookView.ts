@@ -102,30 +102,34 @@ class EbookView extends ViewInterface {
     }
     async reDraw() {
         this.stopAudio();
-        await this.eBookController.getPageFromGroup(this.pagination.page, this.group).then((arrWords: wordType[]) => {
-            this.words = arrWords;
-            document.querySelector('.ebook-container')?.remove();
-            const bookContainer = document.createElement('div');
-            bookContainer.classList.add('ebook-container');
+        await this.eBookController
+            .getPageFromGroup(this.pagination.page, this.group)
+            .then((arrWords: wordType[]) => {
+                this.words = arrWords;
+                document.querySelector('.ebook-container')?.remove();
+                const bookContainer = document.createElement('div');
+                bookContainer.classList.add('ebook-container');
 
-
-            this.words.forEach((w) => {
-                const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
-                const wordBlock = this.getWordCard(w, clone);
-                bookContainer.append(wordBlock);
+                this.words.forEach((w) => {
+                    const clone = templateCard.content.cloneNode(true) as HTMLDivElement;
+                    const wordBlock = this.getWordCard(w, clone);
+                    bookContainer.append(wordBlock);
+                });
+                this.rootElement.append(bookContainer);
+                if (this.eBookController.isPageLearned(this.pagination.page)) {
+                    document
+                        .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                        .forEach((btn) => (btn.disabled = true));
+                    assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
+                } else {
+                    document
+                        .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
+                        .forEach((btn) => (btn.disabled = false));
+                }
+            })
+            .catch(() => {
+                //catch stopped fetch error
             });
-            this.rootElement.append(bookContainer);
-            if (this.eBookController.isPageLearned(this.pagination.page)) {
-                document
-                    .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
-                    .forEach((btn) => (btn.disabled = true));
-                assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
-            } else {
-                document
-                    .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
-                    .forEach((btn) => (btn.disabled = false));
-            }
-        }).catch(() => { });
     }
     async getGroups(): Promise<HTMLUListElement> {
         const MAX_GROUP = 6;
@@ -202,8 +206,14 @@ class EbookView extends ViewInterface {
             const rightAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#rightAnswer'));
             const wrongAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#wrongAnswer'));
             if (word.userWord !== undefined) {
-                rightAnswer.innerText = word.userWord.optional.success === null || word.userWord.optional.success === "null" ? '0' : word.userWord.optional.success?.toString();
-                wrongAnswer.innerText = word.userWord.optional.failed === null || word.userWord.optional.success === "null" ? '0' : word.userWord.optional.failed?.toString();
+                rightAnswer.innerText =
+                    word.userWord.optional.success === null || word.userWord.optional.success === 'null'
+                        ? '0'
+                        : word.userWord.optional.success?.toString();
+                wrongAnswer.innerText =
+                    word.userWord.optional.failed === null || word.userWord.optional.success === 'null'
+                        ? '0'
+                        : word.userWord.optional.failed?.toString();
                 if (word.userWord.difficulty === wordStatus.easy) {
                     card.classList.add(`word-card_easy`);
                     easyMark.disabled = true;
@@ -280,8 +290,6 @@ class EbookView extends ViewInterface {
         const target = ev.target as HTMLButtonElement;
         const card = assertDefined(target.closest<HTMLElement>('.word-card'));
         const wordId = assertDefined(card.dataset.wordId);
-        const date = new Date();
-
         const currentWord = assertDefined(this.words.find((word) => word.id === wordId));
         const currentWordProperty = currentWord.userWord;
         const wordUpdate: wordProperty = {
@@ -291,8 +299,7 @@ class EbookView extends ViewInterface {
                 success: currentWordProperty === undefined ? null : currentWordProperty.optional.success,
                 successRow: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
                 firstAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
-                learnedDate:
-                    status === wordStatus.easy ? formatDate(new Date()) : null,
+                learnedDate: status === wordStatus.easy ? formatDate(new Date()) : null,
                 lastAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttempt,
             },
         };

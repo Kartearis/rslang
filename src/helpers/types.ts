@@ -50,15 +50,13 @@ export type audiocallWord = wordGame & {
     right: boolean;
 };
 export type responceUserWords = [
-    filtredWords
+    {
+        paginatedResults: wordType[];
+        //all words whith option
+        totalCount: [
+            {
+                count: string;
+            }
+        ];
+    }
 ];
-
-export type filtredWords = {
-    paginatedResults: wordType[];
-    //all words whith option
-    totalCount: [
-        {
-            count: string;
-        }
-    ];
-}
