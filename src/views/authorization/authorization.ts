@@ -1,3 +1,4 @@
+import LoadingOverlay from '../../components/loadingOverlay';
 import { assertDefined } from '../../helpers/helpers';
 import ViewInterface from '../viewInterface';
 
@@ -13,13 +14,13 @@ abstract class Authorization extends ViewInterface {
         return input;
     }
 
-    protected getSubmitBtn(classes: string[], value: string, action: () => void) {
+    protected getSubmitBtn(classes: string[], value: string, action: () => Promise<void>) {
         const submitBtn = document.createElement('input');
         submitBtn.type = 'submit';
         submitBtn.disabled = true;
         classes.forEach((c) => submitBtn.classList.add(c));
         submitBtn.value = value;
-        submitBtn.addEventListener('click', (ev) => {
+        submitBtn.addEventListener('click', async (ev) => {
             ev.preventDefault();
             action();
         });

@@ -1,3 +1,4 @@
+import LoadingOverlay from '../../components/loadingOverlay';
 import UserController from '../../controllers/userController';
 import { assertDefined } from '../../helpers/helpers';
 import Authorization from './authorization';
@@ -31,13 +32,22 @@ class SigninView extends Authorization {
         form.append(pass);
         pass.minLength = 8;
         pass.required = true;
-        const submit = this.getSubmitBtn(['login-form__submit'], 'Войти', this.signinAction);
+        const submit = this.getSubmitBtn(['login-form__submit'], 'Войти', () => this.signinAction());
         form.append(submit);
     }
-    private signinAction() {
+    private async signinAction(): Promise<void> {
         const email = assertDefined(document.querySelector<HTMLInputElement>('#email')).value;
         const password = assertDefined(document.querySelector<HTMLInputElement>('#password')).value;
-        UserController.getInstance().signIn(email, password);
+        const loadingOverlay = new LoadingOverlay(true).show();
+        this.rootElement.append(loadingOverlay);
+        await UserController.getInstance().signIn(email, password).then(() => {
+            loadingOverlay.hide();
+        },
+        () => {
+            const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
+            errMesage.classList.toggle('hidden');
+            loadingOverlay.hide();
+        });
     }
 }
 
