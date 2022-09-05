@@ -184,7 +184,6 @@
 .word-card__easy-mark {
     font-size: var(--font-1);
     color: var(--color-accent-2);
-    transform: rotate(45deg);
 }
 
 .word-card__stats {
