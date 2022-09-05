@@ -8,7 +8,7 @@ type groupWords = {
 };
 class EBookController {
     private static instance: EBookController;
-    private groupWords: groupWords = { group: 0, words: [] };
+    private groupWords: groupWords = { group: -1, words: [] };
     userController: UserController;
     abortController: AbortController | null = null;
     private constructor() {
