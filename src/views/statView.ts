@@ -125,10 +125,12 @@ export default class StatView extends ViewInterface {
         const sprintStats = sprintDailyStatsController.readStats();
         const audioStats = audioDailyStatsController.readStats();
         const wordStats = this.aggregateWordDailyStats([sprintStats, audioStats]);
+
         this.drawPieChart(assertDefined(this.gsSprintPie), this.processCorrectIncorrect(sprintStats));
         (assertDefined(
             this.rootElement.querySelector('#gs-s-combo .stat-card__value')
         ) as HTMLElement).innerText = sprintStats.longestCombo.toString();
+
         (assertDefined(
             this.rootElement.querySelector('#gs-s-new .stat-card__value')
         ) as HTMLElement).innerText = sprintStats.newCnt.toString();
@@ -143,9 +145,16 @@ export default class StatView extends ViewInterface {
         (assertDefined(
             this.rootElement.querySelector('#ws-new .stat-card__value')
         ) as HTMLElement).innerText = wordStats.newCnt.toString();
+        // Show learned cnt from localStorage, then update from db as data becomes available
         (assertDefined(
             this.rootElement.querySelector('#ws-learnt .stat-card__value')
         ) as HTMLElement).innerText = wordStats.learnedCnt.toString();
+        StatsController.getInstance().getLearnedToday()
+            .then((cnt) => {
+                (assertDefined(
+                    this.rootElement.querySelector('#ws-learnt .stat-card__value')
+                ) as HTMLElement).innerText = cnt.toString();
+            });
         this.wsPie = assertDefined(this.rootElement.querySelector('#ws .stat-card__pie-canvas'));
         this.drawPieChart(this.wsPie, this.processCorrectIncorrect(wordStats));
     }

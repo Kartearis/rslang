@@ -1,4 +1,4 @@
-import {assertDefined, HOST, scanDate, typedEntries} from '../helpers/helpers';
+import {assertDefined, formatDate, HOST, scanDate, typedEntries} from '../helpers/helpers';
 import {responceUserWords, wordType} from '../helpers/types';
 
 type DateStringBasedStats = {
@@ -96,5 +96,11 @@ export default class StatsController {
                 else st[firstAttempt] = 1;
                 return st;
         });
+    }
+
+    async getLearnedToday(): Promise<number> {
+        const learnedToday: WordStats = await this.getStats(`{"$and": [{"userWord.optional": {"$ne": null}},
+            {"userWord.optional.learnedDate": "${formatDate(new Date())}"}]}`);
+        return learnedToday.cnt;
     }
 }
