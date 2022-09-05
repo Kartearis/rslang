@@ -7,6 +7,9 @@ import { assertDefined } from '../helpers/helpers';
 import DailyStatsController, { DailyStats } from '../controllers/dailyStatsController';
 import StatsController, {DateBasedStats} from "../controllers/statsController";
 import LoadingOverlay from "../components/loadingOverlay";
+import UserController from "../controllers/userController";
+import userController from "../controllers/userController";
+import RouterController from "../controllers/routerController";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -99,6 +102,11 @@ export default class StatView extends ViewInterface {
     }
 
     show(): void {
+        // If user is not authorised - redirect to signin
+        // TODO: implement on base class (or some middle class)
+        if (!UserController.getInstance().isSignin())
+            RouterController.getInstance().navigate('/signin');
+
         this.rootElement.innerHTML = '';
 
         this.rootElement.append(template.content.cloneNode(true));
