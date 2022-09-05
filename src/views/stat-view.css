@@ -124,3 +124,10 @@
     max-height: 300px;
     width: 100%;
 }
+
+@media (min-width: 1400px) {
+    .stats {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
