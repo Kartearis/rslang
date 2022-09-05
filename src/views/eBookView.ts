@@ -305,6 +305,7 @@ class EbookView extends ViewInterface {
                 lastAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttempt,
             },
         };
+        assertDefined(this.words.find(word => wordId === word.id)).userWord = wordUpdate;
         const group = this.group;
         await this.saveCardState(wordId, wordUpdate, card.dataset.wordStatus).then(() => {
             switch (status) {
@@ -331,9 +332,10 @@ class EbookView extends ViewInterface {
                 }
             }
         });
-        const counHard = document.querySelectorAll(`.word-card_${wordStatus.hard}`).length;
-        const counLearned = document.querySelectorAll(`.word-card_${wordStatus.easy}`).length;
-        if (counHard + counLearned === WORDS_ON_PAGE) {
+        const countHardAndLearned = this.words.filter(word => word.userWord?.difficulty === wordStatus.easy || word.userWord?.difficulty === wordStatus.hard).length;
+        // const counHard = document.querySelectorAll(`.word-card_hard`).length;
+        // const counLearned = document.querySelectorAll(`.word-card_${wordStatus.easy}`).length;
+        if (countHardAndLearned === WORDS_ON_PAGE) {
             assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
             document
                 .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
