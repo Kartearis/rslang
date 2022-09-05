@@ -20,8 +20,18 @@
 }
 
 .audiocall-game__button {
-    cursor: pointer;
     user-select: none;
+    transition: transform 0.3s;
+}
+
+.audiocall-game__button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.audiocall-game__button-centralizer {
+    display: flex;
+    justify-content: center;
 }
 
 .response {
