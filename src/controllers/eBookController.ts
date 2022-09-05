@@ -1,4 +1,4 @@
-import { HARD_WORD_GROUP_NUM, HOST } from '../helpers/helpers';
+import { assertDefined, HARD_WORD_GROUP_NUM, HOST } from '../helpers/helpers';
 import { responceUserWords, wordProperty, wordStatus, wordType } from '../helpers/types';
 import UserController from './userController';
 const COUNT_PAGES = 30;
@@ -10,10 +10,10 @@ class EBookController {
     private static instance: EBookController;
     private groupWords: groupWords = { group: 0, words: [] };
     userController: UserController;
-    abortController: AbortController;
+    abortController: AbortController | null = null;
     private constructor() {
         this.userController = UserController.getInstance();
-        this.abortController = new AbortController();
+        // this.abortController = new AbortController();
     }
     public static getInstance(): EBookController {
         if (!EBookController.instance) {
@@ -32,7 +32,7 @@ class EBookController {
         }
         return gameWords;
     }
-    async loadGroup(group: number) {
+    private async loadGroup(group: number) {
         this.groupWords.words = [];
         if (this.userController.isSignin()) {
             if (group === HARD_WORD_GROUP_NUM) {
@@ -69,72 +69,89 @@ class EBookController {
             return true;
         });
     }
-    async loadUnauthGroup(group: number): Promise<void> {
-        for (let i = 0; i < COUNT_PAGES; i += 1) {
-            const response = await fetch(`${HOST}/words?group=${group}&page=${i}`, {
-                signal: this.abortController.signal,
-                method: 'GET',
-            });
-            if (response.ok) {
-                const words: wordType[] = await response.json();
-                this.groupWords.words.push(words);
-            } else {
-                throw Error('Error get unauthorized user words');
-            }
-        }
-    }
-    async loadAuthGroup(group: number): Promise<void> {
-        const WORDS_IN_GROUP = 600;
-        const { userId, jwt } = localStorage;
-        const url = `${HOST}/users/${userId}/aggregatedWords?group=${group}&wordsPerPage=${WORDS_IN_GROUP}`;
-        const response = await fetch(url, {
-            signal: this.abortController.signal,
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                Authorization: `Bearer ${jwt}`,
-            },
-        });
-        if (response.ok) {
-            const responceUserWords = (await response.json()) as responceUserWords;
+    private async loadUnauthGroup(group: number): Promise<void> {
+        this.abortController = new AbortController();
+        try {
             for (let i = 0; i < COUNT_PAGES; i += 1) {
-                const pageWords = responceUserWords[0].paginatedResults.filter((word) => word.page === i);
-                if (pageWords !== undefined) {
-                    //word has Id field, but userWord save id word as _id. Rewrite.
-                    pageWords.forEach((word) => {
-                        if (word._id !== undefined) word.id = word._id;
-                    });
-                    this.groupWords.words.push(pageWords);
+                const response = await fetch(`${HOST}/words?group=${group}&page=${i}`, {
+                    signal: assertDefined(this.abortController).signal,
+                    method: 'GET',
+                });
+                if (response.ok) {
+                    const words: wordType[] = await response.json();
+                    this.groupWords.words.push(words);
+                } else {
+                    throw Error('Error get unauthorized user words');
                 }
             }
-        } else {
-            throw Error('Access token is missing or invalid');
+        } finally {
+            this.abortController = null;
         }
     }
-    async getHardWordsUser(): Promise<wordType[]> {
-        const { userId, jwt } = localStorage;
-        //3600 words in base
-        const MAX_WORDS = 3600;
-        const response = await fetch(
-            `${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${MAX_WORDS}&filter={"userWord.difficulty":"hard"}`,
-            {
-                signal: this.abortController.signal,
+    private async loadAuthGroup(group: number): Promise<void> {
+        this.abortController = new AbortController();
+        try {
+            const WORDS_IN_GROUP = 600;
+            const { userId, jwt } = localStorage;
+            const url = `${HOST}/users/${userId}/aggregatedWords?group=${group}&wordsPerPage=${WORDS_IN_GROUP}`;
+            const response = await fetch(url, {
+                signal: assertDefined(this.abortController).signal,
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
                     Authorization: `Bearer ${jwt}`,
                 },
-            }
-        );
-        if (response.status === 200) {
-            const arr = (await response.json()) as responceUserWords;
-            const arrWords: wordType[] = arr[0].paginatedResults;
-            arrWords.forEach((word) => {
-                if (word._id !== undefined) word.id = word._id;
             });
-            return arrWords;
-        } else {
-            throw Error('Access token is missing or invalid');
+            if (response.ok) {
+                const responceUserWords = (await response.json()) as responceUserWords;
+                for (let i = 0; i < COUNT_PAGES; i += 1) {
+                    const pageWords = responceUserWords[0].paginatedResults.filter((word) => word.page === i);
+                    if (pageWords !== undefined) {
+                        //word has Id field, but userWord save id word as _id. Rewrite.
+                        pageWords.forEach((word) => {
+                            if (word._id !== undefined) word.id = word._id;
+                        });
+                        this.groupWords.words.push(pageWords);
+                    }
+                }
+            } else {
+                throw Error('Access token is missing or invalid.');
+            }
+        } catch {
+            throw Error('Request was stopped.');
+        } finally {
+            this.abortController = null;
+        }
+    }
+    private async getHardWordsUser(): Promise<wordType[]> {
+        this.abortController = new AbortController();
+        try {
+            const { userId, jwt } = localStorage;
+            //3600 words in base
+            const MAX_WORDS = 3600;
+            const response = await fetch(
+                `${HOST}/users/${userId}/aggregatedWords?wordsPerPage=${MAX_WORDS}&filter={"userWord.difficulty":"hard"}`,
+                {
+                    signal: assertDefined(this.abortController).signal,
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                }
+            );
+            if (response.status === 200) {
+                const arr = (await response.json()) as responceUserWords;
+                const arrWords: wordType[] = arr[0].paginatedResults;
+                arrWords.forEach((word) => {
+                    if (word._id !== undefined) word.id = word._id;
+                });
+                return arrWords;
+            } else {
+                throw Error('Access token is missing or invalid');
+            }
+        } finally {
+            this.abortController = null;
         }
     }
     updateWord(wordId: string, property: wordProperty) {

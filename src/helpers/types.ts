@@ -36,6 +36,7 @@ export type wordProperty = {
         success: string | null;
         successRow: string | null;
         learnedDate: string | null;
+        firstAttempt: string | null;
         lastAttempt: string | null;
     };
 };

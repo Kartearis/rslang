@@ -43,6 +43,7 @@ abstract class GameController {
                                 success: gameWord.result ? '1' : '0',
                                 successRow: gameWord.result ? '1' : '0',
                                 learnedDate: null,
+                                firstAttempt: curDateString,
                                 lastAttempt: curDateString,
                             },
                         };
@@ -63,6 +64,7 @@ abstract class GameController {
                                     success: (Number(options.success) + 1).toString(),
                                     successRow: successInRowAtemps.toString(),
                                     learnedDate: successInRowAtemps === 3 ? curDateString : options.learnedDate,
+                                    firstAttempt: options.firstAttempt,
                                     lastAttempt: curDateString,
                                 },
                             };
@@ -78,6 +80,7 @@ abstract class GameController {
                                     success: options.success,
                                     successRow: '0',
                                     learnedDate: null,
+                                    firstAttempt: options.firstAttempt,
                                     lastAttempt: curDateString,
                                 },
                             };

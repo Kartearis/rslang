@@ -13,9 +13,9 @@ class SigninView extends Authorization {
         const form = this.getAuthForm();
         form.classList.add('signin-form');
         this.fillLoginForm(form);
-        form.addEventListener('input', () =>
-            assertDefined(form.querySelector<HTMLParagraphElement>('#errMesage')).classList.add('hidden')
-        );
+        form.addEventListener('input', () => {
+            assertDefined(form.querySelector<HTMLParagraphElement>('#errMesage')).classList.add('hidden');
+        });
         this.rootElement.innerText = '';
         const formContainer = document.createElement('div');
         formContainer.classList.add('auth-container');

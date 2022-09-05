@@ -1,3 +1,4 @@
+import { assertDefined } from '../../helpers/helpers';
 import ViewInterface from '../viewInterface';
 
 abstract class Authorization extends ViewInterface {
@@ -15,19 +16,29 @@ abstract class Authorization extends ViewInterface {
     protected getSubmitBtn(classes: string[], value: string, action: () => void) {
         const submitBtn = document.createElement('input');
         submitBtn.type = 'submit';
+        submitBtn.disabled = true;
         classes.forEach((c) => submitBtn.classList.add(c));
         submitBtn.value = value;
-        submitBtn.addEventListener('click', () => action());
+        submitBtn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            action();
+        });
         return submitBtn;
     }
-    protected getAuthForm(): HTMLDivElement {
-        const form = document.createElement('div');
+    protected getAuthForm(): HTMLFormElement {
+        const form = document.createElement('form');
         const errMesage = document.createElement('p');
         errMesage.innerText = this.errorMessage;
         errMesage.classList.add('errMesage');
         errMesage.classList.add('hidden');
         errMesage.id = 'errMesage';
         form.append(errMesage);
+        form.addEventListener('input', () => {
+            const email = assertDefined(document.querySelector<HTMLInputElement>('input[type=email]'));
+            const password = assertDefined(document.querySelector<HTMLInputElement>('input[type=password]'));
+            const submit = assertDefined(document.querySelector<HTMLInputElement>('input[type=submit]'));
+            submit.disabled = !(email.checkValidity() && password.checkValidity());
+        });
         return form;
     }
 }

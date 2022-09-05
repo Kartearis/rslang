@@ -16,8 +16,9 @@
 .hidden {
     display: none;
 }
+
 .signin-form,
-.registration-form{
+.registration-form {
     background-color: var(--color-block);
     border-radius: 15px;
     gap: 20px;
@@ -26,6 +27,7 @@
     flex-direction: column;
     box-shadow: -5px 14px 8px 1px rgba(34, 60, 80, 0.11);
 }
+
 .signin-form {
     padding: 20px 40px;
 }
@@ -41,7 +43,7 @@
 .login-form__login {
     font-size: 20px;
     border-radius: 15px;
-    border:2px solid var(--color-header);
+    border: 2px solid var(--color-header);
     outline-offset: 3px;
     padding: 5px 0 5px 10px;
     outline: 0;
@@ -63,4 +65,12 @@
 .login-form__submit:hover {
     cursor: pointer;
     scale: 1.1;
+}
+
+.reg-form__submit:disabled,
+.login-form__submit:disabled {
+    background-color: #b5b5b5;
+    color: var(--color-shaded);
+    border: none;
+    scale: 1;
 }
