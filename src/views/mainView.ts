@@ -38,7 +38,7 @@ const mainBody = `<div class="main-wrapper"><h1 class="main-title">RSLANG APP</h
                                 <li class="dev-card__work">Игра "Спринт"</li>
                                 <li class="dev-card__work">Статистика</li>
                                 <li class="dev-card__work">Архитектура</li>
-                                <li class="dev-card__work">Дизайн учебника и авторизации</li>
+                                <li class="dev-card__work">Дизайн приложения</li>
                             </ul>
                         </div>
                         <div class="dev-card">
