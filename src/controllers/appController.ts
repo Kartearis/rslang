@@ -7,8 +7,23 @@ export default class AppController {
         const router: RouterController = RouterController.getInstance();
         const userController: UserController = UserController.getInstance();
         const viewContainer: HTMLElement = assertDefined(document.querySelector('.content'));
+        router.setRootElement(viewContainer);
+        // If user is signed in, refresh token, then reopen current view. Else just reopen view
         if (userController.isSignin()) {
-            userController.getNewToken().then(() => userController.startUpdateToken());
+            userController
+                .getNewToken()
+                .then(() => userController.startUpdateToken())
+                .then(() => {
+                    router.reOpenCurrent();
+                    //hidde signin and registration button after reload page
+                    if (userController.isSignin()) {
+                        assertDefined(document.querySelector('#signin')).classList.add('hidden');
+                        assertDefined(document.querySelector('#registration')).classList.add('hidden');
+                    } else {
+                        assertDefined(document.querySelector('#logout')).classList.add('hidden');
+                    }
+                });
+        } else router.reOpenCurrent();
 
         }
         if (!userController.isSignin()) HeaderAction.checkAuth();

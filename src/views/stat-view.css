@@ -101,6 +101,8 @@
 }
 
 .stat-graph {
+    position: relative;
+    overflow: hidden;
     border-radius: 10px;
     padding: 10px;
     -webkit-box-shadow: 0px 10px 8px -6px var(--color-shaded);
@@ -123,4 +125,11 @@
 .stat-graph__canvas {
     max-height: 300px;
     width: 100%;
+}
+
+@media (min-width: 1400px) {
+    .stats {
+        width: 1400px;
+        margin: 0 auto;
+    }
 }
