@@ -225,8 +225,7 @@ class EbookView extends ViewInterface {
                     markHard.disabled = true;
                 }
             } else {
-                rightAnswer.innerHTML = '0';
-                wrongAnswer.innerHTML = '0';
+                stats.remove();
             }
             easyMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
             if (this.group === HARD_WORD_GROUP_NUM) {
