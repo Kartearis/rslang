@@ -6,6 +6,7 @@ Chart.register(ChartDataLabels);
 import { assertDefined } from '../helpers/helpers';
 import DailyStatsController, { DailyStats } from '../controllers/dailyStatsController';
 import StatsController, {DateBasedStats} from "../controllers/statsController";
+import LoadingOverlay from "../components/loadingOverlay";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -82,6 +83,8 @@ export default class StatView extends ViewInterface {
     private wsLearnt?: HTMLElement;
     private wsPie?: HTMLCanvasElement;
     private wpdCanvas?: HTMLCanvasElement;
+    private wpdContainer?: HTMLElement;
+    private lwContainer?: HTMLElement;
     private lwCanvas?: HTMLCanvasElement;
 
     processCorrectIncorrect(stats: DailyStats): number[] {
@@ -101,8 +104,9 @@ export default class StatView extends ViewInterface {
         this.rootElement.append(template.content.cloneNode(true));
         this.gsSprintPie = assertDefined(this.rootElement.querySelector('#gs-sprint .stat-card__pie-canvas'));
         this.wpdCanvas = assertDefined(this.rootElement.querySelector('#wpd .stat-graph__canvas'));
-
         this.lwCanvas = assertDefined(this.rootElement.querySelector('#lw .stat-graph__canvas'));
+        this.wpdContainer = assertDefined(this.rootElement.querySelector('#wpd'));
+        this.lwContainer = assertDefined(this.rootElement.querySelector('#lw'));
         this.fillDailyStats();
         this.fillGlobalStats();
     }
@@ -140,17 +144,22 @@ export default class StatView extends ViewInterface {
 
     async fillGlobalStats(): Promise<void> {
         const statsController = new StatsController();
+        const wpdLoading = new LoadingOverlay();
+        const lpdLoading = new LoadingOverlay();
+        assertDefined(this.wpdContainer).append(wpdLoading.show());
+        assertDefined(this.lwContainer).append(lpdLoading.show());
         const newWordStats: DateBasedStats = await statsController.getNewWordsPerDate();
         this.drawLongChart(assertDefined(this.wpdCanvas), {
             label: 'Words per day',
             data: newWordStats
         });
         const learnedWordStats: DateBasedStats = await statsController.getLearnedWordsPerDate();
-        console.log(learnedWordStats);
         this.drawLongChart(assertDefined(this.lwCanvas), {
             label: 'Learned words',
             data: learnedWordStats,
         });
+        wpdLoading.hide();
+        lpdLoading.hide();
     }
 
     drawPieChart(element: HTMLCanvasElement, data: number[]): void {
