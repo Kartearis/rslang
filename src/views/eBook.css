@@ -178,13 +178,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
 }
-.word-card__easy-mark{    
+
+.word-card__easy-mark {
     font-size: var(--font-1);
     color: var(--color-accent-2);
     transform: rotate(45deg);
 }
+
 .word-card__stats {
     margin-bottom: -45px;
     background-color: var(--color-overlay);
@@ -193,6 +195,7 @@
     padding: 5px 10px;
     border-radius: 10px;
     position: absolute;
+    z-index: 100;
 }
 
 .word-card__stats_success {

@@ -13,12 +13,10 @@ import LoadingOverlay from '../components/loadingOverlay';
 const templateCard = document.createElement('template');
 templateCard.innerHTML = `
 <div class="word-card" data-word-id="">
-    
-    <div id="cartStat" class="word-card__stats">
-        <span id="rightAnswer" class="word-card__stats_success"></span> / <span id="wrongAnswer" class="word-card__stats_wrong"></span>
-    </div>
-    
     <div class="word-card__img-container">
+    <div id="cartStat" class="word-card__stats">
+    <span id="rightAnswer" class="word-card__stats_success"></span> / <span id="wrongAnswer" class="word-card__stats_wrong"></span>
+</div>
         <div class="word-card__easy hidden"><span class="word-card__easy-mark">Изучено</span></div>
         <img class="word-card__img" id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
     </div>
