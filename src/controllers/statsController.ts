@@ -44,7 +44,12 @@ export default class StatsController {
             });
             if (response.ok) {
                 const jsonResult = await response.json();
-                return {
+                if (jsonResult[0].totalCount.length === 0)
+                    return {
+                        words: [],
+                        cnt: 0
+                    };
+                else return {
                     words: jsonResult[0].paginatedResults,
                     cnt: jsonResult[0].totalCount[0].count,
                 };
