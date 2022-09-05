@@ -5,6 +5,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 import { assertDefined } from '../helpers/helpers';
 import DailyStatsController, { DailyStats } from '../controllers/dailyStatsController';
+import StatsController, {DateBasedStats} from "../controllers/statsController";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -100,34 +101,10 @@ export default class StatView extends ViewInterface {
         this.rootElement.append(template.content.cloneNode(true));
         this.gsSprintPie = assertDefined(this.rootElement.querySelector('#gs-sprint .stat-card__pie-canvas'));
         this.wpdCanvas = assertDefined(this.rootElement.querySelector('#wpd .stat-graph__canvas'));
-        this.fillDailyStats();
-        this.drawLongChart(this.wpdCanvas, {
-            label: 'Words per day',
-            data: [
-                { date: new Date('2022-07-01'), words: 2 },
-                { date: new Date('2022-07-02'), words: 5 },
-                { date: new Date('2022-07-03'), words: 0 },
-                { date: new Date('2022-07-04'), words: 0 },
-                { date: new Date('2022-07-05'), words: 10 },
-                { date: new Date('2022-07-06'), words: 13 },
-                { date: new Date('2022-07-07'), words: 0 },
-                { date: new Date('2022-07-08'), words: 15 },
-            ],
-        });
+
         this.lwCanvas = assertDefined(this.rootElement.querySelector('#lw .stat-graph__canvas'));
-        this.drawLongChart(this.lwCanvas, {
-            label: 'Learned words',
-            data: [
-                { date: new Date('2022-07-01'), words: 2 },
-                { date: new Date('2022-07-02'), words: 5 },
-                { date: new Date('2022-07-03'), words: 6 },
-                { date: new Date('2022-07-04'), words: 6 },
-                { date: new Date('2022-07-05'), words: 9 },
-                { date: new Date('2022-07-06'), words: 13 },
-                { date: new Date('2022-07-07'), words: 13 },
-                { date: new Date('2022-07-08'), words: 15 },
-            ],
-        });
+        this.fillDailyStats();
+        this.fillGlobalStats();
     }
 
     fillDailyStats(): void {
@@ -159,6 +136,28 @@ export default class StatView extends ViewInterface {
         ) as HTMLElement).innerText = wordStats.learnedCnt.toString();
         this.wsPie = assertDefined(this.rootElement.querySelector('#ws .stat-card__pie-canvas'));
         this.drawPieChart(this.wsPie, this.processCorrectIncorrect(wordStats));
+    }
+
+    async fillGlobalStats(): Promise<void> {
+        const statsController = new StatsController();
+        const newWordStats: DateBasedStats = await statsController.getNewWordsPerDate();
+        this.drawLongChart(assertDefined(this.wpdCanvas), {
+            label: 'Words per day',
+            data: newWordStats
+        });
+        this.drawLongChart(assertDefined(this.lwCanvas), {
+            label: 'Learned words',
+            data: [
+                { date: new Date('2022-07-01'), words: 2 },
+                { date: new Date('2022-07-02'), words: 5 },
+                { date: new Date('2022-07-03'), words: 6 },
+                { date: new Date('2022-07-04'), words: 6 },
+                { date: new Date('2022-07-05'), words: 9 },
+                { date: new Date('2022-07-06'), words: 13 },
+                { date: new Date('2022-07-07'), words: 13 },
+                { date: new Date('2022-07-08'), words: 15 },
+            ],
+        });
     }
 
     drawPieChart(element: HTMLCanvasElement, data: number[]): void {

@@ -1,5 +1,16 @@
-import { assertDefined, HOST } from '../helpers/helpers';
-import { responceUserWords } from '../helpers/types';
+import {assertDefined, HOST, scanDate, typedEntries} from '../helpers/helpers';
+import {responceUserWords, wordType} from '../helpers/types';
+
+type DateStringBasedStats = {
+    [date: string]: number
+};
+
+export type DateBasedStats = { date: Date, words: number }[];
+
+type WordStats = {
+    words: wordType[],
+    cnt: number
+};
 
 //query example
 // by lastAttempt: {"userWord.optional.lastAttempt":"2022-09-04"}
@@ -16,7 +27,7 @@ export default class StatsController {
         return StatsController.instance;
     }
 
-    async getStats(queryString: string): Promise<number> {
+    async getStats(queryString: string): Promise<WordStats> {
         this.abortController = new AbortController();
         try {
             //3600 words in base
@@ -32,9 +43,11 @@ export default class StatsController {
                 },
             });
             if (response.ok) {
-                const responceUserWords = (await response.json()) as responceUserWords;
-                const count = responceUserWords[0].totalCount[0].count;
-                return Number(count);
+                const jsonResult = await response.json();
+                return {
+                    words: jsonResult[0].paginatedResults,
+                    cnt: jsonResult[0].totalCount[0].count
+                };
             } else {
                 throw Error('Access token is missing or invalid.');
             }
@@ -43,5 +56,26 @@ export default class StatsController {
         } finally {
             this.abortController = null;
         }
+    }
+
+    async getLearnedWordsPerDate() {
+
+    }
+
+    async getNewWordsPerDate(): Promise<DateBasedStats> {
+        const wordStats: WordStats = await this.getStats(`{"$and": [{"userWord.optional": {"$ne": null}},
+            {"userWord.optional.firstAttempt": {"$ne": "null"}}]}`);
+        const stats: DateStringBasedStats = {};
+        console.log(wordStats);
+        wordStats.words.reduce((st: DateStringBasedStats, word: wordType) => {
+            const firstAttempt = assertDefined(word.userWord?.optional?.firstAttempt);
+            if (st[firstAttempt] !== undefined)
+                st[firstAttempt] += 1;
+            else st[firstAttempt] = 1;
+            return st;
+        }, stats);
+        return typedEntries(stats)
+            .map(([date, cnt]) => ({date: scanDate(date as string), words: cnt}))
+            .sort((a,b) => a.date.getTime() - b.date.getTime());
     }
 }

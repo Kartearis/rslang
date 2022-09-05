@@ -7,11 +7,18 @@ export default class AppController {
         const router: RouterController = RouterController.getInstance();
         const userController: UserController = UserController.getInstance();
         const viewContainer: HTMLElement = assertDefined(document.querySelector('.content'));
-        if (userController.isSignin()) {
-            userController.getNewToken().then(() => userController.startUpdateToken());
-        }
         router.setRootElement(viewContainer);
-        router.reOpenCurrent();
+        // If user is signed in, refresh token, then reopen current view. Else just reopen view
+        if (userController.isSignin()) {
+            console.log('signed');
+            console.log('another');
+            userController.getNewToken()
+                .then(() => userController.startUpdateToken())
+                .then(() => router.reOpenCurrent());
+        }
+        else router.reOpenCurrent();
+
+
         assertDefined(document.querySelector('#ebook')).addEventListener('click', () => router.navigate('/ebook'));
         assertDefined(document.querySelector('#audiocall')).addEventListener('click', () =>
             router.navigate('/level', '/audiocall')
