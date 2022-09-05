@@ -13,12 +13,14 @@ import LoadingOverlay from '../components/loadingOverlay';
 const templateCard = document.createElement('template');
 templateCard.innerHTML = `
 <div class="word-card" data-word-id="">
-    <div id="cartStat" class="word-card__stats">
-        <span id="rightAnswer" class="word-card__stats_success"></span> / <span id="wrongAnswer" class="word-card__stats_wrong"></span>
-    </div>
     <div class="word-card__img-container">
+    <div id="cartStat" class="word-card__stats">
+    <span id="rightAnswer" class="word-card__stats_success"></span> / <span id="wrongAnswer" class="word-card__stats_wrong"></span>
+</div>
+        <div class="word-card__easy hidden"><span class="word-card__easy-mark">Изучено</span></div>
         <img class="word-card__img" id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
     </div>
+    
     <div class="word-card__info word-info">
         <p id="word"></p>
         <p class="word-info__meaning" id="meaning"></p>
@@ -52,8 +54,11 @@ class EbookView extends ViewInterface {
     }
 
     async show(): Promise<void> {
-        this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
         this.rootElement.innerText = '';
+        const loadingOverlay = new LoadingOverlay(true).show();
+        this.rootElement.append(loadingOverlay);
+        this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
+        loadingOverlay.hide();
         const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
         if (this.group === HARD_WORD_GROUP_NUM)
@@ -215,7 +220,7 @@ class EbookView extends ViewInterface {
                         ? '0'
                         : word.userWord.optional.failed?.toString();
                 if (word.userWord.difficulty === wordStatus.easy) {
-                    card.classList.add(`word-card_easy`);
+                    assertDefined(card.querySelector('.word-card__easy')).classList.remove('hidden');
                     easyMark.disabled = true;
                     markHard.disabled = true;
                 } else if (word.userWord.difficulty === wordStatus.hard) {
@@ -223,8 +228,7 @@ class EbookView extends ViewInterface {
                     markHard.disabled = true;
                 }
             } else {
-                rightAnswer.innerHTML = '0';
-                wrongAnswer.innerHTML = '0';
+                stats.remove();
             }
             easyMark.addEventListener('click', (ev) => this.markCard(ev, wordStatus.easy));
             if (this.group === HARD_WORD_GROUP_NUM) {
@@ -303,6 +307,7 @@ class EbookView extends ViewInterface {
                 lastAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttempt,
             },
         };
+        assertDefined(this.words.find((word) => wordId === word.id)).userWord = wordUpdate;
         const group = this.group;
         await this.saveCardState(wordId, wordUpdate, card.dataset.wordStatus).then(() => {
             switch (status) {
@@ -316,7 +321,7 @@ class EbookView extends ViewInterface {
                         card.remove();
                     } else {
                         card.classList.remove(`word-card_hard`);
-                        card.classList.add(`word-card_easy`);
+                        assertDefined(card.querySelector('.word-card__easy')).classList.remove('hidden');
                         target.disabled = true;
                         assertDefined(card.querySelector<HTMLButtonElement>('#hardMark')).disabled = true;
                         card.dataset.wordStatus = status;
@@ -329,9 +334,10 @@ class EbookView extends ViewInterface {
                 }
             }
         });
-        const counHard = document.querySelectorAll(`.word-card_${wordStatus.hard}`).length;
-        const counLearned = document.querySelectorAll(`.word-card_${wordStatus.easy}`).length;
-        if (counHard + counLearned === WORDS_ON_PAGE) {
+        const countHardAndLearned = this.words.filter(
+            (word) => word.userWord?.difficulty === wordStatus.easy || word.userWord?.difficulty === wordStatus.hard
+        ).length;
+        if (countHardAndLearned === WORDS_ON_PAGE) {
             assertDefined(document.querySelector('.current-page')).classList.add('pages__page-num_learned');
             document
                 .querySelectorAll<HTMLButtonElement>('.group-navigation__game')

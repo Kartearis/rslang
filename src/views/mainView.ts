@@ -27,7 +27,7 @@ const mainBody = `<div class="main-wrapper"><h1 class="main-title">RSLANG APP</h
                         <div class="advantage-block__item"><img class="advantage-block__img" height="200" width="100%" src="${img6}" alt="Разные люди, иллюстрация инклюзивности"><p class="advantage-block__text">Наша миссия - сделать изучение языков доступным для всех.</<p></div>
                     </div>
                     <H2 class="our-team-title">НАША КОМАНДА</H2>
-                    <div class="team-block">
+                    <div id="teamBlock" class="team-block">
                         <div class="dev-card">
                             <img class="dev-card__img" alt="Аватар гитхаба пользователя Kartearis" src="${imgDev1}" width="50">
                             <a href="https://github.com/Kartearis">Kartearis</a>

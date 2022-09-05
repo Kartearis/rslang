@@ -3,9 +3,6 @@ import ViewInterface from './viewInterface';
 import './audiocallView.css';
 import { assertDefined, COUNT_AUDIOCALL_WORDS, HOST } from '../helpers/helpers';
 import AudiocallController from '../controllers/audiocallController';
-// <button id="ascPlayBtn" class="audiocall-game__button audiocall-game__button_asc">
-// <img class="word-info__audio" id="playImg" src="${audioImg}" />
-// </button>
 
 const audiocallBlock = `
 <div class="progress"></div>
@@ -120,7 +117,6 @@ class AudiocallView extends ViewInterface {
     private togleAnswer() {
         assertDefined(document.querySelector('#donkKnowBtn')).classList.toggle('hidden');
         assertDefined(document.querySelector('#nextBtn')).classList.toggle('hidden');
-        // assertDefined(document.querySelector('#words')).classList.toggle('hidden');
         assertDefined(document.querySelector('#responseImg')).classList.toggle('hidden');
         assertDefined(document.querySelector('#responseWord')).classList.toggle('hidden');
         assertDefined(document.querySelector('#responsePlayBtn')).classList.toggle('response__audio');
