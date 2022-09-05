@@ -96,37 +96,11 @@ export default class StatView extends ViewInterface {
 
     show(): void {
         this.rootElement.innerHTML = '';
-        const sprintDailyStatsController = new DailyStatsController('sprint-game');
-        const audioDailyStatsController = new DailyStatsController('audio-game');
-        const sprintStats = sprintDailyStatsController.readStats();
-        const audioStats = audioDailyStatsController.readStats();
-        const wordStats = this.aggregateWordDailyStats([sprintStats, audioStats]);
+
         this.rootElement.append(template.content.cloneNode(true));
         this.gsSprintPie = assertDefined(this.rootElement.querySelector('#gs-sprint .stat-card__pie-canvas'));
-        this.drawPieChart(this.gsSprintPie, this.processCorrectIncorrect(sprintStats));
-        (assertDefined(
-            this.rootElement.querySelector('#gs-s-combo .stat-card__value')
-        ) as HTMLElement).innerText = sprintStats.longestCombo.toString();
-        (assertDefined(
-            this.rootElement.querySelector('#gs-s-new .stat-card__value')
-        ) as HTMLElement).innerText = sprintStats.newCnt.toString();
-        (assertDefined(
-            this.rootElement.querySelector('#gs-a-combo .stat-card__value')
-        ) as HTMLElement).innerText = audioStats.longestCombo.toString();
-        (assertDefined(
-            this.rootElement.querySelector('#gs-a-new .stat-card__value')
-        ) as HTMLElement).innerText = audioStats.newCnt.toString();
-        this.gsAudioPie = assertDefined(this.rootElement.querySelector('#gs-audio .stat-card__pie-canvas'));
-        this.drawPieChart(this.gsAudioPie, this.processCorrectIncorrect(audioStats));
-        (assertDefined(
-            this.rootElement.querySelector('#ws-new .stat-card__value')
-        ) as HTMLElement).innerText = wordStats.newCnt.toString();
-        (assertDefined(
-            this.rootElement.querySelector('#ws-learnt .stat-card__value')
-        ) as HTMLElement).innerText = wordStats.learnedCnt.toString();
-        this.wsPie = assertDefined(this.rootElement.querySelector('#ws .stat-card__pie-canvas'));
-        this.drawPieChart(this.wsPie, this.processCorrectIncorrect(wordStats));
         this.wpdCanvas = assertDefined(this.rootElement.querySelector('#wpd .stat-graph__canvas'));
+        this.fillDailyStats();
         this.drawLongChart(this.wpdCanvas, {
             label: 'Words per day',
             data: [
@@ -154,6 +128,37 @@ export default class StatView extends ViewInterface {
                 { date: new Date('2022-07-08'), words: 15 },
             ],
         });
+    }
+
+    fillDailyStats(): void {
+        const sprintDailyStatsController = new DailyStatsController('sprint-game');
+        const audioDailyStatsController = new DailyStatsController('audio-game');
+        const sprintStats = sprintDailyStatsController.readStats();
+        const audioStats = audioDailyStatsController.readStats();
+        const wordStats = this.aggregateWordDailyStats([sprintStats, audioStats]);
+        this.drawPieChart(assertDefined(this.gsSprintPie), this.processCorrectIncorrect(sprintStats));
+        (assertDefined(
+            this.rootElement.querySelector('#gs-s-combo .stat-card__value')
+        ) as HTMLElement).innerText = sprintStats.longestCombo.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#gs-s-new .stat-card__value')
+        ) as HTMLElement).innerText = sprintStats.newCnt.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#gs-a-combo .stat-card__value')
+        ) as HTMLElement).innerText = audioStats.longestCombo.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#gs-a-new .stat-card__value')
+        ) as HTMLElement).innerText = audioStats.newCnt.toString();
+        this.gsAudioPie = assertDefined(this.rootElement.querySelector('#gs-audio .stat-card__pie-canvas'));
+        this.drawPieChart(this.gsAudioPie, this.processCorrectIncorrect(audioStats));
+        (assertDefined(
+            this.rootElement.querySelector('#ws-new .stat-card__value')
+        ) as HTMLElement).innerText = wordStats.newCnt.toString();
+        (assertDefined(
+            this.rootElement.querySelector('#ws-learnt .stat-card__value')
+        ) as HTMLElement).innerText = wordStats.learnedCnt.toString();
+        this.wsPie = assertDefined(this.rootElement.querySelector('#ws .stat-card__pie-canvas'));
+        this.drawPieChart(this.wsPie, this.processCorrectIncorrect(wordStats));
     }
 
     drawPieChart(element: HTMLCanvasElement, data: number[]): void {
