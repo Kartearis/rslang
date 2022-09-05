@@ -149,6 +149,7 @@ export default class StatView extends ViewInterface {
         (assertDefined(
             this.rootElement.querySelector('#ws-learnt .stat-card__value')
         ) as HTMLElement).innerText = wordStats.learnedCnt.toString();
+        // TODO: Actually should be handled by DailyStatsController, but this works as ad-hoc solution
         StatsController.getInstance().getLearnedToday()
             .then((cnt) => {
                 (assertDefined(
