@@ -86,6 +86,10 @@ class UserController {
     isSignin() {
         return localStorage.getItem(TOKEN_NAME) !== null;
     }
+
+    get userId(): string {
+        return assertDefined(localStorage.getItem(USER_NAME));
+    }
 }
 
 export default UserController;

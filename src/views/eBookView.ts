@@ -142,7 +142,7 @@ class EbookView extends ViewInterface {
         const ul = document.createElement('ul');
         ul.classList.add('group-list');
         for (let i = 0; i < MAX_GROUP; i++) {
-            const li = this.getGroupLi(`<span class='group-name'>ГРУППА</span> ${i + 1}`, i);
+            const li = this.getGroupLi(`<span class='group-name'>ГРУППА</span>&nbsp;${i + 1}`, i);
             ul.append(li);
         }
         if (this.userController.isSignin()) {

@@ -51,11 +51,11 @@ main {
 }
 
 .our-team-title {
-  font-size: var(--font-3);
+  font-size: var(--font-2);
   text-align: center;
   color: var(--color-header);
   font-weight: var(--font-weight-emphasis);
-  padding: 20px;
+  padding: 40px 0;
 }
 
 .dev-card__img {
@@ -63,15 +63,40 @@ main {
 }
 
 .team-block {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  /*justify-content: space-between;*/
+  gap: 20px;
 }
 
 .dev-card {
+  border-radius: 15px;
+  border: 1px solid var(--color-shaded);
+  padding: 15px;
   min-width: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* padding-bottom: 50px; */
+  -webkit-box-shadow: 0px 9px 12px -1px rgba(34, 60, 80, 0.4);
+  -moz-box-shadow: 0px 9px 12px -1px rgba(34, 60, 80, 0.4);
+  box-shadow: 0px 9px 12px -1px rgba(34, 60, 80, 0.4);
+}
+
+.dev-card__list {
+  padding-top: 10px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+}
+
+.dev-card__work {
+  border-radius: 15px;
+  padding: 5px 15px;
+  background-color: var(--color-accent-0);
+  color: var(--color-background);
 }
 

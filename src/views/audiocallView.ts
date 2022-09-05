@@ -23,7 +23,7 @@ const audiocallBlock = `
            </div>
     </div>
     <div id="words" class="audiocall-game__options response-option"></div>
-    <div class="audiocall-game__button">
+    <div class="audiocall-game__button-centralizer">
         <button id="donkKnowBtn" class="audiocall-game__button audiocall-game__button_dont-know">Не знаю</button>
         <button id="nextBtn" class="audiocall-game__button audiocall-game__button_next hidden">→</button>
     </div>

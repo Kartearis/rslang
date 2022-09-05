@@ -1,5 +1,6 @@
 import StorageController from './storageController';
 import { formatDate, typedEntries } from '../helpers/helpers';
+import UserController from './userController';
 
 export type DailyStats = {
     correctCnt: number;
@@ -13,6 +14,8 @@ export default class DailyStatsController {
     storage: StorageController;
 
     constructor(prefix: string) {
+        const user: UserController = UserController.getInstance();
+        if (user.isSignin()) prefix = `${prefix}@${user.userId}`;
         this.storage = new StorageController(prefix);
     }
 
