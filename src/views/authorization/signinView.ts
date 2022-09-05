@@ -1,3 +1,4 @@
+import HeaderAction from '../../components/headerAction';
 import LoadingOverlay from '../../components/loadingOverlay';
 import UserController from '../../controllers/userController';
 import { assertDefined } from '../../helpers/helpers';
@@ -42,12 +43,13 @@ class SigninView extends Authorization {
         this.rootElement.append(loadingOverlay);
         await UserController.getInstance().signIn(email, password).then(() => {
             loadingOverlay.hide();
+            HeaderAction.checkAuth();
         },
-        () => {
-            const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
-            errMesage.classList.toggle('hidden');
-            loadingOverlay.hide();
-        });
+            () => {
+                const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
+                errMesage.classList.toggle('hidden');
+                loadingOverlay.hide();
+            });
     }
 }
 
