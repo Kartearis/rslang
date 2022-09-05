@@ -14,61 +14,61 @@ import RouterController from "../controllers/routerController";
 const template = document.createElement('template');
 template.innerHTML = `
     <section class="stats">
-        <h2 class="stats__header">Statistics</h2>
+        <h2 class="stats__header">Статистика</h2>
         <div class="stats__short-container">
             <div class="stat-card" id="gs-sprint">
-                <h4 class="stat-card__header">Sprint</h4>
+                <h4 class="stat-card__header">Спринт</h4>
                 <div class="stat-card__number" id="gs-s-new">
-                    <h5 class="stat-card__value-title">New</h5>
+                    <h5 class="stat-card__value-title">Новые слова</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__number" id="gs-s-combo">
-                    <h5 class="stat-card__value-title">Combo</h5>
+                    <h5 class="stat-card__value-title">Макс. серия</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__pie">
-                    <h5 class="stat-card__pie-title">Correct answers</h5>
+                    <h5 class="stat-card__pie-title">Правильные ответы</h5>
                     <canvas class="stat-card__pie-canvas"></canvas>
                 </div>
             </div>
             <div class="stat-card" id="gs-audio">
-                <h4 class="stat-card__header">Audio</h4>
+                <h4 class="stat-card__header">Аудиовызов</h4>
                 <div class="stat-card__number" id="gs-a-new">
-                    <h5 class="stat-card__value-title">New</h5>
+                    <h5 class="stat-card__value-title">Новые слова</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__number" id="gs-a-combo">
-                    <h5 class="stat-card__value-title">Combo</h5>
+                    <h5 class="stat-card__value-title">Макс. серия</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__pie">
-                    <h5 class="stat-card__pie-title">Correct answers</h5>
+                    <h5 class="stat-card__pie-title">Правильные ответы</h5>
                     <canvas class="stat-card__pie-canvas"></canvas>
                 </div>
             </div>
             <div class="stat-card" id="ws">
-                <h4 class="stat-card__header">Word stats</h4>
+                <h4 class="stat-card__header">В целом по словам</h4>
                 <div class="stat-card__number" id="ws-new">
-                    <h5 class="stat-card__value-title">New</h5>
+                    <h5 class="stat-card__value-title">Новые слова</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__number" id="ws-learnt">
-                    <h5 class="stat-card__value-title">Learnt</h5>
+                    <h5 class="stat-card__value-title">Изученные слова</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__pie">
-                    <h5 class="stat-card__pie-title">Correct answers</h5>
+                    <h5 class="stat-card__pie-title">Правильные ответы</h5>
                     <canvas class="stat-card__pie-canvas"></canvas>
                 </div>
             </div>
         </div>
         <div class="stats__long-container">
             <div class="stat-graph" id="wpd">
-                <h4 class="stat-graph__header">New words per day</h4>
+                <h4 class="stat-graph__header">Количество новых слов по датам</h4>
                 <canvas class="stat-graph__canvas"></canvas>
             </div>
             <div class="stat-graph" id="lw">
-                <h4 class="stat-graph__header">Learned words (cumulative)</h4>
+                <h4 class="stat-graph__header">Количество изученных слов к дате</h4>
                 <canvas class="stat-graph__canvas"></canvas>
             </div>
         </div>
