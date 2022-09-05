@@ -61,8 +61,6 @@ class EbookView extends ViewInterface {
         loadingOverlay.hide();
         const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
-        if (this.group === HARD_WORD_GROUP_NUM)
-            pagination.querySelectorAll<HTMLButtonElement>('button').forEach((btn) => (btn.disabled = true));
         const groupNavigation = document.createElement('div');
         groupNavigation.classList.add('group-navigation');
         const audiocallButton = document.createElement('button');
@@ -89,7 +87,8 @@ class EbookView extends ViewInterface {
         groupNavigation.append(sprintButton);
         groupNavigation.append(pagination);
         groupNavigation.append(audiocallButton);
-
+        if (this.group === HARD_WORD_GROUP_NUM)
+            groupNavigation.querySelectorAll<HTMLButtonElement>('button').forEach((btn) => (btn.disabled = true));
         this.rootElement.append(groups);
         this.rootElement.append(groupNavigation);
         const bookContainer = document.createElement('div');
@@ -131,6 +130,8 @@ class EbookView extends ViewInterface {
                         .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
                         .forEach((btn) => (btn.disabled = false));
                 }
+                if (this.group === HARD_WORD_GROUP_NUM)
+                    assertDefined(document.querySelector('.group-navigation')).querySelectorAll<HTMLButtonElement>('button').forEach((btn) => (btn.disabled = true));
             })
             .catch(() => {
                 //catch stopped fetch error
