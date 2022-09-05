@@ -47,12 +47,13 @@ export default class StatsController {
                 if (jsonResult[0].totalCount.length === 0)
                     return {
                         words: [],
-                        cnt: 0
+                        cnt: 0,
                     };
-                else return {
-                    words: jsonResult[0].paginatedResults,
-                    cnt: jsonResult[0].totalCount[0].count,
-                };
+                else
+                    return {
+                        words: jsonResult[0].paginatedResults,
+                        cnt: jsonResult[0].totalCount[0].count,
+                    };
             } else {
                 throw Error('Access token is missing or invalid.');
             }

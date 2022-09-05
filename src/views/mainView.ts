@@ -12,7 +12,6 @@ import imgDev2 from '../assets/imgs/dev2.png';
 import imgDev3 from '../assets/imgs/dev3.jpg';
 
 export default class MainView extends ViewInterface {
-
     show(): void {
         this.rootElement.innerHTML = mainBody;
     }
