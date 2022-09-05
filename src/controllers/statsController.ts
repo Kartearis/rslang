@@ -6,14 +6,14 @@ import { responceUserWords } from '../helpers/types';
 // by difficulty and lastAttempt {"$and":[{"userWord.difficulty":"learning", "userWord.optional.lastAttempt":"2022-09-03"}]}
 // by dificulty {"$or":[{"userWord.difficulty":"learning", "userWord.difficulty":"hard"}]}
 // for test Promise.resolve(StatisticsController.getInstance().getStats('{"$and":[{"userWord.difficulty":"learning", "userWord.optional.lastAttempt":"2022-09-03"}]}')).then(res => console.log(res));
-class StatisticsController {
-    private static instance: StatisticsController;
+export default class StatsController {
+    private static instance: StatsController;
     abortController: AbortController | null = null;
-    public static getInstance(): StatisticsController {
-        if (!StatisticsController.instance) {
-            StatisticsController.instance = new StatisticsController();
+    public static getInstance(): StatsController {
+        if (!StatsController.instance) {
+            StatsController.instance = new StatsController();
         }
-        return StatisticsController.instance;
+        return StatsController.instance;
     }
 
     async getStats(queryString: string): Promise<number> {
@@ -45,5 +45,3 @@ class StatisticsController {
         }
     }
 }
-
-export default StatisticsController;
