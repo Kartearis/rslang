@@ -58,24 +58,36 @@ export default class StatsController {
         }
     }
 
-    async getLearnedWordsPerDate() {
-
-    }
-
-    async getNewWordsPerDate(): Promise<DateBasedStats> {
-        const wordStats: WordStats = await this.getStats(`{"$and": [{"userWord.optional": {"$ne": null}},
-            {"userWord.optional.firstAttempt": {"$ne": "null"}}]}`);
+    async getStatPerDate(query: string, reducer: (st: DateStringBasedStats, word: wordType) => DateStringBasedStats) {
+        const wordStats: WordStats = await this.getStats(query);
         const stats: DateStringBasedStats = {};
-        console.log(wordStats);
-        wordStats.words.reduce((st: DateStringBasedStats, word: wordType) => {
-            const firstAttempt = assertDefined(word.userWord?.optional?.firstAttempt);
-            if (st[firstAttempt] !== undefined)
-                st[firstAttempt] += 1;
-            else st[firstAttempt] = 1;
-            return st;
-        }, stats);
+        wordStats.words.reduce(reducer, stats);
         return typedEntries(stats)
             .map(([date, cnt]) => ({date: scanDate(date as string), words: cnt}))
             .sort((a,b) => a.date.getTime() - b.date.getTime());
+    }
+
+    async getLearnedWordsPerDate() {
+        return this.getStatPerDate(`{"$and": [{"userWord.optional": {"$ne": null}},
+            {"userWord.optional.learnedDate": {"$ne": "null"}}]}`,
+            (st: DateStringBasedStats, word: wordType) => {
+                const learnedDate = assertDefined(word.userWord?.optional?.learnedDate);
+                if (st[learnedDate] !== undefined)
+                    st[learnedDate] += 1;
+                else st[learnedDate] = 1;
+                return st;
+            });
+    }
+
+    async getNewWordsPerDate(): Promise<DateBasedStats> {
+        return this.getStatPerDate(`{"$and": [{"userWord.optional": {"$ne": null}},
+             {"userWord.optional.firstAttempt": {"$ne": "null"}}]}`,
+            (st: DateStringBasedStats, word: wordType) => {
+                const firstAttempt = assertDefined(word.userWord?.optional?.firstAttempt);
+                if (st[firstAttempt] !== undefined)
+                    st[firstAttempt] += 1;
+                else st[firstAttempt] = 1;
+                return st;
+        });
     }
 }

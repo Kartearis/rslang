@@ -145,18 +145,11 @@ export default class StatView extends ViewInterface {
             label: 'Words per day',
             data: newWordStats
         });
+        const learnedWordStats: DateBasedStats = await statsController.getLearnedWordsPerDate();
+        console.log(learnedWordStats);
         this.drawLongChart(assertDefined(this.lwCanvas), {
             label: 'Learned words',
-            data: [
-                { date: new Date('2022-07-01'), words: 2 },
-                { date: new Date('2022-07-02'), words: 5 },
-                { date: new Date('2022-07-03'), words: 6 },
-                { date: new Date('2022-07-04'), words: 6 },
-                { date: new Date('2022-07-05'), words: 9 },
-                { date: new Date('2022-07-06'), words: 13 },
-                { date: new Date('2022-07-07'), words: 13 },
-                { date: new Date('2022-07-08'), words: 15 },
-            ],
+            data: learnedWordStats,
         });
     }
 
@@ -221,6 +214,9 @@ export default class StatView extends ViewInterface {
             data: chartData,
             // plugins: [ChartDataLabels],
             options: {
+                layout: {
+                    padding: 20,
+                },
                 plugins: {
                     title: {
                         display: false,
