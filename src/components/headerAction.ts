@@ -41,7 +41,7 @@ class HeaderAction {
     }
 
     static hidde() {
-        assertDefined(document.querySelector('.header-auth'));
+        assertDefined(document.querySelector('.header-auth')).classList.add('hidden');
     }
 
 
