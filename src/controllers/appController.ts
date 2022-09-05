@@ -31,7 +31,7 @@ export default class AppController {
         router.reOpenCurrent();
 
         assertDefined(document.querySelector('#main')).addEventListener('click', () => router.navigate('/'));
-        assertDefined(document.querySelector('#team')).addEventListener('click', () => { router.navigate('/'); router.navigate('#teamBlock') });
+        assertDefined(document.querySelector('#team')).addEventListener('click', () => router.navigate('/'));
 
         assertDefined(document.querySelector('#ebook')).addEventListener('click', () => router.navigate('/ebook'));
         assertDefined(document.querySelector('#audiocall')).addEventListener('click', () =>
