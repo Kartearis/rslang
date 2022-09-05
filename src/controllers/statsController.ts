@@ -68,7 +68,7 @@ export default class StatsController {
     }
 
     async getLearnedWordsPerDate() {
-        return this.getStatPerDate(`{"$and": [{"userWord.optional": {"$ne": null}},
+        const learnedPerDate = await this.getStatPerDate(`{"$and": [{"userWord.optional": {"$ne": null}},
             {"userWord.optional.learnedDate": {"$ne": "null"}}]}`,
             (st: DateStringBasedStats, word: wordType) => {
                 const learnedDate = assertDefined(word.userWord?.optional?.learnedDate);
@@ -76,6 +76,13 @@ export default class StatsController {
                     st[learnedDate] += 1;
                 else st[learnedDate] = 1;
                 return st;
+            });
+        let lastValue: number = 0;
+        return learnedPerDate
+            .map((obj) => {
+                obj.words += lastValue;
+                lastValue = obj.words;
+                return obj;
             });
     }
 
