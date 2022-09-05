@@ -27,7 +27,7 @@ class UserController {
             localStorage.setItem(TOKEN_NAME, token);
             localStorage.setItem(REFRESH_TOKEN_NAME, refreshToken);
             localStorage.setItem(USER_NAME, userId);
-            RouterController.getInstance().navigate('/');
+            RouterController.getInstance().back();
             this.startUpdateToken();
         } else {
             const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));

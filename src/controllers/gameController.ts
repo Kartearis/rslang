@@ -34,6 +34,12 @@ abstract class GameController {
                     else if (!gameWord.result && previousIsCorrect)
                         if (currentCombo > stats.longestCombo) stats.longestCombo = currentCombo;
                     previousIsCorrect = gameWord.result;
+                    if (
+                        gameWord.wordGame?.userWord === undefined ||
+                        gameWord.wordGame.userWord.optional.firstAttempt === null ||
+                        gameWord.wordGame.userWord.optional.firstAttempt === undefined
+                    )
+                        stats.newCnt += 1;
                     //first appearance
                     if (gameWord.wordGame.userWord === undefined) {
                         gameWord.wordGame.userWord = {

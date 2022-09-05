@@ -7,11 +7,24 @@ export default class AppController {
         const router: RouterController = RouterController.getInstance();
         const userController: UserController = UserController.getInstance();
         const viewContainer: HTMLElement = assertDefined(document.querySelector('.content'));
-        if (userController.isSignin()) {
-            userController.getNewToken().then(() => userController.startUpdateToken());
-        }
         router.setRootElement(viewContainer);
-        router.reOpenCurrent();
+        // If user is signed in, refresh token, then reopen current view. Else just reopen view
+        if (userController.isSignin()) {
+            userController
+                .getNewToken()
+                .then(() => userController.startUpdateToken())
+                .then(() => {
+                    router.reOpenCurrent();
+                    //hidde signin and registration button after reload page
+                    if (userController.isSignin()) {
+                        assertDefined(document.querySelector('#signin')).classList.add('hidden');
+                        assertDefined(document.querySelector('#registration')).classList.add('hidden');
+                    } else {
+                        assertDefined(document.querySelector('#logout')).classList.add('hidden');
+                    }
+                });
+        } else router.reOpenCurrent();
+
         assertDefined(document.querySelector('#ebook')).addEventListener('click', () => router.navigate('/ebook'));
         assertDefined(document.querySelector('#audiocall')).addEventListener('click', () =>
             router.navigate('/level', '/audiocall')
@@ -24,13 +37,5 @@ export default class AppController {
             router.navigate('/registration')
         );
         assertDefined(document.querySelector('#logout')).addEventListener('click', () => router.navigate('/logout'));
-        //hidde signin and registration button after reload page
-
-        if (userController.isSignin()) {
-            assertDefined(document.querySelector('#signin')).classList.add('hidden');
-            assertDefined(document.querySelector('#registration')).classList.add('hidden');
-        } else {
-            assertDefined(document.querySelector('#logout')).classList.add('hidden');
-        }
     }
 }

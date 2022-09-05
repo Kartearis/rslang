@@ -5,65 +5,69 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 import { assertDefined } from '../helpers/helpers';
 import DailyStatsController, { DailyStats } from '../controllers/dailyStatsController';
+import StatsController, { DateBasedStats } from '../controllers/statsController';
+import LoadingOverlay from '../components/loadingOverlay';
+import UserController from '../controllers/userController';
+import RouterController from '../controllers/routerController';
 
 const template = document.createElement('template');
 template.innerHTML = `
     <section class="stats">
-        <h2 class="stats__header">Statistics</h2>
+        <h2 class="stats__header">Статистика</h2>
         <div class="stats__short-container">
             <div class="stat-card" id="gs-sprint">
-                <h4 class="stat-card__header">Sprint</h4>
+                <h4 class="stat-card__header">Спринт</h4>
                 <div class="stat-card__number" id="gs-s-new">
-                    <h5 class="stat-card__value-title">New</h5>
+                    <h5 class="stat-card__value-title">Новые слова</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__number" id="gs-s-combo">
-                    <h5 class="stat-card__value-title">Combo</h5>
+                    <h5 class="stat-card__value-title">Макс. серия</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__pie">
-                    <h5 class="stat-card__pie-title">Correct answers</h5>
+                    <h5 class="stat-card__pie-title">Правильные ответы</h5>
                     <canvas class="stat-card__pie-canvas"></canvas>
                 </div>
             </div>
             <div class="stat-card" id="gs-audio">
-                <h4 class="stat-card__header">Audio</h4>
+                <h4 class="stat-card__header">Аудиовызов</h4>
                 <div class="stat-card__number" id="gs-a-new">
-                    <h5 class="stat-card__value-title">New</h5>
+                    <h5 class="stat-card__value-title">Новые слова</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__number" id="gs-a-combo">
-                    <h5 class="stat-card__value-title">Combo</h5>
+                    <h5 class="stat-card__value-title">Макс. серия</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__pie">
-                    <h5 class="stat-card__pie-title">Correct answers</h5>
+                    <h5 class="stat-card__pie-title">Правильные ответы</h5>
                     <canvas class="stat-card__pie-canvas"></canvas>
                 </div>
             </div>
             <div class="stat-card" id="ws">
-                <h4 class="stat-card__header">Word stats</h4>
+                <h4 class="stat-card__header">В целом по словам</h4>
                 <div class="stat-card__number" id="ws-new">
-                    <h5 class="stat-card__value-title">New</h5>
+                    <h5 class="stat-card__value-title">Новые слова</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__number" id="ws-learnt">
-                    <h5 class="stat-card__value-title">Learnt</h5>
+                    <h5 class="stat-card__value-title">Изученные слова</h5>
                     <div class="stat-card__value">0</div>
                 </div>
                 <div class="stat-card__pie">
-                    <h5 class="stat-card__pie-title">Correct answers</h5>
+                    <h5 class="stat-card__pie-title">Правильные ответы</h5>
                     <canvas class="stat-card__pie-canvas"></canvas>
                 </div>
             </div>
         </div>
         <div class="stats__long-container">
             <div class="stat-graph" id="wpd">
-                <h4 class="stat-graph__header">New words per day</h4>
+                <h4 class="stat-graph__header">Количество новых слов по датам</h4>
                 <canvas class="stat-graph__canvas"></canvas>
             </div>
             <div class="stat-graph" id="lw">
-                <h4 class="stat-graph__header">Learned words (cumulative)</h4>
+                <h4 class="stat-graph__header">Количество изученных слов к дате</h4>
                 <canvas class="stat-graph__canvas"></canvas>
             </div>
         </div>
@@ -81,6 +85,8 @@ export default class StatView extends ViewInterface {
     private wsLearnt?: HTMLElement;
     private wsPie?: HTMLCanvasElement;
     private wpdCanvas?: HTMLCanvasElement;
+    private wpdContainer?: HTMLElement;
+    private lwContainer?: HTMLElement;
     private lwCanvas?: HTMLCanvasElement;
 
     processCorrectIncorrect(stats: DailyStats): number[] {
@@ -95,18 +101,34 @@ export default class StatView extends ViewInterface {
     }
 
     show(): void {
+        // If user is not authorised - redirect to signin
+        // TODO: implement on base class (or some middle class)
+        if (!UserController.getInstance().isSignin()) RouterController.getInstance().navigate('/signin');
+
         this.rootElement.innerHTML = '';
+
+        this.rootElement.append(template.content.cloneNode(true));
+        this.gsSprintPie = assertDefined(this.rootElement.querySelector('#gs-sprint .stat-card__pie-canvas'));
+        this.wpdCanvas = assertDefined(this.rootElement.querySelector('#wpd .stat-graph__canvas'));
+        this.lwCanvas = assertDefined(this.rootElement.querySelector('#lw .stat-graph__canvas'));
+        this.wpdContainer = assertDefined(this.rootElement.querySelector('#wpd'));
+        this.lwContainer = assertDefined(this.rootElement.querySelector('#lw'));
+        this.fillDailyStats();
+        this.fillGlobalStats();
+    }
+
+    fillDailyStats(): void {
         const sprintDailyStatsController = new DailyStatsController('sprint-game');
         const audioDailyStatsController = new DailyStatsController('audio-game');
         const sprintStats = sprintDailyStatsController.readStats();
         const audioStats = audioDailyStatsController.readStats();
         const wordStats = this.aggregateWordDailyStats([sprintStats, audioStats]);
-        this.rootElement.append(template.content.cloneNode(true));
-        this.gsSprintPie = assertDefined(this.rootElement.querySelector('#gs-sprint .stat-card__pie-canvas'));
-        this.drawPieChart(this.gsSprintPie, this.processCorrectIncorrect(sprintStats));
+
+        this.drawPieChart(assertDefined(this.gsSprintPie), this.processCorrectIncorrect(sprintStats));
         (assertDefined(
             this.rootElement.querySelector('#gs-s-combo .stat-card__value')
         ) as HTMLElement).innerText = sprintStats.longestCombo.toString();
+
         (assertDefined(
             this.rootElement.querySelector('#gs-s-new .stat-card__value')
         ) as HTMLElement).innerText = sprintStats.newCnt.toString();
@@ -121,39 +143,40 @@ export default class StatView extends ViewInterface {
         (assertDefined(
             this.rootElement.querySelector('#ws-new .stat-card__value')
         ) as HTMLElement).innerText = wordStats.newCnt.toString();
+        // Show learned cnt from localStorage, then update from db as data becomes available
         (assertDefined(
             this.rootElement.querySelector('#ws-learnt .stat-card__value')
         ) as HTMLElement).innerText = wordStats.learnedCnt.toString();
+        // TODO: Actually should be handled by DailyStatsController, but this works as ad-hoc solution
+        StatsController.getInstance()
+            .getLearnedToday()
+            .then((cnt) => {
+                (assertDefined(
+                    this.rootElement.querySelector('#ws-learnt .stat-card__value')
+                ) as HTMLElement).innerText = cnt.toString();
+            });
         this.wsPie = assertDefined(this.rootElement.querySelector('#ws .stat-card__pie-canvas'));
         this.drawPieChart(this.wsPie, this.processCorrectIncorrect(wordStats));
-        this.wpdCanvas = assertDefined(this.rootElement.querySelector('#wpd .stat-graph__canvas'));
-        this.drawLongChart(this.wpdCanvas, {
+    }
+
+    async fillGlobalStats(): Promise<void> {
+        const statsController = new StatsController();
+        const wpdLoading = new LoadingOverlay();
+        const lpdLoading = new LoadingOverlay();
+        assertDefined(this.wpdContainer).append(wpdLoading.show());
+        assertDefined(this.lwContainer).append(lpdLoading.show());
+        const newWordStats: DateBasedStats = await statsController.getNewWordsPerDate();
+        this.drawLongChart(assertDefined(this.wpdCanvas), {
             label: 'Words per day',
-            data: [
-                { date: new Date('2022-07-01'), words: 2 },
-                { date: new Date('2022-07-02'), words: 5 },
-                { date: new Date('2022-07-03'), words: 0 },
-                { date: new Date('2022-07-04'), words: 0 },
-                { date: new Date('2022-07-05'), words: 10 },
-                { date: new Date('2022-07-06'), words: 13 },
-                { date: new Date('2022-07-07'), words: 0 },
-                { date: new Date('2022-07-08'), words: 15 },
-            ],
+            data: newWordStats,
         });
-        this.lwCanvas = assertDefined(this.rootElement.querySelector('#lw .stat-graph__canvas'));
-        this.drawLongChart(this.lwCanvas, {
+        const learnedWordStats: DateBasedStats = await statsController.getLearnedWordsPerDate();
+        this.drawLongChart(assertDefined(this.lwCanvas), {
             label: 'Learned words',
-            data: [
-                { date: new Date('2022-07-01'), words: 2 },
-                { date: new Date('2022-07-02'), words: 5 },
-                { date: new Date('2022-07-03'), words: 6 },
-                { date: new Date('2022-07-04'), words: 6 },
-                { date: new Date('2022-07-05'), words: 9 },
-                { date: new Date('2022-07-06'), words: 13 },
-                { date: new Date('2022-07-07'), words: 13 },
-                { date: new Date('2022-07-08'), words: 15 },
-            ],
+            data: learnedWordStats,
         });
+        wpdLoading.hide();
+        lpdLoading.hide();
     }
 
     drawPieChart(element: HTMLCanvasElement, data: number[]): void {
@@ -217,6 +240,9 @@ export default class StatView extends ViewInterface {
             data: chartData,
             // plugins: [ChartDataLabels],
             options: {
+                layout: {
+                    padding: 20,
+                },
                 plugins: {
                     title: {
                         display: false,
@@ -224,9 +250,9 @@ export default class StatView extends ViewInterface {
                     legend: {
                         display: false,
                     },
-                    // datalabels: {
-                    //
-                    // }
+                    datalabels: {
+                        align: 'top',
+                    },
                 },
             },
         });
