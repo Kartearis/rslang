@@ -61,3 +61,29 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.git-group__link--float {
+  position: relative;
+}
+
+.git-group__link--float::after {
+  box-sizing: border-box;
+  content: attr(data-float-title);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: calc(-50px + 50%);
+  width: 100px;
+  padding: 10px;
+  border-radius: 15px;
+  border: 1px solid var(--color-shaded);
+  text-align: center;
+  background-color: var(--color-block);
+  color: var(--color-shaded);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.git-group__link--float:hover::after {
+  opacity: 1;
+}
