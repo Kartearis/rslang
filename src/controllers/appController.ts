@@ -47,6 +47,5 @@ export default class AppController {
         );
         assertDefined(document.querySelector('#logout')).addEventListener('click', () => router.navigate('/logout'));
         //hidde signin and registration button after reload page
-
     }
 }

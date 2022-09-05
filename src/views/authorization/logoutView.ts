@@ -14,7 +14,6 @@ class LogoutView extends ViewInterface {
         HeaderAction.checkAuth();
         this.controller.logout();
         RouterController.getInstance().navigate('/');
-        // RouterController.getInstance().reOpenCurrent();
     }
 }
 

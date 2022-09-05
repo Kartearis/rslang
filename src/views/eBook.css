@@ -75,13 +75,11 @@
 
 .group-list__group:hover {
     cursor: pointer;
-    /*opacity: 0.7;*/
     transform: scaleX(1.1);
     z-index: 2;
 }
 
 .group-list__group_active {
-    /*opacity: 0.8;*/
     -webkit-box-shadow: 0px -2px 5px 0px rgba(34, 60, 80, 0.5);
     -moz-box-shadow: 0px -2px 5px 0px rgba(34, 60, 80, 0.5);
     box-shadow: 0px -2px 5px 0px rgba(34, 60, 80, 0.5);
@@ -326,7 +324,6 @@
 .word-action__to-easy:hover:enabled,
 .word-action__to-learning:hover:enabled {
     cursor: pointer;
-    /*font-size: 120%;*/
     transform: scale(1.1);
 }
 
@@ -359,8 +356,3 @@
 .group5 {
     background-color: var(--color-accent-5);
 }
-
-/* .group6 {
-    background-color: var(--color-accent-6);
-} */
-

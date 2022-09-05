@@ -1,5 +1,3 @@
-import HeaderAction from '../../components/headerAction';
-import LoadingOverlay from '../../components/loadingOverlay';
 import { assertDefined } from '../../helpers/helpers';
 import ViewInterface from '../viewInterface';
 

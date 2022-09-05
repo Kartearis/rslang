@@ -29,8 +29,8 @@ class UserController {
             localStorage.setItem(USER_NAME, userId);
             RouterController.getInstance().back();
             this.startUpdateToken();
-        }  else {
-            throw Error("Signing error");
+        } else {
+            throw Error('Signing error');
         }
     }
     async registration(name: string, email: string, password: string): Promise<void> {
@@ -49,7 +49,7 @@ class UserController {
             await UserController.getInstance().signIn(email, password);
             RouterController.getInstance().navigate('/');
         } else {
-            throw Error("Registration error");
+            throw Error('Registration error');
         }
     }
     async getNewToken(): Promise<void> {

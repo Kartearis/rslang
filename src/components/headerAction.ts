@@ -1,13 +1,11 @@
-import UserController from '../controllers/userController';
-import userController from '../controllers/userController';
+import RouterController from '../controllers/routerController';
 import { assertDefined } from '../helpers/helpers';
 
 class HeaderAction {
     static addAction() {
-        let burgerBtn = assertDefined(document.querySelector<HTMLButtonElement>('.burger'));
-        let menu = assertDefined(document.querySelector('.menu-list'));
-        let coverLayer = assertDefined(document.querySelector('.cover-layer'));
-        let userBtn = assertDefined(document.querySelector('.header-auth'));
+        const burgerBtn = assertDefined(document.querySelector<HTMLButtonElement>('.burger'));
+        const menu = assertDefined(document.querySelector('.menu-list'));
+        const coverLayer = assertDefined(document.querySelector('.cover-layer'));
 
         burgerBtn.addEventListener('click', () => {
             burgerBtn.classList.toggle('active');
@@ -21,7 +19,7 @@ class HeaderAction {
             coverLayer.classList.remove('active');
         });
 
-        document.querySelectorAll('.menu-list__menu-link').forEach(a => {
+        document.querySelectorAll('.menu-list__menu-link').forEach((a) => {
             a.addEventListener('click', () => {
                 burgerBtn.classList.remove('active');
                 menu.classList.remove('active');
@@ -29,22 +27,27 @@ class HeaderAction {
             });
         });
 
-        userBtn.addEventListener('click', () => {
+        const signBtn = assertDefined(document.querySelector('#signIcon'));
+        const userIcon = assertDefined(document.querySelector('#userIcon'));
+
+        signBtn.addEventListener('click', () => {
             assertDefined(document.querySelector('#userMenu')).classList.toggle('hidden');
-        })
+        });
+        userIcon.addEventListener('click', () => {
+            assertDefined(document.querySelector('#userMenu')).classList.toggle('hidden');
+        });
+        RouterController.getInstance().addNavigationHook(() => HeaderAction.hidde());
     }
 
     static checkAuth() {
-        document.querySelectorAll('.user-list__menu-item').forEach(li => li.classList.toggle('hidden'));
+        document.querySelectorAll('.user-list__menu-item').forEach((li) => li.classList.toggle('hidden'));
         assertDefined(document.querySelector('#signIcon')).classList.toggle('hidden');
         assertDefined(document.querySelector('#userIcon')).classList.toggle('hidden');
     }
 
     static hidde() {
-        assertDefined(document.querySelector('.header-auth')).classList.add('hidden');
+        assertDefined(document.querySelector('#userMenu')).classList.add('hidden');
     }
-
-
 }
 
-export default HeaderAction
+export default HeaderAction;

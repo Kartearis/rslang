@@ -41,15 +41,19 @@ class SigninView extends Authorization {
         const password = assertDefined(document.querySelector<HTMLInputElement>('#password')).value;
         const loadingOverlay = new LoadingOverlay(true).show();
         this.rootElement.append(loadingOverlay);
-        await UserController.getInstance().signIn(email, password).then(() => {
-            loadingOverlay.hide();
-            HeaderAction.checkAuth();
-        },
-            () => {
-                const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
-                errMesage.classList.toggle('hidden');
-                loadingOverlay.hide();
-            });
+        await UserController.getInstance()
+            .signIn(email, password)
+            .then(
+                () => {
+                    loadingOverlay.hide();
+                    HeaderAction.checkAuth();
+                },
+                () => {
+                    const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
+                    errMesage.classList.toggle('hidden');
+                    loadingOverlay.hide();
+                }
+            );
     }
 }
 
