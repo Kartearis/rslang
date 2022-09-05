@@ -65,13 +65,15 @@
     font-weight: bold;
     background-color: inherit;
     font-size: 18px;
+    transition: transform 0.3s;
 }
 
 .pagination__btn:enabled:hover,
 .pages__page-num:enabled:hover {
     cursor: pointer;
-    color: gray;
-    border: solid 2px gray;
+    transform: scale(1.1);
+    /*color: gray;*/
+    /*border: solid 2px gray;*/
 }
 
 .pagination__btn_prev,
