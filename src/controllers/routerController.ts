@@ -22,7 +22,7 @@ export default class RouterController {
     private rootElement: HTMLElement = document.body;
     private lastView: ViewInterface | null = null;
     private storage: StorageController;
-    private hooks: Hook[] = []
+    private hooks: Hook[] = [];
 
     public static getInstance(): RouterController {
         if (!RouterController.instance) {
@@ -72,8 +72,7 @@ export default class RouterController {
 
     private renderView(to: string, data: null | unknown = null): void {
         if (this.lastView) this.lastView.destroy();
-        if (this.hooks.length > 0)
-            this.hooks.forEach((hook) => hook(to));
+        if (this.hooks.length > 0) this.hooks.forEach((hook) => hook(to));
         const view = new this.routeConfig[to](this.rootElement, data);
         this.lastView = view;
         // Maybe its more effective to do it on navigation and popstate
