@@ -152,7 +152,7 @@ class EbookView extends ViewInterface {
         if (this.group === groupNum) li.classList.add('group-list__group_active');
         li.dataset.group = groupNum.toString();
         li.addEventListener('click', async (ev: Event) => {
-            const loadingOverlay = new LoadingOverlay(false).show();
+            const loadingOverlay = new LoadingOverlay(true).show();
             this.rootElement.append(loadingOverlay);
             this.stopAudio();
             assertDefined(document.querySelector('.group-list__group_active')).classList.remove(
