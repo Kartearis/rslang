@@ -13,12 +13,16 @@ import LoadingOverlay from '../components/loadingOverlay';
 const templateCard = document.createElement('template');
 templateCard.innerHTML = `
 <div class="word-card" data-word-id="">
+    
     <div id="cartStat" class="word-card__stats">
         <span id="rightAnswer" class="word-card__stats_success"></span> / <span id="wrongAnswer" class="word-card__stats_wrong"></span>
     </div>
+    
     <div class="word-card__img-container">
+        <div class="word-card__easy hidden"><span class="word-card__easy-mark">Изучено</span></div>
         <img class="word-card__img" id="wordImg" src="https://rs-lang-proj.herokuapp.com/files/01_0006.jpg" />
     </div>
+    
     <div class="word-card__info word-info">
         <p id="word"></p>
         <p class="word-info__meaning" id="meaning"></p>
@@ -215,7 +219,7 @@ class EbookView extends ViewInterface {
                         ? '0'
                         : word.userWord.optional.failed?.toString();
                 if (word.userWord.difficulty === wordStatus.easy) {
-                    card.classList.add(`word-card_easy`);
+                    assertDefined(card.querySelector('.word-card__easy')).classList.remove('hidden');
                     easyMark.disabled = true;
                     markHard.disabled = true;
                 } else if (word.userWord.difficulty === wordStatus.hard) {
@@ -316,7 +320,7 @@ class EbookView extends ViewInterface {
                         card.remove();
                     } else {
                         card.classList.remove(`word-card_hard`);
-                        card.classList.add(`word-card_easy`);
+                        assertDefined(card.querySelector('.word-card__easy')).classList.remove('hidden');
                         target.disabled = true;
                         assertDefined(card.querySelector<HTMLButtonElement>('#hardMark')).disabled = true;
                         card.dataset.wordStatus = status;

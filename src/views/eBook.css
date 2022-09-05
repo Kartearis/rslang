@@ -170,13 +170,24 @@
     border-color: var(--color-accent-6);
 }
 
-.word-card_easy {
-    border-color: green;
+.word-card__easy {
+    width: inherit;
+    height: inherit;
+    background: var(--color-overlay);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }
-
+.word-card__easy-mark{    
+    font-size: var(--font-1);
+    color: var(--color-accent-2);
+    transform: rotate(45deg);
+}
 .word-card__stats {
     margin-bottom: -45px;
-    background-color: var(--color-background);
+    background-color: var(--color-overlay);
     margin-top: 5px;
     margin-left: 5px;
     padding: 5px 10px;
