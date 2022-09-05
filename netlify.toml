@@ -1,0 +1,4 @@
+[build]
+    [[redirects]]
+        from = "/*"
+        to = "/index.html"
