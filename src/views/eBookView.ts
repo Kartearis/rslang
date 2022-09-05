@@ -54,7 +54,11 @@ class EbookView extends ViewInterface {
     }
 
     async show(): Promise<void> {
+        this.rootElement.innerText = '';
+        const loadingOverlay = new LoadingOverlay(true).show();
+        this.rootElement.append(loadingOverlay);
         this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
+        loadingOverlay.hide();
         this.rootElement.innerText = '';
         const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();

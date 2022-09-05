@@ -32,19 +32,17 @@ class HeaderAction {
         userBtn.addEventListener('click', () => {
             assertDefined(document.querySelector('#userMenu')).classList.toggle('hidden');
         })
-        HeaderAction.checkAuth();
     }
 
     static checkAuth() {
         document.querySelectorAll('.user-list__menu-item').forEach(li => li.classList.toggle('hidden'));
-        // assertDefined(document.querySelector('#logout')).classList.toggle('hidden');
-        // assertDefined(document.querySelector('#signin')).classList.toggle('hidden');
-        // assertDefined(document.querySelector('#registration')).classList.toggle('hidden');
         assertDefined(document.querySelector('#signIcon')).classList.toggle('hidden');
         assertDefined(document.querySelector('#userIcon')).classList.toggle('hidden');
     }
 
-
+    static hidde() {
+        assertDefined(document.querySelector('.header-auth'));
+    }
 
 
 }
