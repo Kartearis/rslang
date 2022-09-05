@@ -228,9 +228,9 @@ export default class StatView extends ViewInterface {
                     legend: {
                         display: false,
                     },
-                    // datalabels: {
-                    //
-                    // }
+                    datalabels: {
+                        align: 'top'
+                    }
                 },
             },
         });
