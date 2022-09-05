@@ -59,7 +59,6 @@ class EbookView extends ViewInterface {
         this.rootElement.append(loadingOverlay);
         this.words = await this.eBookController.getPageFromGroup(this.pagination.page, this.group);
         loadingOverlay.hide();
-        this.rootElement.innerText = '';
         const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
         if (this.group === HARD_WORD_GROUP_NUM)

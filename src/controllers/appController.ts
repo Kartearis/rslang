@@ -15,20 +15,12 @@ export default class AppController {
                 .then(() => userController.startUpdateToken())
                 .then(() => {
                     router.reOpenCurrent();
-                    //hidde signin and registration button after reload page
-                    // if (userController.isSignin()) {
-                    //     assertDefined(document.querySelector('#signin')).classList.add('hidden');
-                    //     assertDefined(document.querySelector('#registration')).classList.add('hidden');
-                    // } else {
-                    //     assertDefined(document.querySelector('#logout')).classList.add('hidden');
-                    // }
                 });
         } else router.reOpenCurrent();
 
         if (userController.isSignin()) HeaderAction.checkAuth();
         HeaderAction.addAction();
         router.setRootElement(viewContainer);
-        router.reOpenCurrent();
 
         assertDefined(document.querySelector('#main')).addEventListener('click', () => router.navigate('/'));
         assertDefined(document.querySelector('#team')).addEventListener('click', () => router.navigate('/'));
