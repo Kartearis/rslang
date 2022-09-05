@@ -1,15 +1,15 @@
-import {assertDefined, formatDate, HOST, scanDate, typedEntries} from '../helpers/helpers';
-import {responceUserWords, wordType} from '../helpers/types';
+import { assertDefined, formatDate, HOST, scanDate, typedEntries } from '../helpers/helpers';
+import { wordType } from '../helpers/types';
 
 type DateStringBasedStats = {
-    [date: string]: number
+    [date: string]: number;
 };
 
-export type DateBasedStats = { date: Date, words: number }[];
+export type DateBasedStats = { date: Date; words: number }[];
 
 type WordStats = {
-    words: wordType[],
-    cnt: number
+    words: wordType[];
+    cnt: number;
 };
 
 //query example
@@ -46,7 +46,7 @@ export default class StatsController {
                 const jsonResult = await response.json();
                 return {
                     words: jsonResult[0].paginatedResults,
-                    cnt: jsonResult[0].totalCount[0].count
+                    cnt: jsonResult[0].totalCount[0].count,
                 };
             } else {
                 throw Error('Access token is missing or invalid.');
@@ -63,39 +63,40 @@ export default class StatsController {
         const stats: DateStringBasedStats = {};
         wordStats.words.reduce(reducer, stats);
         return typedEntries(stats)
-            .map(([date, cnt]) => ({date: scanDate(date as string), words: cnt}))
-            .sort((a,b) => a.date.getTime() - b.date.getTime());
+            .map(([date, cnt]) => ({ date: scanDate(date as string), words: cnt }))
+            .sort((a, b) => a.date.getTime() - b.date.getTime());
     }
 
     async getLearnedWordsPerDate() {
-        const learnedPerDate = await this.getStatPerDate(`{"$and": [{"userWord.optional": {"$ne": null}},
+        const learnedPerDate = await this.getStatPerDate(
+            `{"$and": [{"userWord.optional": {"$ne": null}},
             {"userWord.optional.learnedDate": {"$ne": "null"}}]}`,
             (st: DateStringBasedStats, word: wordType) => {
                 const learnedDate = assertDefined(word.userWord?.optional?.learnedDate);
-                if (st[learnedDate] !== undefined)
-                    st[learnedDate] += 1;
+                if (st[learnedDate] !== undefined) st[learnedDate] += 1;
                 else st[learnedDate] = 1;
                 return st;
-            });
-        let lastValue: number = 0;
-        return learnedPerDate
-            .map((obj) => {
-                obj.words += lastValue;
-                lastValue = obj.words;
-                return obj;
-            });
+            }
+        );
+        let lastValue = 0;
+        return learnedPerDate.map((obj) => {
+            obj.words += lastValue;
+            lastValue = obj.words;
+            return obj;
+        });
     }
 
     async getNewWordsPerDate(): Promise<DateBasedStats> {
-        return this.getStatPerDate(`{"$and": [{"userWord.optional": {"$ne": null}},
+        return this.getStatPerDate(
+            `{"$and": [{"userWord.optional": {"$ne": null}},
              {"userWord.optional.firstAttempt": {"$ne": "null"}}]}`,
             (st: DateStringBasedStats, word: wordType) => {
                 const firstAttempt = assertDefined(word.userWord?.optional?.firstAttempt);
-                if (st[firstAttempt] !== undefined)
-                    st[firstAttempt] += 1;
+                if (st[firstAttempt] !== undefined) st[firstAttempt] += 1;
                 else st[firstAttempt] = 1;
                 return st;
-        });
+            }
+        );
     }
 
     async getLearnedToday(): Promise<number> {

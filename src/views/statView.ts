@@ -5,11 +5,10 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 import { assertDefined } from '../helpers/helpers';
 import DailyStatsController, { DailyStats } from '../controllers/dailyStatsController';
-import StatsController, {DateBasedStats} from "../controllers/statsController";
-import LoadingOverlay from "../components/loadingOverlay";
-import UserController from "../controllers/userController";
-import userController from "../controllers/userController";
-import RouterController from "../controllers/routerController";
+import StatsController, { DateBasedStats } from '../controllers/statsController';
+import LoadingOverlay from '../components/loadingOverlay';
+import UserController from '../controllers/userController';
+import RouterController from '../controllers/routerController';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -104,8 +103,7 @@ export default class StatView extends ViewInterface {
     show(): void {
         // If user is not authorised - redirect to signin
         // TODO: implement on base class (or some middle class)
-        if (!UserController.getInstance().isSignin())
-            RouterController.getInstance().navigate('/signin');
+        if (!UserController.getInstance().isSignin()) RouterController.getInstance().navigate('/signin');
 
         this.rootElement.innerHTML = '';
 
@@ -150,7 +148,8 @@ export default class StatView extends ViewInterface {
             this.rootElement.querySelector('#ws-learnt .stat-card__value')
         ) as HTMLElement).innerText = wordStats.learnedCnt.toString();
         // TODO: Actually should be handled by DailyStatsController, but this works as ad-hoc solution
-        StatsController.getInstance().getLearnedToday()
+        StatsController.getInstance()
+            .getLearnedToday()
             .then((cnt) => {
                 (assertDefined(
                     this.rootElement.querySelector('#ws-learnt .stat-card__value')
@@ -169,7 +168,7 @@ export default class StatView extends ViewInterface {
         const newWordStats: DateBasedStats = await statsController.getNewWordsPerDate();
         this.drawLongChart(assertDefined(this.wpdCanvas), {
             label: 'Words per day',
-            data: newWordStats
+            data: newWordStats,
         });
         const learnedWordStats: DateBasedStats = await statsController.getLearnedWordsPerDate();
         this.drawLongChart(assertDefined(this.lwCanvas), {
@@ -252,8 +251,8 @@ export default class StatView extends ViewInterface {
                         display: false,
                     },
                     datalabels: {
-                        align: 'top'
-                    }
+                        align: 'top',
+                    },
                 },
             },
         });

@@ -10,7 +10,8 @@ export default class AppController {
         router.setRootElement(viewContainer);
         // If user is signed in, refresh token, then reopen current view. Else just reopen view
         if (userController.isSignin()) {
-            userController.getNewToken()
+            userController
+                .getNewToken()
                 .then(() => userController.startUpdateToken())
                 .then(() => {
                     router.reOpenCurrent();
@@ -22,9 +23,7 @@ export default class AppController {
                         assertDefined(document.querySelector('#logout')).classList.add('hidden');
                     }
                 });
-        }
-        else router.reOpenCurrent();
-
+        } else router.reOpenCurrent();
 
         assertDefined(document.querySelector('#ebook')).addEventListener('click', () => router.navigate('/ebook'));
         assertDefined(document.querySelector('#audiocall')).addEventListener('click', () =>
@@ -38,7 +37,5 @@ export default class AppController {
             router.navigate('/registration')
         );
         assertDefined(document.querySelector('#logout')).addEventListener('click', () => router.navigate('/logout'));
-
-
     }
 }
