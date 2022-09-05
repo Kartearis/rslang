@@ -1,7 +1,7 @@
 import RouterController from './routerController';
 import { assertDefined } from '../helpers/helpers';
 import UserController from './userController';
-
+import HeaderAction from '../components/headerAction';
 export default class AppController {
     constructor() {
         const router: RouterController = RouterController.getInstance();
@@ -15,15 +15,15 @@ export default class AppController {
                 .then(() => userController.startUpdateToken())
                 .then(() => {
                     router.reOpenCurrent();
-                    //hidde signin and registration button after reload page
-                    if (userController.isSignin()) {
-                        assertDefined(document.querySelector('#signin')).classList.add('hidden');
-                        assertDefined(document.querySelector('#registration')).classList.add('hidden');
-                    } else {
-                        assertDefined(document.querySelector('#logout')).classList.add('hidden');
-                    }
                 });
         } else router.reOpenCurrent();
+
+        if (userController.isSignin()) HeaderAction.checkAuth();
+        HeaderAction.addAction();
+        router.setRootElement(viewContainer);
+
+        assertDefined(document.querySelector('#main')).addEventListener('click', () => router.navigate('/'));
+        assertDefined(document.querySelector('#team')).addEventListener('click', () => router.navigate('/'));
 
         assertDefined(document.querySelector('#ebook')).addEventListener('click', () => router.navigate('/ebook'));
         assertDefined(document.querySelector('#audiocall')).addEventListener('click', () =>
@@ -32,10 +32,12 @@ export default class AppController {
         assertDefined(document.querySelector('#sprint')).addEventListener('click', () =>
             router.navigate('/level', '/sprint')
         );
+        assertDefined(document.querySelector('#stats')).addEventListener('click', () => router.navigate('/stats'));
         assertDefined(document.querySelector('#signin')).addEventListener('click', () => router.navigate('/signin'));
         assertDefined(document.querySelector('#registration')).addEventListener('click', () =>
             router.navigate('/registration')
         );
         assertDefined(document.querySelector('#logout')).addEventListener('click', () => router.navigate('/logout'));
+        //hidde signin and registration button after reload page
     }
 }

@@ -75,13 +75,11 @@
 
 .group-list__group:hover {
     cursor: pointer;
-    /*opacity: 0.7;*/
     transform: scaleX(1.1);
     z-index: 2;
 }
 
 .group-list__group_active {
-    /*opacity: 0.8;*/
     -webkit-box-shadow: 0px -2px 5px 0px rgba(34, 60, 80, 0.5);
     -moz-box-shadow: 0px -2px 5px 0px rgba(34, 60, 80, 0.5);
     box-shadow: 0px -2px 5px 0px rgba(34, 60, 80, 0.5);
@@ -194,18 +192,31 @@
     border-color: var(--color-accent-6);
 }
 
-.word-card_easy {
-    border-color: green;
+.word-card__easy {
+    width: inherit;
+    height: inherit;
+    background: var(--color-overlay);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.word-card__easy-mark {
+    font-size: var(--font-1);
+    color: var(--color-accent-2);
 }
 
 .word-card__stats {
     margin-bottom: -45px;
-    background-color: var(--color-background);
+    background-color: var(--color-overlay);
     margin-top: 5px;
     margin-left: 5px;
     padding: 5px 10px;
     border-radius: 10px;
     position: absolute;
+    z-index: 100;
 }
 
 .word-card__stats_success {
@@ -313,7 +324,6 @@
 .word-action__to-easy:hover:enabled,
 .word-action__to-learning:hover:enabled {
     cursor: pointer;
-    /*font-size: 120%;*/
     transform: scale(1.1);
 }
 
@@ -346,8 +356,3 @@
 .group5 {
     background-color: var(--color-accent-5);
 }
-
-/* .group6 {
-    background-color: var(--color-accent-6);
-} */
-

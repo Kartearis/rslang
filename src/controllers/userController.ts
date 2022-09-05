@@ -30,14 +30,10 @@ class UserController {
             RouterController.getInstance().back();
             this.startUpdateToken();
         } else {
-            const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
-            errMesage.classList.toggle('hidden');
+            throw Error('Signing error');
         }
     }
-    async registration(): Promise<void> {
-        const email = assertDefined(document.querySelector<HTMLInputElement>('#email')).value;
-        const password = assertDefined(document.querySelector<HTMLInputElement>('#password')).value;
-        const name = assertDefined(document.querySelector<HTMLInputElement>('#name')).value;
+    async registration(name: string, email: string, password: string): Promise<void> {
         const res = await fetch(`${HOST}/users`, {
             method: 'POST',
             headers: {
@@ -53,8 +49,7 @@ class UserController {
             await UserController.getInstance().signIn(email, password);
             RouterController.getInstance().navigate('/');
         } else {
-            const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
-            errMesage.classList.toggle('hidden');
+            throw Error('Registration error');
         }
     }
     async getNewToken(): Promise<void> {

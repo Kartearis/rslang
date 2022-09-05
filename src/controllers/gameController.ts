@@ -18,6 +18,7 @@ abstract class GameController {
         this.userController = UserController.getInstance();
     }
     protected async saveResult(gameWords: wordGame[]): Promise<void> {
+        if (!this.userController.isSignin()) return;
         const stats: DailyStats = DailyStatsController.getEmpty();
         let previousIsCorrect = false;
         let currentCombo = 0;

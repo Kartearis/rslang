@@ -1,3 +1,5 @@
+import HeaderAction from '../../components/headerAction';
+import LoadingOverlay from '../../components/loadingOverlay';
 import UserController from '../../controllers/userController';
 import { assertDefined } from '../../helpers/helpers';
 import Authorization from './authorization';
@@ -33,8 +35,29 @@ class RegistrationView extends Authorization {
         pass.minLength = 8;
         pass.required = true;
         form.append(pass);
-        const submit = this.getSubmitBtn(['reg-form__submit'], 'Регистрация', this.controller.registration);
+        const submit = this.getSubmitBtn(['reg-form__submit'], 'Регистрация', () => this.registrationAction());
         form.append(submit);
+    }
+
+    private async registrationAction(): Promise<void> {
+        const email = assertDefined(document.querySelector<HTMLInputElement>('#email')).value;
+        const password = assertDefined(document.querySelector<HTMLInputElement>('#password')).value;
+        const name = assertDefined(document.querySelector<HTMLInputElement>('#name')).value;
+        const loadingOverlay = new LoadingOverlay(true).show();
+        this.rootElement.append(loadingOverlay);
+        await UserController.getInstance()
+            .registration(name, email, password)
+            .then(
+                () => {
+                    loadingOverlay.hide();
+                    HeaderAction.checkAuth();
+                },
+                () => {
+                    const errMesage = assertDefined(document.querySelector<HTMLParagraphElement>('#errMesage'));
+                    errMesage.classList.toggle('hidden');
+                    loadingOverlay.hide();
+                }
+            );
     }
 }
 

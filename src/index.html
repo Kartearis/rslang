@@ -13,14 +13,11 @@
         <div class="header-wrapper">
             <nav>
                 <ul class="menu-list">
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link">Главная</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link">О команде</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="main">Главная</a></li>
+                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" href="#teamBlock" id="team">О команде</a></li>
                     <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="audiocall">Аудиовызов</a></li>
                     <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="sprint">Спринт</a></li>
                     <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="ebook">Учебник</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="signin">Вход</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="registration">Регистрация</a></li>
-                    <li class="menu-list__menu-item"><a class="menu-list__menu-link" id="logout">Выход</a></li>
                 </ul>
             </nav>
             <button type="button" class="burger" id="burger">
@@ -29,8 +26,20 @@
                 <span class="burger-line"></span>
             </button>
             <div class="header-auth">
-                <img src="./assets/logo/auth.svg" alt="" class="auth-logo">
+                <img id="signIcon" src="./assets/logo/signin.svg" alt="" class="auth-logo">
+                <img id="userIcon" src="./assets/logo/auth.svg" alt="" class="auth-logo hidden">
+                <div id="userMenu" class='user-menu hidden'>
+                    <nav>
+                        <ul class="user-menu__list">
+                            <li class="user-list__menu-item"><a class="user-list__menu-link" id="signin">Вход</a></li>
+                            <li class="user-list__menu-item"><a class="user-list__menu-link" id="registration">Регистрация</a></li>
+                            <li class="user-list__menu-item hidden"><a class="user-list__menu-link" id="stats">Статистика</a></li>
+                            <li class="user-list__menu-item hidden"><a class="user-list__menu-link" id="logout">Выход</a></li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
+
             <div class="cover-layer"></div>
 
         </div>
@@ -40,7 +49,7 @@
         <div class="footer-wrapper">
             <div class="rs-group">
                 <a class="rs-group__link" href="https://rs.school/">
-                    <img class="rs-group__img" src="./assets/logo/rs-school.svg" alt="Логотип Rs School" >
+                    <img class="rs-group__img" src="./assets/logo/rs-school.svg" alt="Логотип Rs School">
                 </a>
             </div>
             <span class="year-group">
@@ -57,5 +66,5 @@
         </div>
     </footer>
 </body>
-<script src="./header.js"></script>
+
 </html>
