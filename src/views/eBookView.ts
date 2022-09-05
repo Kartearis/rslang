@@ -211,14 +211,19 @@ class EbookView extends ViewInterface {
             const rightAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#rightAnswer'));
             const wrongAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#wrongAnswer'));
             if (word.userWord !== undefined) {
-                rightAnswer.innerText =
-                    word.userWord.optional.success === null || word.userWord.optional.success === 'null'
-                        ? '0'
-                        : word.userWord.optional.success?.toString();
-                wrongAnswer.innerText =
-                    word.userWord.optional.failed === null || word.userWord.optional.success === 'null'
-                        ? '0'
-                        : word.userWord.optional.failed?.toString();
+                if (word.userWord.optional.firstAttempt !== null) {
+                    rightAnswer.innerText =
+                        word.userWord.optional.success === null || word.userWord.optional.success === 'null'
+                            ? '0'
+                            : word.userWord.optional.success?.toString();
+                    wrongAnswer.innerText =
+                        word.userWord.optional.failed === null || word.userWord.optional.success === 'null'
+                            ? '0'
+                            : word.userWord.optional.failed?.toString();
+                } else {
+                    stats.remove();
+                }
+
                 if (word.userWord.difficulty === wordStatus.easy) {
                     assertDefined(card.querySelector('.word-card__easy')).classList.remove('hidden');
                     easyMark.disabled = true;
