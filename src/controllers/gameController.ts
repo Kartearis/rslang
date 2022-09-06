@@ -6,8 +6,7 @@ import UserWordController from './userWordController';
 import DailyStatsController, { DailyStats } from './dailyStatsController';
 
 function fixFirstAttempt(firstAttempt: string | null) {
-    if (firstAttempt === undefined || firstAttempt === null || firstAttempt === 'null')
-        return formatDate(new Date);
+    if (firstAttempt === undefined || firstAttempt === null || firstAttempt === 'null') return formatDate(new Date());
     else return firstAttempt;
 }
 
