@@ -1,0 +1,159 @@
+@import '../../icons.css';
+
+.sprint-game {
+    padding: 10px;
+    background-color: var(--color-background);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 70px 1fr;
+    gap: 10px;
+    color: var(--color-default);
+}
+
+.sprint-game__timer-container {
+    grid-column: 1;
+    grid-row: 1/span 2;
+}
+
+.sprint-game__point-container {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--font-2);
+    color: var(--color-accent-0);
+}
+
+.sprint-game__controls-container {
+    grid-column: 3;
+    grid-row: 1/span 2;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.sprint-game__game {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 350px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.sprint-game__word-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+
+}
+
+.sprint-game__original-word {
+    font-size: var(--font-1);
+    font-weight: var(--font-weight-emphasis);
+    text-align: center;
+}
+
+.sprint-game__translation {
+    font-size: var(--font-2);
+    font-weight: var(--font-weight-thin);
+    text-align: center;
+}
+
+.sprint-game__game-controls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.game-button {
+    border-radius: 15px;
+    border: 1px solid var(--color-header);
+    background-color: var(--color-header);
+    color: var(--color-background);
+    padding: 5px 10px;
+    transition: transform 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.game-button--transparent {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--color-shaded);
+    padding: 5px;
+}
+
+.game-button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.game-button--wide {
+    min-width: 150px;
+}
+
+.game-button--wrong {
+    font-size: var(--font-3);
+    border-color: var(--color-accent-6);
+    background-color: var(--color-accent-6);
+}
+
+.game-button--wrong::before {
+    content: '←';
+    padding-right: 10px;
+}
+
+.game-button--right {
+    font-size: var(--font-3);
+    border-color: var(--color-accent-2);
+    background-color: var(--color-accent-2);
+}
+
+.game-button--right::after {
+    content: '→';
+    padding-left: 10px;
+}
+
+@media (max-width: 768px) {
+    .sprint-game__game {
+        grid-column: 1/ span 3;
+        min-width: 250px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .sprint-game {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+@media (min-height: 800px) {
+    .sprint-game {
+        grid-template-rows: 30vh 1fr 30vh;
+    }
+}
+
+.icon--volume {
+    --path: url('../../assets/icons/bi_volume-up.svg');
+}
+
+.icon--mute {
+    --path: url('../../assets/icons/bi_volume-mute.svg');
+}
+
+.icon--cross {
+    --path: url('../../assets/icons/bi_x.svg');
+}
+
+.icon--sound {
+    --path: url('../../assets/icons/bi_music-note.svg');
+}

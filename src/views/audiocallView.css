@@ -1,0 +1,222 @@
+@import '../icons.css';
+
+.hidden {
+    display: none !important;
+}
+
+.progress {
+    background-color: var(--color-accent-2);
+    width: 0;
+    height: 3px;
+}
+
+.audiocall-game {
+    background-color: var(--color-background);
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    height: 100%;
+    gap: 80px;
+}
+
+.audiocall-game__button {
+    user-select: none;
+    transition: transform 0.3s;
+}
+
+.audiocall-game__button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.audiocall-game__button-centralizer {
+    display: flex;
+    justify-content: center;
+}
+
+.response {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 180px;
+}
+
+.response__img {
+    border-radius: 500px;
+    width: 100px;
+    height: 100px;
+    border: 2px solid white;
+}
+
+.response__audio-img_play {
+    animation: playAudio 0.5s linear infinite;
+}
+
+.audiocall-game__options {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 20px
+}
+
+@media (min-width: 1400px) {
+    .audiocall-game {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .audiocall-game {
+        gap: 20px;
+    }
+
+    .option {
+        margin: 0 30px;
+    }
+
+    .audiocall-game__options {
+        flex-direction: column;
+    }
+
+    .response {
+        height: auto;
+    }
+}
+
+.option {
+    background-color: var(--color-header);
+    gap: 5px;
+    text-align: center;
+    color: white;
+    font-style: normal;
+    font-weight: var(--font-weight-default);
+    font-size: var(--font-7);
+    padding: 7px 30px;
+    border-radius: 30px;
+    border: 1px solid var(--color-header);
+    transition: .3s;
+}
+
+.option:enabled:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.option:disabled {
+    background-color: #b5b5b5;
+    color: var(--color-shaded);
+    border: none;
+}
+
+.option__num-key {
+    color: var(--color-accent-2);
+    font-size: var(--font-2);
+    padding-right: 8px;
+}
+
+.response__audio_asc {
+    height: 100px;
+    width: 100px;
+    border-radius: 50px;
+    border: none;
+}
+
+.response__audio {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    margin-right: 20px;
+    border: none;
+}
+
+.response__audio-img {
+    scale: 200%;
+}
+
+.response__row {
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    font-size: var(--font-1);
+}
+
+.response__word {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-1);
+}
+
+.response__word_right,
+.response__word_wrong {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}
+
+.response__word_right {
+    background-color: var(--color-accent-3);
+}
+
+.response__word_right::after {
+    content: '✓';
+}
+
+.response__word_wrong {
+    background-color: var(--color-accent-6);
+}
+
+.response__word_wrong::after {
+    content: '✖';
+}
+
+.audiocall-game__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.audiocall-game__button_dont-know,
+.audiocall-game__button_next {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-4);
+    width: 200px;
+    border: none;
+    border-radius: 8px;
+    height: 35px;
+}
+
+.audiocall-game__button_dont-know {
+    background-color: var(--color-accent-5);
+}
+
+.audiocall-game__button_next {
+    background-color: var(--color-accent-2);
+}
+
+.icon--cross {
+    --path: url('../assets/icons/bi_x.svg');
+}
+
+.audiocall-game__button_exit {
+    background-color: inherit;
+    width: 30px;
+    border: none;
+    height: 30px;
+    align-self: end;
+}
+
+@keyframes playAudio {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+}

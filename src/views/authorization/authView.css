@@ -1,0 +1,76 @@
+@import "../../global.css";
+
+.auth-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-background);
+}
+
+.errMesage {
+    color: var(--color-accent-6);
+}
+
+.hidden {
+    display: none;
+}
+
+.signin-form,
+.registration-form {
+    background-color: var(--color-block);
+    border-radius: 15px;
+    gap: 20px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -5px 14px 8px 1px rgba(34, 60, 80, 0.11);
+}
+
+.signin-form {
+    padding: 20px 40px;
+}
+
+.registration-form {
+    padding: 20px 60px;
+}
+
+.reg-form__name,
+.reg-form__login,
+.reg-form__pass,
+.login-form__pass,
+.login-form__login {
+    font-size: 20px;
+    border-radius: 15px;
+    border: 2px solid var(--color-header);
+    outline-offset: 3px;
+    padding: 5px 0 5px 10px;
+    outline: 0;
+}
+
+.reg-form__submit,
+.login-form__submit {
+    border: none;
+    font-size: var(--font-4);
+    border-radius: 15px;
+    width: 160px;
+    height: 30px;
+    color: var(--color-block);
+    background-color: var(--color-header);
+    transition: .3s;
+}
+
+.reg-form__submit:hover,
+.login-form__submit:hover {
+    cursor: pointer;
+    scale: 1.1;
+}
+
+.reg-form__submit:disabled,
+.login-form__submit:disabled {
+    background-color: #b5b5b5;
+    color: var(--color-shaded);
+    border: none;
+    scale: 1;
+}

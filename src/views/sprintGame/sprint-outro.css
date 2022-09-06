@@ -1,0 +1,97 @@
+.sprint-outro {
+    padding: 20px;
+    background-color: var(--color-background);
+    font-family: var(--font-family-default);
+    color: var(--color-shaded);
+    display: grid;
+    grid-template-rows: 70px 1fr max-content;
+    min-height: 420px;
+    justify-items: center;
+}
+
+.sprint-outro__sub {
+    font-weight: inherit;
+    font-size: inherit;
+    color: inherit;
+    font-family: inherit;
+}
+
+.sprint-outro__header {
+    font-size: var(--font-3);
+    color: var(--color-header);
+    font-weight: var(--font-weight-emphasis);
+}
+
+.sprint-outro__word-stats {
+    height: max(50vh, 300px);
+    overflow-y: scroll;
+    width: min(500px, 80%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 10px;
+
+}
+
+.sprint-outro__stat-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 5px;
+}
+
+.sprint-outro__stat-block:not(:last-child) {
+    border-bottom: 1px solid var(--color-shaded);
+}
+
+.sprint-outro__stat-header {
+    font-size: var(--font-4);
+    color: var(--color-header);
+    font-weight: var(--font-weight-emphasis);
+}
+
+.sprint-outro__stat-header--error {
+    color: var(--color-accent-6);
+}
+
+.sprint-outro__stat-header--correct {
+    color: var(--color-accent-2);
+}
+
+.sprint-outro__controls-container {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.outro-button {
+    border-radius: 15px;
+    background-color: var(--color-header);
+    border: 1px solid var(--color-header);
+    color: var(--color-background);
+    padding: 5px;
+    transition: transform 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.outro-button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+@media (min-width: 1400px) {
+    .sprint-outro {
+        width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+@media (min-height: 800px) {
+    .sprint-outro {
+        grid-template-rows: 10vh 1fr max-content;
+    }
+}
