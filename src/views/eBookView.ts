@@ -212,7 +212,7 @@ class EbookView extends ViewInterface {
             const rightAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#rightAnswer'));
             const wrongAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#wrongAnswer'));
             if (word.userWord !== undefined) {
-                if (word.userWord.optional.firstAttempt !== "null") {
+                if (word.userWord.optional.firstAttempt !== "null" && word.userWord.optional.firstAttempt !== null) {
                     rightAnswer.innerText =
                         (word.userWord.optional.success === null || word.userWord.optional.success === 'null')
                             ? '0'
