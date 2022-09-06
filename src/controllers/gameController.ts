@@ -5,6 +5,12 @@ import UserController from './userController';
 import UserWordController from './userWordController';
 import DailyStatsController, { DailyStats } from './dailyStatsController';
 
+function fixFirstAttempt(firstAttempt: string | null) {
+    if (firstAttempt === undefined || firstAttempt === null || firstAttempt === 'null')
+        return formatDate(new Date);
+    else return firstAttempt;
+}
+
 abstract class GameController {
     protected words: wordType[];
     protected userWordController: UserWordController;
@@ -65,13 +71,13 @@ abstract class GameController {
                                 difficulty:
                                     successInRowAtemps >= SUCCESS_ANSWER_FOR_LEARNED
                                         ? wordStatus.easy
-                                        : wordStatus.learning,
+                                        : gameWord.wordGame.userWord.difficulty,
                                 optional: {
                                     failed: options.failed,
                                     success: (Number(options.success) + 1).toString(),
                                     successRow: successInRowAtemps.toString(),
                                     learnedDate: successInRowAtemps === 3 ? curDateString : options.learnedDate,
-                                    firstAttempt: options.firstAttempt,
+                                    firstAttempt: fixFirstAttempt(options.firstAttempt),
                                     lastAttempt: curDateString,
                                 },
                             };
@@ -87,7 +93,7 @@ abstract class GameController {
                                     success: options.success,
                                     successRow: '0',
                                     learnedDate: null,
-                                    firstAttempt: options.firstAttempt,
+                                    firstAttempt: fixFirstAttempt(options.firstAttempt),
                                     lastAttempt: curDateString,
                                 },
                             };

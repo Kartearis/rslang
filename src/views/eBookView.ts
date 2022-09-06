@@ -305,9 +305,9 @@ class EbookView extends ViewInterface {
         const wordUpdate: wordProperty = {
             difficulty: status,
             optional: {
-                failed: currentWordProperty === undefined ? null : currentWordProperty.optional.failed,
-                success: currentWordProperty === undefined ? null : currentWordProperty.optional.success,
-                successRow: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
+                failed: currentWordProperty === undefined ? '0' : currentWordProperty.optional.failed,
+                success: currentWordProperty === undefined ? '0' : currentWordProperty.optional.success,
+                successRow: currentWordProperty === undefined ? '0' : currentWordProperty.optional.successRow,
                 firstAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
                 learnedDate: status === wordStatus.easy ? formatDate(new Date()) : null,
                 lastAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttempt,
