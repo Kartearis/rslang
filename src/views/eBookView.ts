@@ -131,7 +131,9 @@ class EbookView extends ViewInterface {
                         .forEach((btn) => (btn.disabled = false));
                 }
                 if (this.group === HARD_WORD_GROUP_NUM)
-                    assertDefined(document.querySelector('.group-navigation')).querySelectorAll<HTMLButtonElement>('button').forEach((btn) => (btn.disabled = true));
+                    assertDefined(document.querySelector('.group-navigation'))
+                        .querySelectorAll<HTMLButtonElement>('button')
+                        .forEach((btn) => (btn.disabled = true));
             })
             .catch(() => {
                 //catch stopped fetch error
@@ -212,13 +214,13 @@ class EbookView extends ViewInterface {
             const rightAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#rightAnswer'));
             const wrongAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#wrongAnswer'));
             if (word.userWord !== undefined) {
-                if (word.userWord.optional.firstAttempt !== "null") {
+                if (word.userWord.optional.firstAttempt !== 'null' && word.userWord.optional.firstAttempt !== null) {
                     rightAnswer.innerText =
-                        (word.userWord.optional.success === null || word.userWord.optional.success === 'null')
+                        word.userWord.optional.success === null || word.userWord.optional.success === 'null'
                             ? '0'
                             : word.userWord.optional.success?.toString();
                     wrongAnswer.innerText =
-                        (word.userWord.optional.failed === null || word.userWord.optional.failed === 'null')
+                        word.userWord.optional.failed === null || word.userWord.optional.failed === 'null'
                             ? '0'
                             : word.userWord.optional.failed?.toString();
                 } else {
@@ -305,9 +307,9 @@ class EbookView extends ViewInterface {
         const wordUpdate: wordProperty = {
             difficulty: status,
             optional: {
-                failed: currentWordProperty === undefined ? null : currentWordProperty.optional.failed,
-                success: currentWordProperty === undefined ? null : currentWordProperty.optional.success,
-                successRow: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
+                failed: currentWordProperty === undefined ? '0' : currentWordProperty.optional.failed,
+                success: currentWordProperty === undefined ? '0' : currentWordProperty.optional.success,
+                successRow: currentWordProperty === undefined ? '0' : currentWordProperty.optional.successRow,
                 firstAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
                 learnedDate: status === wordStatus.easy ? formatDate(new Date()) : null,
                 lastAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttempt,
