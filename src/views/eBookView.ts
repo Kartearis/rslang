@@ -61,8 +61,6 @@ class EbookView extends ViewInterface {
         loadingOverlay.hide();
         const groups = await this.getGroups();
         const pagination = await this.pagination.getPagination();
-        if (this.group === HARD_WORD_GROUP_NUM)
-            pagination.querySelectorAll<HTMLButtonElement>('button').forEach((btn) => (btn.disabled = true));
         const groupNavigation = document.createElement('div');
         groupNavigation.classList.add('group-navigation');
         const audiocallButton = document.createElement('button');
@@ -89,7 +87,8 @@ class EbookView extends ViewInterface {
         groupNavigation.append(sprintButton);
         groupNavigation.append(pagination);
         groupNavigation.append(audiocallButton);
-
+        if (this.group === HARD_WORD_GROUP_NUM)
+            groupNavigation.querySelectorAll<HTMLButtonElement>('button').forEach((btn) => (btn.disabled = true));
         this.rootElement.append(groups);
         this.rootElement.append(groupNavigation);
         const bookContainer = document.createElement('div');
@@ -131,6 +130,10 @@ class EbookView extends ViewInterface {
                         .querySelectorAll<HTMLButtonElement>('.group-navigation__game')
                         .forEach((btn) => (btn.disabled = false));
                 }
+                if (this.group === HARD_WORD_GROUP_NUM)
+                    assertDefined(document.querySelector('.group-navigation'))
+                        .querySelectorAll<HTMLButtonElement>('button')
+                        .forEach((btn) => (btn.disabled = true));
             })
             .catch(() => {
                 //catch stopped fetch error
@@ -211,14 +214,19 @@ class EbookView extends ViewInterface {
             const rightAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#rightAnswer'));
             const wrongAnswer = assertDefined(stats.querySelector<HTMLSpanElement>('#wrongAnswer'));
             if (word.userWord !== undefined) {
-                rightAnswer.innerText =
-                    word.userWord.optional.success === null || word.userWord.optional.success === 'null'
-                        ? '0'
-                        : word.userWord.optional.success?.toString();
-                wrongAnswer.innerText =
-                    word.userWord.optional.failed === null || word.userWord.optional.success === 'null'
-                        ? '0'
-                        : word.userWord.optional.failed?.toString();
+                if (word.userWord.optional.firstAttempt !== 'null' && word.userWord.optional.firstAttempt !== null) {
+                    rightAnswer.innerText =
+                        word.userWord.optional.success === null || word.userWord.optional.success === 'null'
+                            ? '0'
+                            : word.userWord.optional.success?.toString();
+                    wrongAnswer.innerText =
+                        word.userWord.optional.failed === null || word.userWord.optional.failed === 'null'
+                            ? '0'
+                            : word.userWord.optional.failed?.toString();
+                } else {
+                    stats.remove();
+                }
+
                 if (word.userWord.difficulty === wordStatus.easy) {
                     assertDefined(card.querySelector('.word-card__easy')).classList.remove('hidden');
                     easyMark.disabled = true;
@@ -299,9 +307,9 @@ class EbookView extends ViewInterface {
         const wordUpdate: wordProperty = {
             difficulty: status,
             optional: {
-                failed: currentWordProperty === undefined ? null : currentWordProperty.optional.failed,
-                success: currentWordProperty === undefined ? null : currentWordProperty.optional.success,
-                successRow: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
+                failed: currentWordProperty === undefined ? '0' : currentWordProperty.optional.failed,
+                success: currentWordProperty === undefined ? '0' : currentWordProperty.optional.success,
+                successRow: currentWordProperty === undefined ? '0' : currentWordProperty.optional.successRow,
                 firstAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.successRow,
                 learnedDate: status === wordStatus.easy ? formatDate(new Date()) : null,
                 lastAttempt: currentWordProperty === undefined ? null : currentWordProperty.optional.lastAttempt,

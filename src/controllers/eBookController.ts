@@ -8,7 +8,7 @@ type groupWords = {
 };
 class EBookController {
     private static instance: EBookController;
-    private groupWords: groupWords = { group: 0, words: [] };
+    private groupWords: groupWords = { group: -1, words: [] };
     userController: UserController;
     abortController: AbortController | null = null;
     private constructor() {
@@ -146,6 +146,11 @@ class EBookController {
                 arrWords.forEach((word) => {
                     if (word._id !== undefined) word.id = word._id;
                 });
+                arrWords.sort(
+                    (a, b) =>
+                        Number(b.group < a.group) - Number(a.group < b.group) ||
+                        Number(b.page < a.page) - Number(a.page < b.page)
+                );
                 return arrWords;
             } else {
                 throw Error('Access token is missing or invalid');
